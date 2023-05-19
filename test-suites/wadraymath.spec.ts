@@ -5,6 +5,7 @@ import { WadRayMathWrapper, WadRayMathWrapper__factory } from '../types';
 import { getFirstSigner } from 'lend-deploy/dist/helpers/utilities/signer';
 import { makeSuite } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
+import { rayDiv, rayMul, rayToWad, wadDiv, wadMul, wadToRay } from './helpers/utils/wadraymath';
 
 makeSuite('WadRayMath', () => {
   let wrapper: WadRayMathWrapper;
@@ -25,7 +26,7 @@ makeSuite('WadRayMath', () => {
     const a = BigNumber.from('134534543232342353231234');
     const b = BigNumber.from('13265462389132757665657');
 
-    expect(await wrapper.wadMul(a, b)).to.be.eq(a.wadMul(b));
+    expect(await wrapper.wadMul(a, b)).to.be.eq(wadMul(a, b));
     expect(await wrapper.wadMul(0, b)).to.be.eq('0');
     expect(await wrapper.wadMul(a, 0)).to.be.eq('0');
 
@@ -37,7 +38,7 @@ makeSuite('WadRayMath', () => {
     const a = BigNumber.from('134534543232342353231234');
     const b = BigNumber.from('13265462389132757665657');
 
-    expect(await wrapper.wadDiv(a, b)).to.be.eq(a.wadDiv(b));
+    expect(await wrapper.wadDiv(a, b)).to.be.eq(wadDiv(a, b));
 
     const halfB = b.div(2);
     const tooLargeA = BigNumber.from(MAX_UINT_AMOUNT).sub(halfB).div(WAD).add(1);
@@ -51,7 +52,7 @@ makeSuite('WadRayMath', () => {
     const a = BigNumber.from('134534543232342353231234');
     const b = BigNumber.from('13265462389132757665657');
 
-    expect(await wrapper.rayMul(a, b)).to.be.eq(a.rayMul(b));
+    expect(await wrapper.rayMul(a, b)).to.be.eq(rayMul(a, b));
     expect(await wrapper.rayMul(0, b)).to.be.eq('0');
     expect(await wrapper.rayMul(a, 0)).to.be.eq('0');
 
@@ -63,7 +64,7 @@ makeSuite('WadRayMath', () => {
     const a = BigNumber.from('134534543232342353231234');
     const b = BigNumber.from('13265462389132757665657');
 
-    expect(await wrapper.rayDiv(a, b)).to.be.eq(a.rayDiv(b));
+    expect(await wrapper.rayDiv(a, b)).to.be.eq(rayDiv(a, b));
 
     const halfB = b.div(2);
     const tooLargeA = BigNumber.from(MAX_UINT_AMOUNT).sub(halfB).div(RAY).add(1);
@@ -76,21 +77,21 @@ makeSuite('WadRayMath', () => {
     const half = BigNumber.from(10).pow(9).div(2);
 
     const a = BigNumber.from('10').pow(27);
-    expect(await wrapper.rayToWad(a)).to.be.eq(a.rayToWad());
+    expect(await wrapper.rayToWad(a)).to.be.eq(rayToWad(a));
 
     const roundDown = BigNumber.from('10').pow(27).add(half.sub(1));
-    expect(await wrapper.rayToWad(roundDown)).to.be.eq(roundDown.rayToWad());
+    expect(await wrapper.rayToWad(roundDown)).to.be.eq(rayToWad(roundDown));
 
     const roundUp = BigNumber.from('10').pow(27).add(half);
-    expect(await wrapper.rayToWad(roundUp)).to.be.eq(roundUp.rayToWad());
+    expect(await wrapper.rayToWad(roundUp)).to.be.eq(rayToWad(roundUp));
 
     const tooLarge = BigNumber.from(MAX_UINT_AMOUNT).sub(half).add(1);
-    expect(await wrapper.rayToWad(tooLarge)).to.be.eq(tooLarge.rayToWad());
+    expect(await wrapper.rayToWad(tooLarge)).to.be.eq(rayToWad(tooLarge));
   });
 
   it('wadToRay()', async () => {
     const a = BigNumber.from('10').pow(18);
-    expect(await wrapper.wadToRay(a)).to.be.eq(a.wadToRay());
+    expect(await wrapper.wadToRay(a)).to.be.eq(wadToRay(a));
 
     const ratio = BigNumber.from(10).pow(9);
     const tooLarge = BigNumber.from(MAX_UINT_AMOUNT).div(ratio).add(1);

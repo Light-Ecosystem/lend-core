@@ -11,6 +11,7 @@ import { MAX_UINT_AMOUNT } from '../helpers/constants';
 import { MockFlashLoanReceiver } from '../types/MockFlashLoanReceiver';
 import { TestEnv, makeSuite } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
+import { rayMul } from './helpers/utils/wadraymath';
 
 makeSuite('Pool: Authorized FlashLoan', (testEnv: TestEnv) => {
   let _mockFlashLoanReceiver = {} as MockFlashLoanReceiver;
@@ -66,7 +67,7 @@ makeSuite('Pool: Authorized FlashLoan', (testEnv: TestEnv) => {
     const currentLiquidityIndex = reserveData.liquidityIndex;
 
     const totalLiquidity = reserveData.totalHToken.add(
-      reserveData.accruedToTreasuryScaled.rayMul(reserveData.liquidityIndex)
+      rayMul(reserveData.accruedToTreasuryScaled, reserveData.liquidityIndex)
     );
 
     expect(totalLiquidity).to.be.equal('1000000000000000000');
@@ -95,7 +96,7 @@ makeSuite('Pool: Authorized FlashLoan', (testEnv: TestEnv) => {
     const currentLiquidityIndex = reserveData.liquidityIndex;
 
     const totalLiquidity = reserveData.totalHToken.add(
-      reserveData.accruedToTreasuryScaled.rayMul(reserveData.liquidityIndex)
+      rayMul(reserveData.accruedToTreasuryScaled, reserveData.liquidityIndex)
     );
 
     expect(totalLiquidity).to.be.equal('1000000000000000000');
@@ -279,7 +280,7 @@ makeSuite('Pool: Authorized FlashLoan', (testEnv: TestEnv) => {
     const userData = await helpersContract.getUserReserveData(usdc.address, depositor.address);
 
     const totalLiquidity = reserveData.totalHToken.add(
-      reserveData.accruedToTreasuryScaled.rayMul(reserveData.liquidityIndex)
+      rayMul(reserveData.accruedToTreasuryScaled, reserveData.liquidityIndex)
     );
 
     const expectedLiquidity = await convertToCurrencyDecimals(usdc.address, '1000');

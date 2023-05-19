@@ -5,6 +5,7 @@ import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
 import { advanceTimeAndBlock } from 'lend-deploy';
+import { percentMul, rayDiv, rayMul } from './helpers/utils/wadraymath';
 
 makeSuite('Mint To Treasury', (testEnv: TestEnv) => {
   it('User 0 deposits 1000 DAI. Borrower borrows 100 DAI. Clock moved forward one year. Calculates and verifies the amount accrued to the treasury', async () => {
@@ -43,11 +44,13 @@ makeSuite('Mint To Treasury', (testEnv: TestEnv) => {
 
     const { liquidityIndex, variableBorrowIndex } = await pool.getReserveData(dai.address);
 
-    const expectedAccruedToTreasury = amountDAItoBorrow
-      .rayMul(variableBorrowIndex)
-      .sub(amountDAItoBorrow)
-      .percentMul(reserveFactor)
-      .rayDiv(liquidityIndex);
+    const expectedAccruedToTreasury = rayDiv(
+      percentMul(
+        rayMul(amountDAItoBorrow, variableBorrowIndex).sub(amountDAItoBorrow),
+        reserveFactor
+      ),
+      liquidityIndex
+    );
 
     const { accruedToTreasury } = await pool.getReserveData(dai.address);
 
@@ -65,7 +68,7 @@ makeSuite('Mint To Treasury', (testEnv: TestEnv) => {
     const normalizedIncome = await pool.getReserveNormalizedIncome(dai.address);
     const treasuryBalance = await hDai.balanceOf(treasuryAddress);
 
-    const expectedTreasuryBalance = accruedToTreasury.rayMul(normalizedIncome);
+    const expectedTreasuryBalance = rayMul(accruedToTreasury, normalizedIncome);
 
     expect(treasuryBalance).to.be.closeTo(
       expectedTreasuryBalance,

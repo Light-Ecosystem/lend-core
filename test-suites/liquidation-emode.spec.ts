@@ -7,6 +7,7 @@ import { makeSuite, TestEnv } from './helpers/make-suite';
 import { getReserveData, getUserData } from './helpers/utils/helpers';
 import './helpers/utils/wadraymath';
 import { evmRevert, evmSnapshot, waitForTx } from 'lend-deploy';
+import { percentMul } from './helpers/utils/wadraymath';
 
 makeSuite('Pool Liquidation: Liquidates borrows in eMode with price change', (testEnv: TestEnv) => {
   const { INVALID_HF } = ProtocolErrors;
@@ -207,9 +208,10 @@ makeSuite('Pool Liquidation: Liquidates borrows in eMode with price change', (te
     const principalDecimals = (await helpersContract.getReserveConfigurationData(dai.address))
       .decimals;
 
-    const expectedCollateralLiquidated = principalPrice
-      .mul(amountToLiquidate)
-      .percentMul(CATEGORY.lb)
+    const expectedCollateralLiquidated = percentMul(
+      principalPrice.mul(amountToLiquidate),
+      CATEGORY.lb
+    )
       .mul(BigNumber.from(10).pow(collateralDecimals))
       .div(collateralPrice.mul(BigNumber.from(10).pow(principalDecimals)));
 
@@ -334,7 +336,7 @@ makeSuite('Pool Liquidation: Liquidates borrows in eMode with price change', (te
     const userGlobalDataBefore = await pool.getUserAccountData(user1.address);
     expect(userGlobalDataBefore.healthFactor).to.be.gt(utils.parseUnits('1', 18));
 
-    await oracle.setAssetPrice(weth.address, wethPrice.percentMul(9000));
+    await oracle.setAssetPrice(weth.address, percentMul(wethPrice, 9000));
 
     const userGlobalDataAfter = await pool.getUserAccountData(user1.address);
     expect(userGlobalDataAfter.healthFactor).to.be.lt(utils.parseUnits('1', 18), INVALID_HF);
@@ -353,9 +355,10 @@ makeSuite('Pool Liquidation: Liquidates borrows in eMode with price change', (te
 
     const wethConfig = await helpersContract.getReserveConfigurationData(weth.address);
 
-    const expectedCollateralLiquidated = debtPrice
-      .mul(toBorrow.div(2))
-      .percentMul(wethConfig.liquidationBonus)
+    const expectedCollateralLiquidated = percentMul(
+      debtPrice.mul(toBorrow.div(2)),
+      wethConfig.liquidationBonus
+    )
       .mul(BigNumber.from(10).pow(18))
       .div(collateralPrice.mul(BigNumber.from(10).pow(6)));
 
@@ -479,9 +482,7 @@ makeSuite('Pool Liquidation: Liquidates borrows in eMode with price change', (te
     const debtPrice = await oracle.getAssetPrice(EMODE_ORACLE_ADDRESS);
     const collateralPrice = await oracle.getAssetPrice(EMODE_ORACLE_ADDRESS);
 
-    const expectedCollateralLiquidated = debtPrice
-      .mul(toBorrow.div(2))
-      .percentMul(CATEGORY.lb)
+    const expectedCollateralLiquidated = percentMul(debtPrice.mul(toBorrow.div(2)), CATEGORY.lb)
       .mul(BigNumber.from(10).pow(18))
       .div(collateralPrice.mul(BigNumber.from(10).pow(6)));
 
@@ -609,9 +610,10 @@ makeSuite('Pool Liquidation: Liquidates borrows in eMode with price change', (te
 
     const wethConfig = await helpersContract.getReserveConfigurationData(weth.address);
 
-    const expectedCollateralLiquidated = debtPrice
-      .mul(toBorrow.div(2))
-      .percentMul(wethConfig.liquidationBonus)
+    const expectedCollateralLiquidated = percentMul(
+      debtPrice.mul(toBorrow.div(2)),
+      wethConfig.liquidationBonus
+    )
       .mul(BigNumber.from(10).pow(18))
       .div(collateralPrice.mul(BigNumber.from(10).pow(6)));
 

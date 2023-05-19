@@ -9,6 +9,7 @@ import { getReserveData, getUserData } from './helpers/utils/helpers';
 import { makeSuite } from './helpers/make-suite';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { waitForTx, increaseTime, evmSnapshot, evmRevert } from 'lend-deploy';
+import { percentDiv, percentMul } from './helpers/utils/wadraymath';
 
 declare var hre: HardhatRuntimeEnvironment;
 
@@ -226,7 +227,7 @@ makeSuite('Pool Liquidation: Add fee to liquidations', (testEnv) => {
 
     const amountDAIToBorrow = await convertToCurrencyDecimals(
       dai.address,
-      userGlobalData.availableBorrowsBase.div(daiPrice).percentMul(9500).toString()
+      percentMul(userGlobalData.availableBorrowsBase.div(daiPrice), 9500).toString()
     );
 
     await pool
@@ -248,7 +249,7 @@ makeSuite('Pool Liquidation: Add fee to liquidations', (testEnv) => {
 
     const daiPrice = await oracle.getAssetPrice(dai.address);
 
-    await oracle.setAssetPrice(dai.address, daiPrice.percentMul(11800));
+    await oracle.setAssetPrice(dai.address, percentMul(daiPrice, 11800));
 
     const userGlobalData = await pool.getUserAccountData(borrower.address);
 
@@ -336,9 +337,9 @@ makeSuite('Pool Liquidation: Add fee to liquidations', (testEnv) => {
       .mul(BigNumber.from(10).pow(collateralDecimals))
       .div(collateralPrice.mul(BigNumber.from(10).pow(principalDecimals)));
 
-    const bonusCollateral = baseCollateral.percentMul(10500).sub(baseCollateral);
+    const bonusCollateral = percentMul(baseCollateral, 10500).sub(baseCollateral);
     const totalCollateralLiquidated = baseCollateral.add(bonusCollateral);
-    const liquidationProtocolFees = bonusCollateral.percentMul(wethLiquidationProtocolFee);
+    const liquidationProtocolFees = percentMul(bonusCollateral, wethLiquidationProtocolFee);
     const expectedLiquidationReward = totalCollateralLiquidated.sub(liquidationProtocolFees);
 
     if (!tx.blockNumber) {
@@ -461,7 +462,7 @@ makeSuite('Pool Liquidation: Add fee to liquidations', (testEnv) => {
 
     const amountUSDCToBorrow = await convertToCurrencyDecimals(
       usdc.address,
-      userGlobalData.availableBorrowsBase.div(usdcPrice).percentMul(9502).toString()
+      percentMul(userGlobalData.availableBorrowsBase.div(usdcPrice), 9502).toString()
     );
 
     await pool
@@ -469,7 +470,7 @@ makeSuite('Pool Liquidation: Add fee to liquidations', (testEnv) => {
       .borrow(usdc.address, amountUSDCToBorrow, RateMode.Stable, '0', borrower.address);
 
     //drops HF below 1
-    await oracle.setAssetPrice(usdc.address, usdcPrice.percentMul(11200));
+    await oracle.setAssetPrice(usdc.address, percentMul(usdcPrice, 11200));
 
     //mints usdc to the liquidator
     await usdc
@@ -536,9 +537,9 @@ makeSuite('Pool Liquidation: Add fee to liquidations', (testEnv) => {
       .mul(BigNumber.from(10).pow(collateralDecimals))
       .div(collateralPrice.mul(BigNumber.from(10).pow(principalDecimals)));
 
-    const bonusCollateral = baseCollateral.percentMul(10500).sub(baseCollateral);
+    const bonusCollateral = percentMul(baseCollateral, 10500).sub(baseCollateral);
     const totalCollateralLiquidated = baseCollateral.add(bonusCollateral);
-    const liquidationProtocolFees = bonusCollateral.percentMul(wethLiquidationProtocolFee);
+    const liquidationProtocolFees = percentMul(bonusCollateral, wethLiquidationProtocolFee);
     const expectedLiquidationReward = totalCollateralLiquidated.sub(liquidationProtocolFees);
 
     expect(userGlobalDataAfter.healthFactor).to.be.gt(oneEther, 'Invalid health factor');
@@ -628,7 +629,7 @@ makeSuite('Pool Liquidation: Add fee to liquidations', (testEnv) => {
     const usdcPrice = await oracle.getAssetPrice(usdc.address);
 
     //drops HF below 1
-    await oracle.setAssetPrice(usdc.address, usdcPrice.percentMul(11400));
+    await oracle.setAssetPrice(usdc.address, percentMul(usdcPrice, 11400));
 
     //mints usdc to the liquidator
     await usdc
@@ -694,16 +695,18 @@ makeSuite('Pool Liquidation: Add fee to liquidations', (testEnv) => {
       hope.address
     );
 
-    const expectedPrincipal = collateralPrice
-      .mul(expectedCollateralLiquidated)
-      .mul(BigNumber.from(10).pow(principalDecimals))
-      .div(principalPrice.mul(BigNumber.from(10).pow(collateralDecimals)))
-      .percentDiv(liquidationBonus);
+    const expectedPrincipal = percentDiv(
+      collateralPrice
+        .mul(expectedCollateralLiquidated)
+        .mul(BigNumber.from(10).pow(principalDecimals))
+        .div(principalPrice.mul(BigNumber.from(10).pow(collateralDecimals))),
+      liquidationBonus
+    );
 
     const bonusCollateral = borrowerHTokenBalance.sub(
-      borrowerHTokenBalance.percentDiv(liquidationBonus)
+      percentDiv(borrowerHTokenBalance, liquidationBonus)
     );
-    const liquidationProtocolFee = bonusCollateral.percentMul(hopeLiquidationProtocolFee);
+    const liquidationProtocolFee = percentMul(bonusCollateral, hopeLiquidationProtocolFee);
     const expectedLiquidationReward = borrowerHTokenBalance.sub(liquidationProtocolFee);
 
     const hHopeTokenBalanceAfter = await hHopeTokenContract.balanceOf(liquidator.address);
@@ -795,7 +798,7 @@ makeSuite('Pool Liquidation: Add fee to liquidations', (testEnv) => {
     const usdcPrice = await oracle.getAssetPrice(usdc.address);
 
     //drops HF below 1
-    await oracle.setAssetPrice(usdc.address, usdcPrice.percentMul(11400));
+    await oracle.setAssetPrice(usdc.address, percentMul(usdcPrice, 11400));
 
     //mints usdc to the liquidator
     await usdc
@@ -861,16 +864,18 @@ makeSuite('Pool Liquidation: Add fee to liquidations', (testEnv) => {
       hope.address
     );
 
-    const expectedPrincipal = collateralPrice
-      .mul(expectedCollateralLiquidated)
-      .mul(BigNumber.from(10).pow(principalDecimals))
-      .div(principalPrice.mul(BigNumber.from(10).pow(collateralDecimals)))
-      .percentDiv(liquidationBonus);
+    const expectedPrincipal = percentDiv(
+      collateralPrice
+        .mul(expectedCollateralLiquidated)
+        .mul(BigNumber.from(10).pow(principalDecimals))
+        .div(principalPrice.mul(BigNumber.from(10).pow(collateralDecimals))),
+      liquidationBonus
+    );
 
     const bonusCollateral = borrowerHTokenBalance.sub(
-      borrowerHTokenBalance.percentDiv(liquidationBonus)
+      percentDiv(borrowerHTokenBalance, liquidationBonus)
     );
-    const liquidationProtocolFee = bonusCollateral.percentMul(hopeLiquidationProtocolFee);
+    const liquidationProtocolFee = percentMul(bonusCollateral, hopeLiquidationProtocolFee);
     const expectedLiquidationReward = borrowerHTokenBalance.sub(liquidationProtocolFee);
 
     const hHopeTokenBalanceAfter = await hHopeTokenContract.balanceOf(liquidator.address);

@@ -7,6 +7,7 @@ import { makeSuite, TestEnv } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
 import { parseUnits, formatUnits, parseEther } from '@ethersproject/units';
 import { evmSnapshot, evmRevert, VariableDebtToken__factory } from 'lend-deploy';
+import { wadMul } from './helpers/utils/wadraymath';
 
 makeSuite('EfficiencyMode', (testEnv: TestEnv) => {
   const {
@@ -267,7 +268,7 @@ makeSuite('EfficiencyMode', (testEnv: TestEnv) => {
     expect(usageAsCollateralEnabled).to.be.true;
     const userDataBeforeEMode = await pool.getUserAccountData(user1.address);
     expect(userDataBeforeSupply.totalCollateralBase).to.be.eq(
-      userDataBeforeEMode.totalCollateralBase.sub(wethToSupply.wadMul(wethPrice))
+      userDataBeforeEMode.totalCollateralBase.sub(wadMul(wethToSupply, wethPrice))
     );
 
     // Activate EMode, increasing availableBorrowsBase
@@ -773,14 +774,14 @@ makeSuite('EfficiencyMode', (testEnv: TestEnv) => {
     const usdcPrice = await oracle.getAssetPrice(usdc.address);
 
     const dataBefore = await pool.getUserAccountData(user2.address);
-    const expectedCollateralDaiPrice = daiAmount.wadMul(daiPrice);
+    const expectedCollateralDaiPrice = wadMul(daiAmount, daiPrice);
     expect(dataBefore.totalCollateralBase).to.be.eq(expectedCollateralDaiPrice);
 
     expect(await pool.connect(user2.signer).setUserEMode(id));
     expect(await pool.getUserEMode(user2.address)).to.be.eq(id);
 
     const dataAfter = await pool.getUserAccountData(user2.address);
-    const expectedCollateralUsdcPrice = daiAmount.wadMul(usdcPrice);
+    const expectedCollateralUsdcPrice = wadMul(daiAmount, usdcPrice);
     expect(dataAfter.totalCollateralBase).to.be.eq(expectedCollateralUsdcPrice);
   });
 

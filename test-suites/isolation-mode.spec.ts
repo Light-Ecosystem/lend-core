@@ -6,13 +6,7 @@ import { HOPELEND_REFERRAL, MAX_UINT_AMOUNT, MAX_UNBACKED_MINT_CAP } from '../he
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { TestEnv, makeSuite } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
-import {
-  increaseTime,
-  waitForTx,
-  evmSnapshot,
-  evmRevert,
-  advanceTimeAndBlock,
-} from 'lend-deploy';
+import { increaseTime, waitForTx, evmSnapshot, evmRevert, advanceTimeAndBlock } from 'lend-deploy';
 import { getReserveData, getUserData } from './helpers/utils/helpers';
 import { getTxCostAndTimestamp } from './helpers/actions';
 import HopeLendConfig from 'lend-deploy/dist/markets/test';
@@ -21,6 +15,7 @@ import {
   calcExpectedReserveDataAfterMintUnbacked,
   configuration as calculationsConfiguration,
 } from './helpers/utils/calculations';
+import { percentMul } from './helpers/utils/wadraymath';
 
 const expectEqual = (
   actual: UserReserveData | ReserveData,
@@ -49,7 +44,7 @@ makeSuite('Isolation mode', (testEnv: TestEnv) => {
 
   before(async () => {
     const { configurator, dai, usdc, hope, users, poolAdmin } = testEnv;
-    calculationsConfiguration.reservesParams = HopeConfig.ReservesConfig;
+    calculationsConfiguration.reservesParams = HopeLendConfig.ReservesConfig;
 
     //set debt ceiling for hope
     await configurator.setDebtCeiling(hope.address, ceilingAmount);
@@ -469,7 +464,7 @@ makeSuite('Isolation mode', (testEnv: TestEnv) => {
     const daiPrice = await oracle.getAssetPrice(dai.address);
     let amountDAIToBorrow = await convertToCurrencyDecimals(
       dai.address,
-      userGlobalData.availableBorrowsBase.div(daiPrice.toString()).percentMul(9999).toString()
+      percentMul(userGlobalData.availableBorrowsBase.div(daiPrice.toString()), 9999).toString()
     );
     await pool
       .connect(users[6].signer)

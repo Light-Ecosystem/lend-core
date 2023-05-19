@@ -17,6 +17,7 @@ import { getReserveData, getUserData } from './helpers/utils/helpers';
 import './helpers/utils/wadraymath';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { waitForTx, increaseTime } from 'lend-deploy';
+import { percentMul } from './helpers/utils/wadraymath';
 
 declare var hre: HardhatRuntimeEnvironment;
 
@@ -190,7 +191,7 @@ makeSuite('PriceOracleSentinel', (testEnv: TestEnv) => {
 
       const amountDAIToBorrow = await convertToCurrencyDecimals(
         dai.address,
-        userGlobalData.availableBorrowsBase.div(daiPrice.toString()).percentMul(9500).toString()
+        percentMul(userGlobalData.availableBorrowsBase.div(daiPrice.toString()), 9500).toString()
       );
 
       await pool
@@ -208,7 +209,7 @@ makeSuite('PriceOracleSentinel', (testEnv: TestEnv) => {
     } = testEnv;
 
     const daiPrice = await oracle.getAssetPrice(dai.address);
-    await oracle.setAssetPrice(dai.address, daiPrice.percentMul(11000));
+    await oracle.setAssetPrice(dai.address, percentMul(daiPrice, 11000));
     const userGlobalData = await pool.getUserAccountData(borrower.address);
 
     expect(userGlobalData.healthFactor).to.be.lt(utils.parseUnits('1', 18), INVALID_HF);
@@ -250,7 +251,7 @@ makeSuite('PriceOracleSentinel', (testEnv: TestEnv) => {
     } = testEnv;
 
     const daiPrice = await oracle.getAssetPrice(dai.address);
-    await oracle.setAssetPrice(dai.address, daiPrice.percentMul(11000));
+    await oracle.setAssetPrice(dai.address, percentMul(daiPrice, 11000));
     const userGlobalData = await pool.getUserAccountData(borrower.address);
 
     expect(userGlobalData.healthFactor).to.be.lt(utils.parseUnits('1', 18), INVALID_HF);
@@ -318,9 +319,7 @@ makeSuite('PriceOracleSentinel', (testEnv: TestEnv) => {
     const principalDecimals = (await helpersContract.getReserveConfigurationData(dai.address))
       .decimals;
 
-    const expectedCollateralLiquidated = principalPrice
-      .mul(amountToLiquidate)
-      .percentMul(10500)
+    const expectedCollateralLiquidated = percentMul(principalPrice.mul(amountToLiquidate), 10500)
       .mul(BigNumber.from(10).pow(collateralDecimals))
       .div(collateralPrice.mul(BigNumber.from(10).pow(principalDecimals)));
 
@@ -491,7 +490,7 @@ makeSuite('PriceOracleSentinel', (testEnv: TestEnv) => {
       oracle,
     } = testEnv;
     const daiPrice = await oracle.getAssetPrice(dai.address);
-    await oracle.setAssetPrice(dai.address, daiPrice.percentMul(9500));
+    await oracle.setAssetPrice(dai.address, percentMul(daiPrice, 9500));
     const userGlobalData = await pool.getUserAccountData(borrower.address);
 
     expect(userGlobalData.healthFactor).to.be.lt(utils.parseUnits('1', 18), INVALID_HF);
@@ -563,9 +562,7 @@ makeSuite('PriceOracleSentinel', (testEnv: TestEnv) => {
     const principalDecimals = (await helpersContract.getReserveConfigurationData(dai.address))
       .decimals;
 
-    const expectedCollateralLiquidated = principalPrice
-      .mul(amountToLiquidate)
-      .percentMul(10500)
+    const expectedCollateralLiquidated = percentMul(principalPrice.mul(amountToLiquidate), 10500)
       .mul(BigNumber.from(10).pow(collateralDecimals))
       .div(collateralPrice.mul(BigNumber.from(10).pow(principalDecimals)));
 

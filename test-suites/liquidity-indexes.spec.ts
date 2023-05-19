@@ -11,6 +11,7 @@ import {
   getMockFlashLoanReceiver,
 } from 'lend-deploy';
 import './helpers/utils/wadraymath';
+import { rayMul } from './helpers/utils/wadraymath';
 
 declare var hre: HardhatRuntimeEnvironment;
 
@@ -114,7 +115,8 @@ makeSuite('Pool: liquidity indexes misc tests', (testEnv: TestEnv) => {
     ).add(wethReserveDataAfterSecondFlash.accruedToTreasuryScaled.toString());
 
     expect(await weth.balanceOf(hWETH.address)).to.be.closeTo(
-      BigNumber.from(totalScaledWithTreasuryAfterSecondFlash.toString()).rayMul(
+      rayMul(
+        BigNumber.from(totalScaledWithTreasuryAfterSecondFlash.toString()),
         wethReserveDataAfterSecondFlash.liquidityIndex
       ),
       1,

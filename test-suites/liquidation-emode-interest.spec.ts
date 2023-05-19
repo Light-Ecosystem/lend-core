@@ -9,6 +9,7 @@ import { makeSuite, TestEnv } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { waitForTx, increaseTime } from 'lend-deploy';
+import { percentMul } from './helpers/utils/wadraymath';
 
 declare var hre: HardhatRuntimeEnvironment;
 
@@ -196,9 +197,10 @@ makeSuite('Pool Liquidation: Liquidates borrows in eMode through interest', (tes
     const principalDecimals = (await helpersContract.getReserveConfigurationData(dai.address))
       .decimals;
 
-    const expectedCollateralLiquidated = principalPrice
-      .mul(amountToLiquidate)
-      .percentMul(CATEGORY.lb)
+    const expectedCollateralLiquidated = percentMul(
+      principalPrice.mul(amountToLiquidate),
+      CATEGORY.lb
+    )
       .mul(BigNumber.from(10).pow(collateralDecimals))
       .div(collateralPrice.mul(BigNumber.from(10).pow(principalDecimals)));
 

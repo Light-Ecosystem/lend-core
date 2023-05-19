@@ -13,6 +13,7 @@ import {
 import { tEthereumAddress } from '../../../helpers/types';
 import { HToken, HopeLendProtocolDataProvider, Pool } from '../../../types';
 import { ReserveData, UserReserveData } from './interfaces';
+import { rayDiv } from './wadraymath';
 
 export const getReserveData = async (
   helper: HopeLendProtocolDataProvider,
@@ -56,11 +57,11 @@ export const getReserveData = async (
 
   const borrowUsageRatio = totalDebt.eq(0)
     ? BigNumber.from(0)
-    : totalDebt.rayDiv(availableLiquidity.add(totalDebt));
+    : rayDiv(totalDebt, availableLiquidity.add(totalDebt));
 
   let supplyUsageRatio = totalDebt.eq(0)
     ? BigNumber.from(0)
-    : totalDebt.rayDiv(totalLiquidity.add(totalDebt));
+    : rayDiv(totalDebt, totalLiquidity.add(totalDebt));
 
   expect(supplyUsageRatio).to.be.lte(borrowUsageRatio, 'Supply usage ratio > borrow usage ratio');
 

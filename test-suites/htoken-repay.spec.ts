@@ -16,6 +16,7 @@ import { setBlocktime, timeLatest } from '../helpers/misc-utils';
 import { RateMode } from '../helpers/types';
 import { TestEnv, makeSuite } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
+import { rayMul } from './helpers/utils/wadraymath';
 
 makeSuite('HToken: Repay', (testEnv: TestEnv) => {
   let snapShot: string;
@@ -256,7 +257,8 @@ makeSuite('HToken: Repay', (testEnv: TestEnv) => {
       user.signer
     );
     const scaledTotalSupply = await variableDebtToken.scaledTotalSupply();
-    const variableDebt = scaledTotalSupply.rayMul(
+    const variableDebt = rayMul(
+      scaledTotalSupply,
       await pool.getReserveNormalizedVariableDebt(dai.address)
     );
 

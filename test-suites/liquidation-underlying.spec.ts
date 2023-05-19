@@ -9,6 +9,7 @@ import { makeSuite } from './helpers/make-suite';
 import { increaseTime, waitForTx } from 'lend-deploy';
 
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { percentDiv, percentMul } from './helpers/utils/wadraymath';
 
 declare var hre: HardhatRuntimeEnvironment;
 
@@ -96,7 +97,7 @@ makeSuite('Pool Liquidation: Liquidator receiving the underlying asset', (testEn
 
     const amountDAIToBorrow = await convertToCurrencyDecimals(
       dai.address,
-      userGlobalData.availableBorrowsBase.div(daiPrice).percentMul(9500).toString()
+      percentMul(userGlobalData.availableBorrowsBase.div(daiPrice), 9500).toString()
     );
 
     await pool
@@ -118,7 +119,7 @@ makeSuite('Pool Liquidation: Liquidator receiving the underlying asset', (testEn
 
     const daiPrice = await oracle.getAssetPrice(dai.address);
 
-    await oracle.setAssetPrice(dai.address, daiPrice.percentMul(11800));
+    await oracle.setAssetPrice(dai.address, percentMul(daiPrice, 11800));
 
     const userGlobalData = await pool.getUserAccountData(borrower.address);
 
@@ -179,9 +180,7 @@ makeSuite('Pool Liquidation: Liquidator receiving the underlying asset', (testEn
     const principalDecimals = (await helpersContract.getReserveConfigurationData(dai.address))
       .decimals;
 
-    const expectedCollateralLiquidated = principalPrice
-      .mul(amountToLiquidate)
-      .percentMul(10500)
+    const expectedCollateralLiquidated = percentMul(principalPrice.mul(amountToLiquidate), 10500)
       .mul(BigNumber.from(10).pow(collateralDecimals))
       .div(collateralPrice.mul(BigNumber.from(10).pow(principalDecimals)));
 
@@ -290,7 +289,7 @@ makeSuite('Pool Liquidation: Liquidator receiving the underlying asset', (testEn
 
     const amountUSDCToBorrow = await convertToCurrencyDecimals(
       usdc.address,
-      userGlobalData.availableBorrowsBase.div(usdcPrice).percentMul(9502).toString()
+      percentMul(userGlobalData.availableBorrowsBase.div(usdcPrice), 9502).toString()
     );
 
     await pool
@@ -298,7 +297,7 @@ makeSuite('Pool Liquidation: Liquidator receiving the underlying asset', (testEn
       .borrow(usdc.address, amountUSDCToBorrow, RateMode.Stable, '0', borrower.address);
 
     //drops HF below 1
-    await oracle.setAssetPrice(usdc.address, usdcPrice.percentMul(11200));
+    await oracle.setAssetPrice(usdc.address, percentMul(usdcPrice, 11200));
 
     //mints dai to the liquidator
 
@@ -341,9 +340,10 @@ makeSuite('Pool Liquidation: Liquidator receiving the underlying asset', (testEn
     const principalDecimals = (await helpersContract.getReserveConfigurationData(usdc.address))
       .decimals;
 
-    const expectedCollateralLiquidated = principalPrice
-      .mul(BigNumber.from(amountToLiquidate))
-      .percentMul(10500)
+    const expectedCollateralLiquidated = percentMul(
+      principalPrice.mul(BigNumber.from(amountToLiquidate)),
+      10500
+    )
       .mul(BigNumber.from(10).pow(collateralDecimals))
       .div(collateralPrice.mul(BigNumber.from(10).pow(principalDecimals)));
 
@@ -419,7 +419,7 @@ makeSuite('Pool Liquidation: Liquidator receiving the underlying asset', (testEn
     const usdcPrice = await oracle.getAssetPrice(usdc.address);
 
     //drops HF below 1
-    await oracle.setAssetPrice(usdc.address, usdcPrice.percentMul(11400));
+    await oracle.setAssetPrice(usdc.address, percentMul(usdcPrice, 11400));
 
     //mints usdc to the liquidator
     await usdc
@@ -465,11 +465,13 @@ makeSuite('Pool Liquidation: Liquidator receiving the underlying asset', (testEn
 
     const expectedCollateralLiquidated = oneEther.mul('33').div('1000');
 
-    const expectedPrincipal = collateralPrice
-      .mul(expectedCollateralLiquidated)
-      .mul(BigNumber.from(10).pow(principalDecimals))
-      .div(principalPrice.mul(BigNumber.from(10).pow(collateralDecimals)))
-      .percentDiv(liquidationBonus);
+    const expectedPrincipal = percentDiv(
+      collateralPrice
+        .mul(expectedCollateralLiquidated)
+        .mul(BigNumber.from(10).pow(principalDecimals))
+        .div(principalPrice.mul(BigNumber.from(10).pow(collateralDecimals))),
+      liquidationBonus
+    );
 
     expect(userGlobalDataAfter.healthFactor).to.be.gt(oneEther, 'Invalid health factor');
 

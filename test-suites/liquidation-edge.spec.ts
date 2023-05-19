@@ -14,6 +14,7 @@ import {
   StableDebtToken__factory,
   VariableDebtToken__factory,
 } from 'lend-deploy';
+import { percentDiv, percentMul } from './helpers/utils/wadraymath';
 
 makeSuite('Pool Liquidation: Edge cases', (testEnv: TestEnv) => {
   let snap: string;
@@ -65,7 +66,7 @@ makeSuite('Pool Liquidation: Edge cases', (testEnv: TestEnv) => {
 
     const daiPrice = await oracle.getAssetPrice(dai.address);
 
-    await oracle.setAssetPrice(dai.address, daiPrice.percentDiv('2700'));
+    await oracle.setAssetPrice(dai.address, percentDiv(daiPrice, '2700'));
 
     // Borrow
     await pool
@@ -89,7 +90,7 @@ makeSuite('Pool Liquidation: Edge cases', (testEnv: TestEnv) => {
         borrower.address
       );
 
-    await oracle.setAssetPrice(dai.address, daiPrice.percentMul(600_00));
+    await oracle.setAssetPrice(dai.address, percentMul(daiPrice, 600_00));
 
     expect(
       await pool

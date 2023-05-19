@@ -10,6 +10,7 @@ import { TestEnv, makeSuite } from './helpers/make-suite';
 import { ProtocolErrors, RateMode } from '../helpers/types';
 import { formatUnits } from '@ethersproject/units';
 import './helpers/utils/wadraymath';
+import { percentMul, ray, rayDiv, rayMul } from './helpers/utils/wadraymath';
 
 const DEBUG = false;
 
@@ -107,9 +108,10 @@ makeSuite('InterestRateStrategy', (testEnv: TestEnv) => {
     );
 
     expect(currentLiquidityRate).to.be.equal(
-      expectedVariableRate
-        .percentMul(8000)
-        .percentMul(BigNumber.from(PERCENTAGE_FACTOR).sub(strategyDAI.reserveFactor)),
+      percentMul(
+        percentMul(expectedVariableRate, 8000),
+        BigNumber.from(PERCENTAGE_FACTOR).sub(strategyDAI.reserveFactor)
+      ),
       'Invalid liquidity rate'
     );
 
@@ -151,7 +153,8 @@ makeSuite('InterestRateStrategy', (testEnv: TestEnv) => {
       .add(rateStrategyStableTwo.variableRateSlope2);
 
     expect(currentLiquidityRate).to.be.equal(
-      expectedVariableRate.percentMul(
+      percentMul(
+        expectedVariableRate,
         BigNumber.from(PERCENTAGE_FACTOR).sub(strategyDAI.reserveFactor)
       ),
       'Invalid liquidity rate'
@@ -196,10 +199,10 @@ makeSuite('InterestRateStrategy', (testEnv: TestEnv) => {
       .add(rateStrategyStableTwo.variableRateSlope1)
       .add(rateStrategyStableTwo.variableRateSlope2);
 
-    const expectedLiquidityRate = BigNumber.from(currentVariableBorrowRate)
-      .add(utils.parseUnits('0.1', 27))
-      .div('2')
-      .percentMul(BigNumber.from(PERCENTAGE_FACTOR).sub(strategyDAI.reserveFactor));
+    const expectedLiquidityRate = percentMul(
+      BigNumber.from(currentVariableBorrowRate).add(utils.parseUnits('0.1', 27)).div('2'),
+      BigNumber.from(PERCENTAGE_FACTOR).sub(strategyDAI.reserveFactor)
+    );
 
     expect(currentVariableBorrowRate).to.be.equal(expectedVariableRate, 'Invalid variable rate');
     expect(currentLiquidityRate).to.be.equal(expectedLiquidityRate, 'Invalid liquidity rate');
@@ -208,7 +211,8 @@ makeSuite('InterestRateStrategy', (testEnv: TestEnv) => {
         .add(rateStrategyStableTwo.stableRateSlope1)
         .add(rateStrategyStableTwo.stableRateSlope2)
         .add(
-          BigNumber.from(rateStrategyStableTwo.stableRateExcessOffset).rayMul(
+          rayMul(
+            BigNumber.from(rateStrategyStableTwo.stableRateExcessOffset),
             BigNumber.from(utils.parseUnits('0.375', 27))
           )
         ),
@@ -240,9 +244,10 @@ makeSuite('InterestRateStrategy', (testEnv: TestEnv) => {
     );
 
     expect(currentLiquidityRate).to.be.equal(
-      expectedVariableRate
-        .percentMul(5000)
-        .percentMul(BigNumber.from(PERCENTAGE_FACTOR).sub(strategyDAI.reserveFactor)),
+      percentMul(
+        percentMul(expectedVariableRate, 5000),
+        BigNumber.from(PERCENTAGE_FACTOR).sub(strategyDAI.reserveFactor)
+      ),
       'Invalid liquidity rate'
     );
 
@@ -281,9 +286,10 @@ makeSuite('InterestRateStrategy', (testEnv: TestEnv) => {
     );
 
     expect(currentLiquidityRate).to.be.equal(
-      expectedVariableRate
-        .percentMul(80)
-        .percentMul(BigNumber.from(PERCENTAGE_FACTOR).sub(strategyDAI.reserveFactor)),
+      percentMul(
+        percentMul(expectedVariableRate, 80),
+        BigNumber.from(PERCENTAGE_FACTOR).sub(strategyDAI.reserveFactor)
+      ),
       'Invalid liquidity rate'
     );
     expect(currentVariableBorrowRate).to.be.equal(expectedVariableRate, 'Invalid variable rate');
@@ -319,19 +325,21 @@ makeSuite('InterestRateStrategy', (testEnv: TestEnv) => {
       2: currentVariableBorrowRate,
     } = await strategyInstance.calculateInterestRates(params);
 
-    const usageRatio = BigNumber.from(1).ray().percentMul(80);
+    const usageRatio = percentMul(ray(), 80);
     const OPTIMAL_USAGE_RATIO = BigNumber.from(rateStrategyStableTwo.optimalUsageRatio);
 
     const expectedVariableRate = BigNumber.from(rateStrategyStableTwo.baseVariableBorrowRate).add(
-      BigNumber.from(rateStrategyStableTwo.variableRateSlope1).rayMul(
-        usageRatio.rayDiv(OPTIMAL_USAGE_RATIO)
+      rayMul(
+        BigNumber.from(rateStrategyStableTwo.variableRateSlope1),
+        rayDiv(usageRatio, OPTIMAL_USAGE_RATIO)
       )
     );
 
     expect(currentLiquidityRate).to.be.equal(
-      expectedVariableRate
-        .percentMul(80)
-        .percentMul(BigNumber.from(PERCENTAGE_FACTOR).sub(strategyDAI.reserveFactor)),
+      percentMul(
+        percentMul(expectedVariableRate, 80),
+        BigNumber.from(PERCENTAGE_FACTOR).sub(strategyDAI.reserveFactor)
+      ),
       'Invalid liquidity rate'
     );
 
@@ -339,8 +347,9 @@ makeSuite('InterestRateStrategy', (testEnv: TestEnv) => {
 
     expect(currentStableBorrowRate).to.be.equal(
       baseStableRate.add(
-        BigNumber.from(rateStrategyStableTwo.stableRateSlope1).rayMul(
-          usageRatio.rayDiv(OPTIMAL_USAGE_RATIO)
+        rayMul(
+          BigNumber.from(rateStrategyStableTwo.stableRateSlope1),
+          rayDiv(usageRatio, OPTIMAL_USAGE_RATIO)
         )
       ),
       'Invalid stable rate'
@@ -378,10 +387,10 @@ makeSuite('InterestRateStrategy', (testEnv: TestEnv) => {
         .add(BigNumber.from(rateStrategyStableTwo.variableRateSlope2))
     );
     expect(await strategyInstance.MAX_EXCESS_USAGE_RATIO()).to.be.eq(
-      BigNumber.from(1).ray().sub(rateStrategyStableTwo.optimalUsageRatio)
+      ray().sub(rateStrategyStableTwo.optimalUsageRatio)
     );
     expect(await strategyInstance.MAX_EXCESS_STABLE_TO_TOTAL_DEBT_RATIO()).to.be.eq(
-      BigNumber.from(1).ray().sub(rateStrategyStableTwo.optimalStableToTotalDebtRatio)
+      ray().sub(rateStrategyStableTwo.optimalStableToTotalDebtRatio)
     );
     expect(await strategyInstance.getStableRateExcessOffset()).to.be.eq(
       rateStrategyStableTwo.stableRateExcessOffset

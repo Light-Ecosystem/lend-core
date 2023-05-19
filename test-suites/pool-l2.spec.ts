@@ -31,6 +31,7 @@ import { MAX_UINT_AMOUNT } from '../helpers/constants';
 import { parseUnits } from 'ethers/lib/utils';
 import { getReserveData, getUserData } from './helpers/utils/helpers';
 import { calcExpectedStableDebtTokenBalance } from './helpers/utils/calculations';
+import { percentMul } from './helpers/utils/wadraymath';
 
 declare var hre: HardhatRuntimeEnvironment;
 
@@ -571,9 +572,7 @@ makeSuite('Pool: L2 functions', (testEnv: TestEnv) => {
     const principalDecimals = (await helpersContract.getReserveConfigurationData(dai.address))
       .decimals;
 
-    const expectedCollateralLiquidated = principalPrice
-      .mul(amountToLiquidate)
-      .percentMul(10500)
+    const expectedCollateralLiquidated = percentMul(principalPrice.mul(amountToLiquidate), 10500)
       .mul(BigNumber.from(10).pow(collateralDecimals))
       .div(collateralPrice.mul(BigNumber.from(10).pow(principalDecimals)));
 

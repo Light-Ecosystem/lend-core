@@ -1,9 +1,4 @@
-import {
-  evmSnapshot,
-  evmRevert,
-  advanceTimeAndBlock,
-  MintableERC20__factory,
-} from 'lend-deploy';
+import { evmSnapshot, evmRevert, advanceTimeAndBlock, MintableERC20__factory } from 'lend-deploy';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -19,6 +14,7 @@ import {
   repayStableBorrow,
   getStableDebtTokenEvent,
 } from './helpers/utils/tokenization-events';
+import { percentMul } from './helpers/utils/wadraymath';
 
 const DEBUG = false;
 
@@ -66,7 +62,7 @@ const increaseSupplyIndex = async (
     .connect(depositor.signer)
     .borrow(
       assetToIncrease,
-      availableLiquidity.percentMul('20'),
+      percentMul(availableLiquidity, '20'),
       RateMode.Variable,
       0,
       depositor.address

@@ -7,6 +7,7 @@ import { MockFlashLoanReceiver } from '../types/MockFlashLoanReceiver';
 import { getMockFlashLoanReceiver } from 'lend-deploy/dist/helpers/contract-getters';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
+import { percentMul } from './helpers/utils/wadraymath';
 
 makeSuite('PausableReserve', (testEnv: TestEnv) => {
   let _mockFlashLoanReceiver = {} as MockFlashLoanReceiver;
@@ -220,7 +221,7 @@ makeSuite('PausableReserve', (testEnv: TestEnv) => {
 
     const amountUSDCToBorrow = await convertToCurrencyDecimals(
       usdc.address,
-      userGlobalData.availableBorrowsBase.div(usdcPrice).percentMul(9502).toString()
+      percentMul(userGlobalData.availableBorrowsBase.div(usdcPrice), 9502).toString()
     );
 
     await pool
@@ -228,7 +229,7 @@ makeSuite('PausableReserve', (testEnv: TestEnv) => {
       .borrow(usdc.address, amountUSDCToBorrow, RateMode.Stable, '0', borrower.address);
 
     // Drops HF below 1
-    await oracle.setAssetPrice(usdc.address, usdcPrice.percentMul(12000));
+    await oracle.setAssetPrice(usdc.address, percentMul(usdcPrice, 12000));
 
     //mints dai to the liquidator
     await usdc['mint(uint256)'](await convertToCurrencyDecimals(usdc.address, '1000'));

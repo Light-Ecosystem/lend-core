@@ -9,6 +9,7 @@ import { getUserData, getReserveData } from './helpers/utils/helpers';
 import { makeSuite } from './helpers/make-suite';
 import { waitForTx } from 'lend-deploy';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { percentMul } from './helpers/utils/wadraymath';
 
 declare var hre: HardhatRuntimeEnvironment;
 
@@ -90,7 +91,7 @@ makeSuite('Pool Liquidation: Liquidator receiving hToken', (testEnv) => {
     const daiPrice = await oracle.getAssetPrice(dai.address);
     const amountDAIToBorrow = await convertToCurrencyDecimals(
       dai.address,
-      userGlobalData.availableBorrowsBase.div(daiPrice.toString()).percentMul(9500).toString()
+      percentMul(userGlobalData.availableBorrowsBase.div(daiPrice.toString()), 9500).toString()
     );
     await pool
       .connect(borrower.signer)
@@ -120,7 +121,7 @@ makeSuite('Pool Liquidation: Liquidator receiving hToken', (testEnv) => {
 
     const daiPrice = await oracle.getAssetPrice(dai.address);
 
-    await oracle.setAssetPrice(dai.address, daiPrice.percentMul(11500));
+    await oracle.setAssetPrice(dai.address, percentMul(daiPrice, 11500));
 
     const userGlobalData = await pool.getUserAccountData(borrower.address);
 
@@ -221,9 +222,7 @@ makeSuite('Pool Liquidation: Liquidator receiving hToken', (testEnv) => {
     const principalDecimals = (await helpersContract.getReserveConfigurationData(dai.address))
       .decimals;
 
-    const expectedCollateralLiquidated = principalPrice
-      .mul(amountToLiquidate)
-      .percentMul(10500)
+    const expectedCollateralLiquidated = percentMul(principalPrice.mul(amountToLiquidate), 10500)
       .mul(BigNumber.from(10).pow(collateralDecimals))
       .div(collateralPrice.mul(BigNumber.from(10).pow(principalDecimals)));
 
@@ -351,7 +350,7 @@ makeSuite('Pool Liquidation: Liquidator receiving hToken', (testEnv) => {
 
     const amountUSDCToBorrow = await convertToCurrencyDecimals(
       usdc.address,
-      userGlobalData.availableBorrowsBase.div(usdcPrice).percentMul(9502).toString()
+      percentMul(userGlobalData.availableBorrowsBase.div(usdcPrice), 9502).toString()
     );
 
     await pool
@@ -360,7 +359,7 @@ makeSuite('Pool Liquidation: Liquidator receiving hToken', (testEnv) => {
 
     //drops HF below 1
 
-    await oracle.setAssetPrice(usdc.address, usdcPrice.percentMul(11200));
+    await oracle.setAssetPrice(usdc.address, percentMul(usdcPrice, 11200));
 
     //mints dai to the liquidator
 
@@ -416,9 +415,7 @@ makeSuite('Pool Liquidation: Liquidator receiving hToken', (testEnv) => {
     const principalDecimals = (await helpersContract.getReserveConfigurationData(usdc.address))
       .decimals;
 
-    const expectedCollateralLiquidated = principalPrice
-      .mul(amountToLiquidate)
-      .percentMul(10500)
+    const expectedCollateralLiquidated = percentMul(principalPrice.mul(amountToLiquidate), 10500)
       .mul(BigNumber.from(10).pow(collateralDecimals))
       .div(collateralPrice.mul(BigNumber.from(10).pow(principalDecimals)));
 

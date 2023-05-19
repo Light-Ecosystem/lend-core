@@ -13,7 +13,7 @@ import { getStableDebtTokenEvent } from './helpers/utils/tokenization-events';
 declare var hre: HardhatRuntimeEnvironment;
 
 makeSuite('StableDebtToken', (testEnv: TestEnv) => {
-  const {CALLER_MUST_BE_POOL, CALLER_NOT_POOL_ADMIN} = ProtocolErrors;
+  const { CALLER_MUST_BE_POOL, CALLER_NOT_POOL_ADMIN } = ProtocolErrors;
 
   let snap: string;
 
@@ -25,7 +25,7 @@ makeSuite('StableDebtToken', (testEnv: TestEnv) => {
   });
 
   it('Check initialization', async () => {
-    const {pool, weth, dai, helpersContract, users} = testEnv;
+    const { pool, weth, dai, helpersContract, users } = testEnv;
     const daiStableDebtTokenAddress = (await helpersContract.getReserveTokensAddresses(dai.address))
       .stableDebtTokenAddress;
     const stableDebtContract = StableDebtToken__factory.connect(
@@ -75,7 +75,7 @@ makeSuite('StableDebtToken', (testEnv: TestEnv) => {
   });
 
   it('Tries to mint not being the Pool (revert expected)', async () => {
-    const {deployer, dai, helpersContract} = testEnv;
+    const { deployer, dai, helpersContract } = testEnv;
 
     const daiStableDebtTokenAddress = (await helpersContract.getReserveTokensAddresses(dai.address))
       .stableDebtTokenAddress;
@@ -91,7 +91,7 @@ makeSuite('StableDebtToken', (testEnv: TestEnv) => {
   });
 
   it('Tries to burn not being the Pool (revert expected)', async () => {
-    const {deployer, dai, helpersContract} = testEnv;
+    const { deployer, dai, helpersContract } = testEnv;
 
     const daiStableDebtTokenAddress = (await helpersContract.getReserveTokensAddresses(dai.address))
       .stableDebtTokenAddress;
@@ -103,14 +103,14 @@ makeSuite('StableDebtToken', (testEnv: TestEnv) => {
 
     const name = await stableDebtContract.name();
 
-    expect(name).to.be.equal('Hope Testnet Stable Debt DAI');
+    expect(name).to.be.equal('HopeLend Testnet Stable Debt DAI');
     await expect(stableDebtContract.burn(deployer.address, '1')).to.be.revertedWith(
       CALLER_MUST_BE_POOL
     );
   });
 
   it('Tries to transfer debt tokens (revert expected)', async () => {
-    const {users, dai, helpersContract} = testEnv;
+    const { users, dai, helpersContract } = testEnv;
     const daiStableDebtTokenAddress = (await helpersContract.getReserveTokensAddresses(dai.address))
       .stableDebtTokenAddress;
     const stableDebtContract = StableDebtToken__factory.connect(
@@ -203,7 +203,7 @@ makeSuite('StableDebtToken', (testEnv: TestEnv) => {
   });
 
   it('Tries to approve debt tokens (revert expected)', async () => {
-    const {users, dai, helpersContract} = testEnv;
+    const { users, dai, helpersContract } = testEnv;
     const daiStableDebtTokenAddress = (await helpersContract.getReserveTokensAddresses(dai.address))
       .stableDebtTokenAddress;
     const stableDebtContract = StableDebtToken__factory.connect(
@@ -220,7 +220,7 @@ makeSuite('StableDebtToken', (testEnv: TestEnv) => {
   });
 
   it('Tries to increase allowance of debt tokens (revert expected)', async () => {
-    const {users, dai, helpersContract} = testEnv;
+    const { users, dai, helpersContract } = testEnv;
     const daiStableDebtTokenAddress = (await helpersContract.getReserveTokensAddresses(dai.address))
       .stableDebtTokenAddress;
     const stableDebtContract = StableDebtToken__factory.connect(
@@ -234,7 +234,7 @@ makeSuite('StableDebtToken', (testEnv: TestEnv) => {
   });
 
   it('Tries to decrease allowance of debt tokens (revert expected)', async () => {
-    const {users, dai, helpersContract} = testEnv;
+    const { users, dai, helpersContract } = testEnv;
     const daiStableDebtTokenAddress = (await helpersContract.getReserveTokensAddresses(dai.address))
       .stableDebtTokenAddress;
     const stableDebtContract = StableDebtToken__factory.connect(
@@ -248,7 +248,7 @@ makeSuite('StableDebtToken', (testEnv: TestEnv) => {
   });
 
   it('Tries to transferFrom (revert expected)', async () => {
-    const {users, dai, helpersContract} = testEnv;
+    const { users, dai, helpersContract } = testEnv;
     const daiStableDebtTokenAddress = (await helpersContract.getReserveTokensAddresses(dai.address))
       .stableDebtTokenAddress;
     const stableDebtContract = StableDebtToken__factory.connect(
@@ -278,7 +278,7 @@ makeSuite('StableDebtToken', (testEnv: TestEnv) => {
     const amount1 = BigNumber.from(2);
     const amount2 = BigNumber.from(1);
 
-    const {deployer, pool, dai, helpersContract, users} = testEnv;
+    const { deployer, pool, dai, helpersContract, users } = testEnv;
 
     // Impersonate the Pool
     await topUpNonPayableWithEther(deployer.signer, [pool.address], utils.parseEther('1'));
@@ -309,7 +309,7 @@ makeSuite('StableDebtToken', (testEnv: TestEnv) => {
 
   it('setIncentivesController() ', async () => {
     // const snapshot = await evmSnapshot();
-    const {dai, helpersContract, poolAdmin, aclManager, deployer} = testEnv;
+    const { dai, helpersContract, poolAdmin, aclManager, deployer } = testEnv;
     const config = await helpersContract.getReserveTokensAddresses(dai.address);
     const stableDebt = StableDebtToken__factory.connect(
       config.stableDebtTokenAddress,
@@ -342,7 +342,7 @@ makeSuite('StableDebtToken', (testEnv: TestEnv) => {
   });
 
   it('User borrows and repays in same block with zero fees', async () => {
-    const {pool, users, dai, hDai, usdc, stableDebtDai} = testEnv;
+    const { pool, users, dai, hDai, usdc, stableDebtDai } = testEnv;
     const user = users[0];
 
     // We need some debt.
