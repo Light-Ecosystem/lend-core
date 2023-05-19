@@ -32,8 +32,8 @@ makeSuite('Pool Liquidation: Edge cases', (testEnv: TestEnv) => {
   });
 
   after(async () => {
-    const { hopeLendOracle, addressesProvider } = testEnv;
-    await waitForTx(await addressesProvider.setPriceOracle(hopeLendOracle.address));
+    const { hopeOracle, addressesProvider } = testEnv;
+    await waitForTx(await addressesProvider.setPriceOracle(hopeOracle.address));
   });
 
   it('ValidationLogic `executeLiquidationCall` where user has variable and stable debt, but variable debt is insufficient to cover the full liquidation amount', async () => {

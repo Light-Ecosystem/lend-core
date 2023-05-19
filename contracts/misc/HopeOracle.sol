@@ -6,21 +6,27 @@ import {Errors} from '../protocol/libraries/helpers/Errors.sol';
 import {IACLManager} from '../interfaces/IACLManager.sol';
 import {IPoolAddressesProvider} from '../interfaces/IPoolAddressesProvider.sol';
 import {IPriceOracleGetter} from '../interfaces/IPriceOracleGetter.sol';
-import {IHopeLendOracle} from '../interfaces/IHopeLendOracle.sol';
+import {IHopeOracle} from '../interfaces/IHopeOracle.sol';
+import "hardhat/console.sol";
 
 /**
- * @title HopeLendOracle
- * @author HopeLend
+ * @title HopeOracle
+ * @author Hope
  * @notice Contract to get asset prices, manage price sources and update the fallback oracle
  * - Use of Chainlink Aggregators as first source of price
  * - If the returned price by a Chainlink aggregator is <= 0, the call is forwarded to a fallback oracle
- * - Owned by the HopeLend governance
+ * - Owned by the Hope governance
  */
-contract HopeLendOracle is IHopeLendOracle {
+contract HopeOracle is IHopeOracle {
   IPoolAddressesProvider public immutable ADDRESSES_PROVIDER;
 
+  struct PriceData{
+    AggregatorInterface source;
+    bool failoverActive;
+  }
+
   // Map of asset price sources (asset => priceSource)
-  mapping(address => AggregatorInterface) private assetsSources;
+  mapping(address => PriceData) private assetsPriceDatas;
 
   IPriceOracleGetter private _fallbackOracle;
   address public immutable override BASE_CURRENCY;
@@ -60,7 +66,7 @@ contract HopeLendOracle is IHopeLendOracle {
     emit BaseCurrencySet(baseCurrency, baseCurrencyUnit);
   }
 
-  /// @inheritdoc IHopeLendOracle
+  /// @inheritdoc IHopeOracle
   function setAssetSources(address[] calldata assets, address[] calldata sources)
     external
     override
@@ -69,13 +75,37 @@ contract HopeLendOracle is IHopeLendOracle {
     _setAssetsSources(assets, sources);
   }
 
-  /// @inheritdoc IHopeLendOracle
+  /// @inheritdoc IHopeOracle
   function setFallbackOracle(address fallbackOracle)
     external
     override
     onlyAssetListingOrPoolAdmins
   {
     _setFallbackOracle(fallbackOracle);
+  }
+
+  /**
+  * @notice Activate the failover for an asset
+  * @param asset The address of the asset
+  */
+  function activateFailover(address asset) 
+    external 
+    override 
+    onlyAssetListingOrPoolAdmins 
+  {
+    _activateFailover(asset);
+  }
+
+  /**
+  * @notice Deactivate the failover for an asset
+  * @param asset The address of the asset
+  */
+  function deactivateFailover(address asset)
+    external
+    override 
+    onlyAssetListingOrPoolAdmins 
+  {
+    _deactivateFailover(asset);
   }
 
   /**
@@ -86,7 +116,7 @@ contract HopeLendOracle is IHopeLendOracle {
   function _setAssetsSources(address[] memory assets, address[] memory sources) internal {
     require(assets.length == sources.length, Errors.INCONSISTENT_PARAMS_LENGTH);
     for (uint256 i = 0; i < assets.length; i++) {
-      assetsSources[assets[i]] = AggregatorInterface(sources[i]);
+      assetsPriceDatas[assets[i]] = PriceData({source: AggregatorInterface(sources[i]), failoverActive: false});
       emit AssetSourceUpdated(assets[i], sources[i]);
     }
   }
@@ -100,16 +130,40 @@ contract HopeLendOracle is IHopeLendOracle {
     emit FallbackOracleUpdated(fallbackOracle);
   }
 
+  /**
+   * @notice Internal function to activate the failover for an asset
+   * @param asset The address of the asset
+   */
+  function _activateFailover(address asset) internal {
+    PriceData storage priceData = assetsPriceDatas[asset];
+    require(!priceData.failoverActive, Errors.FAILOVER_ALREADY_ACTIVE);
+    priceData.failoverActive = true;
+    emit FailoverActivated(asset);
+  }
+
+  /**
+   * @notice Internal function to deactivate the failover for an asset
+   * @param asset The address of the asset
+   */
+  function _deactivateFailover(address asset) internal {
+    PriceData storage priceData = assetsPriceDatas[asset];
+    require(priceData.failoverActive, Errors.FAILOVER_ALREADY_DEACTIVATED);
+    priceData.failoverActive = false;
+    emit FailoverDeactivated(asset);
+  }
+
   /// @inheritdoc IPriceOracleGetter
   function getAssetPrice(address asset) public view override returns (uint256) {
-    AggregatorInterface source = assetsSources[asset];
+    PriceData storage priceData = assetsPriceDatas[asset];
 
     if (asset == BASE_CURRENCY) {
       return BASE_CURRENCY_UNIT;
-    } else if (address(source) == address(0)) {
+    } else if (address(priceData.source) == address(0)) {
+      return _fallbackOracle.getAssetPrice(asset);
+    } else if (priceData.failoverActive) {
       return _fallbackOracle.getAssetPrice(asset);
     } else {
-      int256 price = source.latestAnswer();
+      int256 price = priceData.source.latestAnswer();
       if (price > 0) {
         return uint256(price);
       } else {
@@ -118,7 +172,7 @@ contract HopeLendOracle is IHopeLendOracle {
     }
   }
 
-  /// @inheritdoc IHopeLendOracle
+  /// @inheritdoc IHopeOracle
   function getAssetsPrices(address[] calldata assets)
     external
     view
@@ -132,12 +186,17 @@ contract HopeLendOracle is IHopeLendOracle {
     return prices;
   }
 
-  /// @inheritdoc IHopeLendOracle
+  /// @inheritdoc IHopeOracle
   function getSourceOfAsset(address asset) external view override returns (address) {
-    return address(assetsSources[asset]);
+    return address(assetsPriceDatas[asset].source);
   }
 
-  /// @inheritdoc IHopeLendOracle
+  /// @inheritdoc IHopeOracle
+  function getFailoverStatusOfAsset(address asset) external view override returns (bool) {
+    return assetsPriceDatas[asset].failoverActive;
+  }
+
+  /// @inheritdoc IHopeOracle
   function getFallbackOracle() external view returns (address) {
     return address(_fallbackOracle);
   }

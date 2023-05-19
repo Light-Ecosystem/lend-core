@@ -22,6 +22,7 @@ import {
   transferFrom,
   printHTokenEvents,
 } from './helpers/utils/tokenization-events';
+import {percentMul} from './helpers/utils/wadraymath';
 
 const DEBUG = false;
 
@@ -71,7 +72,7 @@ const increaseSupplyIndex = async (
     .connect(borrower.signer)
     .borrow(
       assetToIncrease,
-      availableLiquidity.percentMul('20'),
+      percentMul(availableLiquidity, '20'),
       RateMode.Variable,
       0,
       borrower.address

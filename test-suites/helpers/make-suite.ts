@@ -10,7 +10,7 @@ import {
   getWETHMocked,
   getVariableDebtToken,
   getStableDebtToken,
-  getHopeLendOracle,
+  getHopeOracle,
   getACLManager,
   getFallbackOracle,
 } from 'lend-deploy/dist/helpers/contract-getters';
@@ -25,7 +25,7 @@ import { PriceOracle } from '../../types/PriceOracle';
 import { PoolAddressesProvider } from '../../types/PoolAddressesProvider';
 import { PoolAddressesProviderRegistry } from '../../types/PoolAddressesProviderRegistry';
 import { WETH9Mocked } from '../../types/WETH9Mocked';
-import { HopeLendOracle, ACLManager, StableDebtToken, VariableDebtToken } from '../../types';
+import { HopeOracle, ACLManager, StableDebtToken, VariableDebtToken } from '../../types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { usingTenderly } from '../../helpers/tenderly-utils';
 import { waitForTx, evmSnapshot, evmRevert, getEthersSigners } from 'lend-deploy';
@@ -45,7 +45,7 @@ export interface TestEnv {
   pool: Pool;
   configurator: PoolConfigurator;
   oracle: PriceOracle;
-  hopeLendOracle: HopeLendOracle;
+  hopeOracle: HopeOracle;
   helpersContract: HopeLendProtocolDataProvider;
   weth: WETH9Mocked;
   hWETH: HToken;
@@ -77,7 +77,7 @@ const testEnv: TestEnv = {
   configurator: {} as PoolConfigurator,
   helpersContract: {} as HopeLendProtocolDataProvider,
   oracle: {} as PriceOracle,
-  hopeLendOracle: {} as HopeLendOracle,
+  hopeOracle: {} as HopeOracle,
   weth: {} as WETH9Mocked,
   hWETH: {} as HToken,
   dai: {} as MintableERC20,
@@ -118,7 +118,7 @@ export async function initializeMakeSuite() {
   testEnv.aclManager = await getACLManager();
 
   testEnv.oracle = await getFallbackOracle();
-  testEnv.hopeLendOracle = await getHopeLendOracle();
+  testEnv.hopeOracle = await getHopeOracle();
 
   testEnv.helpersContract = await getHopeLendProtocolDataProvider();
 

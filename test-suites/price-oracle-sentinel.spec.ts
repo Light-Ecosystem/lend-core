@@ -53,8 +53,8 @@ makeSuite('PriceOracleSentinel', (testEnv: TestEnv) => {
   });
 
   after(async () => {
-    const { hopeLendOracle, addressesProvider } = testEnv;
-    await waitForTx(await addressesProvider.setPriceOracle(hopeLendOracle.address));
+    const { hopeOracle, addressesProvider } = testEnv;
+    await waitForTx(await addressesProvider.setPriceOracle(hopeOracle.address));
   });
 
   it('Admin sets a PriceOracleSentinel and activate it for DAI and WETH', async () => {

@@ -38,7 +38,7 @@ export enum eContractid {
   PriceOracle = 'PriceOracle',
   Proxy = 'Proxy',
   MockAggregator = 'MockAggregator',
-  HopeLendOracle = 'HopeLendOracle',
+  HopeOracle = 'HopeOracle',
   DefaultReserveInterestRateStrategy = 'DefaultReserveInterestRateStrategy',
   InitializableImmutableAdminUpgradeabilityProxy = 'InitializableImmutableAdminUpgradeabilityProxy',
   MockFlashLoanReceiver = 'MockFlashLoanReceiver',
@@ -389,7 +389,7 @@ export interface ICommonConfiguration {
   PoolConfigurator: tEthereumAddress | undefined;
   Pool: tEthereumAddress | undefined;
   TokenDistributor: tEthereumAddress | undefined;
-  HopeLendOracle: tEthereumAddress | undefined;
+  HopeOracle: tEthereumAddress | undefined;
   FallbackOracle: tEthereumAddress | undefined;
   ChainlinkAggregator: tEthereumAddress | undefined;
   PoolAdmin: tEthereumAddress | undefined;

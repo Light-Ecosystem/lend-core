@@ -31,8 +31,8 @@ makeSuite('Pool Liquidation: Liquidates borrows in eMode through interest', (tes
   });
 
   after(async () => {
-    const { hopeLendOracle, addressesProvider } = testEnv;
-    await waitForTx(await addressesProvider.setPriceOracle(hopeLendOracle.address));
+    const { hopeOracle, addressesProvider } = testEnv;
+    await waitForTx(await addressesProvider.setPriceOracle(hopeOracle.address));
   });
 
   it('Adds category id 1 (stablecoins)', async () => {

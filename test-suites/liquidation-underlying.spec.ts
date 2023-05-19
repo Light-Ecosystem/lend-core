@@ -22,8 +22,8 @@ makeSuite('Pool Liquidation: Liquidator receiving the underlying asset', (testEn
   });
 
   after(async () => {
-    const { hopeLendOracle, addressesProvider } = testEnv;
-    await waitForTx(await addressesProvider.setPriceOracle(hopeLendOracle.address));
+    const { hopeOracle, addressesProvider } = testEnv;
+    await waitForTx(await addressesProvider.setPriceOracle(hopeOracle.address));
   });
 
   it("It's not possible to liquidate on a non-active collateral or a non active principal", async () => {

@@ -23,9 +23,9 @@ makeSuite('Pool Liquidation: Liquidator receiving hToken', (testEnv) => {
   let oracleBaseDecimals: number;
 
   before(async () => {
-    const { hopeLendOracle, addressesProvider, oracle, deployer, pool, configurator, hDai, dai } =
+    const { hopeOracle, addressesProvider, oracle, deployer, pool, configurator, hDai, dai } =
       testEnv;
-    oracleBaseDecimals = (await (await hopeLendOracle.BASE_CURRENCY_UNIT()).toString().length) - 1;
+    oracleBaseDecimals = (await (await hopeOracle.BASE_CURRENCY_UNIT()).toString().length) - 1;
 
     await waitForTx(await addressesProvider.setPriceOracle(oracle.address));
 
@@ -45,8 +45,8 @@ makeSuite('Pool Liquidation: Liquidator receiving hToken', (testEnv) => {
   });
 
   after(async () => {
-    const { hopeLendOracle, addressesProvider } = testEnv;
-    await waitForTx(await addressesProvider.setPriceOracle(hopeLendOracle.address));
+    const { hopeOracle, addressesProvider } = testEnv;
+    await waitForTx(await addressesProvider.setPriceOracle(hopeOracle.address));
   });
 
   it('Deposits WETH, borrows DAI/Check liquidation fails because health factor is above 1', async () => {
@@ -115,7 +115,7 @@ makeSuite('Pool Liquidation: Liquidator receiving hToken', (testEnv) => {
       users: [, borrower],
       pool,
       oracle,
-      hopeLendOracle,
+      hopeOracle,
     } = testEnv;
 
     const daiPrice = await oracle.getAssetPrice(dai.address);

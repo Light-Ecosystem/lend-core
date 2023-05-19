@@ -44,7 +44,7 @@ makeSuite('EfficiencyMode', (testEnv: TestEnv) => {
       usdc,
       weth,
       users: [user0, user1, user2],
-      hopeLendOracle,
+      hopeOracle,
     } = testEnv;
     const mintAmount = utils.parseEther('10000');
 

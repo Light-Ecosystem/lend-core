@@ -95,8 +95,8 @@ makeSuite('Pool: L2 functions', (testEnv: TestEnv) => {
   });
 
   after(async () => {
-    const { hopeLendOracle, addressesProvider } = testEnv;
-    expect(await addressesProvider.setPriceOracle(hopeLendOracle.address));
+    const { hopeOracle, addressesProvider } = testEnv;
+    expect(await addressesProvider.setPriceOracle(hopeOracle.address));
   });
 
   it('Supply', async () => {

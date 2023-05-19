@@ -67,8 +67,8 @@ makeSuite('Isolation mode', (testEnv: TestEnv) => {
     );
 
     // configure oracle
-    const { hopeLendOracle, addressesProvider, oracle } = testEnv;
-    oracleBaseDecimals = (await hopeLendOracle.BASE_CURRENCY_UNIT()).toString().length - 1;
+    const { hopeOracle, addressesProvider, oracle } = testEnv;
+    oracleBaseDecimals = (await hopeOracle.BASE_CURRENCY_UNIT()).toString().length - 1;
     await waitForTx(await addressesProvider.setPriceOracle(oracle.address));
 
     snapshot = await evmSnapshot();

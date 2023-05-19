@@ -22,8 +22,8 @@ makeSuite('Pool Liquidation: Add fee to liquidations', (testEnv) => {
   });
 
   after(async () => {
-    const { hopeLendOracle, addressesProvider } = testEnv;
-    await waitForTx(await addressesProvider.setPriceOracle(hopeLendOracle.address));
+    const { hopeOracle, addressesProvider } = testEnv;
+    await waitForTx(await addressesProvider.setPriceOracle(hopeOracle.address));
   });
 
   it('position should be liquidated when turn on liquidation protocol fee.', async () => {

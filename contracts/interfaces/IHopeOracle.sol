@@ -5,11 +5,11 @@ import {IPriceOracleGetter} from './IPriceOracleGetter.sol';
 import {IPoolAddressesProvider} from './IPoolAddressesProvider.sol';
 
 /**
- * @title IHopeLendOracle
- * @author HopeLend
- * @notice Defines the basic interface for the HopeLend Oracle
+ * @title IHopeOracle
+ * @author Hope
+ * @notice Defines the basic interface for the Hope Oracle
  */
-interface IHopeLendOracle is IPriceOracleGetter {
+interface IHopeOracle is IPriceOracleGetter {
   /**
    * @dev Emitted after the base currency is set
    * @param baseCurrency The base currency of used for price quotes
@@ -31,6 +31,18 @@ interface IHopeLendOracle is IPriceOracleGetter {
   event FallbackOracleUpdated(address indexed fallbackOracle);
 
   /**
+  * @dev Emitted after the failover of an asset is activated
+  * @param asset The address of the asset
+  */
+  event FailoverActivated(address indexed asset);
+
+  /**
+  * @dev Emitted after the failover of an asset is deactivated
+  * @param asset The address of the asset
+  */
+  event FailoverDeactivated(address indexed asset);
+
+  /**
    * @notice Returns the PoolAddressesProvider
    * @return The address of the PoolAddressesProvider contract
    */
@@ -50,6 +62,18 @@ interface IHopeLendOracle is IPriceOracleGetter {
   function setFallbackOracle(address fallbackOracle) external;
 
   /**
+   * @notice Activates the failover for an asset
+   * @param asset The address of the asset
+   */
+  function activateFailover(address asset) external;
+
+  /**
+   * @notice Deactivates the failover for an asset
+   * @param asset The address of the asset
+   */
+  function deactivateFailover(address asset) external;
+
+  /**
    * @notice Returns a list of prices from a list of assets addresses
    * @param assets The list of assets addresses
    * @return The prices of the given assets
@@ -62,6 +86,13 @@ interface IHopeLendOracle is IPriceOracleGetter {
    * @return The address of the source
    */
   function getSourceOfAsset(address asset) external view returns (address);
+
+  /**
+   * @notice Returns the failover status of an asset
+   * @param asset The address of the asset
+   * @return The failover status of the asset
+   */
+  function getFailoverStatusOfAsset(address asset) external view returns (bool);
 
   /**
    * @notice Returns the address of the fallback oracle
