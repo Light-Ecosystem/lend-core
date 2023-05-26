@@ -8,7 +8,7 @@ import {
 import { ProtocolErrors } from '../helpers/types';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { MAX_UINT_AMOUNT } from '../helpers/constants';
-import { MockFlashLoanReceiver } from '../types/MockFlashLoanReceiver';
+import { MockFlashLoanReceiver } from './../types';
 import { TestEnv, makeSuite } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
 import { rayMul } from './helpers/utils/wadraymath';

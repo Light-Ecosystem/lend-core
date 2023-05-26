@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { constants, utils } from 'ethers';
 import { ZERO_ADDRESS } from '../helpers/constants';
-import { ACLManager, ACLManager__factory } from '../types';
+import { ACLManager, ACLManager__factory } from './../types';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import { ProtocolErrors } from '../helpers/types';
 

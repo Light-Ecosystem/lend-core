@@ -7,6 +7,8 @@ import {IERC20} from '../../../dependencies/openzeppelin/contracts/IERC20.sol';
 import {IStableDebtToken} from '../../../interfaces/IStableDebtToken.sol';
 import {IVariableDebtToken} from '../../../interfaces/IVariableDebtToken.sol';
 import {IHToken} from '../../../interfaces/IHToken.sol';
+import {IAbsGauge} from '../../../interfaces/IAbsGauge.sol';
+import {ILendingGauge} from '../../../interfaces/ILendingGauge.sol';
 import {UserConfiguration} from '../configuration/UserConfiguration.sol';
 import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
 import {Helpers} from '../helpers/Helpers.sol';
@@ -122,8 +124,10 @@ library BorrowLogic {
       );
     } else {
       (isFirstBorrowing, reserveCache.nextScaledVariableDebt) = IVariableDebtToken(
-        reserveCache.variableDebtTokenAddress
-      ).mint(params.user, params.onBehalfOf, params.amount, reserveCache.nextVariableBorrowIndex);
+        reserveCache
+          .variableDebtTokenAddress
+      )
+        .mint(params.user, params.onBehalfOf, params.amount, reserveCache.nextVariableBorrowIndex);
     }
 
     if (isFirstBorrowing) {
@@ -135,7 +139,8 @@ library BorrowLogic {
         .isolationModeTotalDebt += (params.amount /
         10 **
           (reserveCache.reserveConfiguration.getDecimals() -
-            ReserveConfiguration.DEBT_CEILING_DECIMALS)).toUint128();
+            ReserveConfiguration.DEBT_CEILING_DECIMALS))
+        .toUint128();
       emit IsolationModeTotalDebtUpdated(
         isolationModeCollateralAddress,
         nextIsolationModeTotalDebt
@@ -148,6 +153,13 @@ library BorrowLogic {
       0,
       params.releaseUnderlying ? params.amount : 0
     );
+
+    {
+      ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
+      if (address(lendingGauge) != address(0)) {
+        lendingGauge.updateAllocation(0, params.releaseUnderlying ? params.amount : 0);
+      }
+    }
 
     if (params.releaseUnderlying) {
       IHToken(reserveCache.hTokenAddress).transferUnderlyingTo(params.user, params.amount);
@@ -216,12 +228,16 @@ library BorrowLogic {
 
     if (params.interestRateMode == DataTypes.InterestRateMode.STABLE) {
       (reserveCache.nextTotalStableDebt, reserveCache.nextAvgStableBorrowRate) = IStableDebtToken(
-        reserveCache.stableDebtTokenAddress
-      ).burn(params.onBehalfOf, paybackAmount);
+        reserveCache
+          .stableDebtTokenAddress
+      )
+        .burn(params.onBehalfOf, paybackAmount);
     } else {
       reserveCache.nextScaledVariableDebt = IVariableDebtToken(
-        reserveCache.variableDebtTokenAddress
-      ).burn(params.onBehalfOf, paybackAmount, reserveCache.nextVariableBorrowIndex);
+        reserveCache
+          .variableDebtTokenAddress
+      )
+        .burn(params.onBehalfOf, paybackAmount, reserveCache.nextVariableBorrowIndex);
     }
 
     reserve.updateInterestRates(
@@ -230,6 +246,11 @@ library BorrowLogic {
       params.useHTokens ? 0 : paybackAmount,
       0
     );
+
+    ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
+    if (address(lendingGauge) != address(0)) {
+      lendingGauge.updateAllocation(params.useHTokens ? 0 : paybackAmount, 0);
+    }
 
     if (stableDebt + variableDebt - paybackAmount == 0) {
       userConfig.setBorrowing(reserve.id, false);
@@ -293,6 +314,11 @@ library BorrowLogic {
 
     reserve.updateInterestRates(reserveCache, asset, 0, 0);
 
+    ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
+    if (address(lendingGauge) != address(0)) {
+      lendingGauge.updateAllocation(0, 0);
+    }
+
     emit RebalanceStableBorrowRate(asset, user);
   }
 
@@ -330,23 +356,36 @@ library BorrowLogic {
 
     if (interestRateMode == DataTypes.InterestRateMode.STABLE) {
       (reserveCache.nextTotalStableDebt, reserveCache.nextAvgStableBorrowRate) = IStableDebtToken(
-        reserveCache.stableDebtTokenAddress
-      ).burn(msg.sender, stableDebt);
+        reserveCache
+          .stableDebtTokenAddress
+      )
+        .burn(msg.sender, stableDebt);
 
       (, reserveCache.nextScaledVariableDebt) = IVariableDebtToken(
-        reserveCache.variableDebtTokenAddress
-      ).mint(msg.sender, msg.sender, stableDebt, reserveCache.nextVariableBorrowIndex);
+        reserveCache
+          .variableDebtTokenAddress
+      )
+        .mint(msg.sender, msg.sender, stableDebt, reserveCache.nextVariableBorrowIndex);
     } else {
       reserveCache.nextScaledVariableDebt = IVariableDebtToken(
-        reserveCache.variableDebtTokenAddress
-      ).burn(msg.sender, variableDebt, reserveCache.nextVariableBorrowIndex);
+        reserveCache
+          .variableDebtTokenAddress
+      )
+        .burn(msg.sender, variableDebt, reserveCache.nextVariableBorrowIndex);
 
       (, reserveCache.nextTotalStableDebt, reserveCache.nextAvgStableBorrowRate) = IStableDebtToken(
-        reserveCache.stableDebtTokenAddress
-      ).mint(msg.sender, msg.sender, variableDebt, reserve.currentStableBorrowRate);
+        reserveCache
+          .stableDebtTokenAddress
+      )
+        .mint(msg.sender, msg.sender, variableDebt, reserve.currentStableBorrowRate);
     }
 
     reserve.updateInterestRates(reserveCache, asset, 0, 0);
+
+    ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
+    if (address(lendingGauge) != address(0)) {
+      lendingGauge.updateAllocation(0, 0);
+    }
 
     emit SwapBorrowRateMode(asset, msg.sender, interestRateMode);
   }

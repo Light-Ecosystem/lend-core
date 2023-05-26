@@ -6,7 +6,7 @@ import { TransactionReceipt } from '@ethersproject/providers';
 import { MAX_UINT_AMOUNT } from '../helpers/constants';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { RateMode } from '../helpers/types';
-import { MockHTokenRepayment__factory, Pool, VariableDebtToken } from '../types';
+import { MockHTokenRepayment__factory, Pool, VariableDebtToken } from './../types';
 import { makeSuite, SignerWithAddress, TestEnv } from './helpers/make-suite';
 import {
   supply,
@@ -70,7 +70,7 @@ const increaseSupplyIndex = async (
       depositor.address
     );
 
-  await advanceTimeAndBlock(10000000000);
+  await advanceTimeAndBlock(10000);
 };
 
 const updateBalances = (

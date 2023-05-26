@@ -4,6 +4,8 @@ pragma solidity 0.8.17;
 import {IERC20} from '../../../dependencies/openzeppelin/contracts/IERC20.sol';
 import {GPv2SafeERC20} from '../../../dependencies/gnosis/contracts/GPv2SafeERC20.sol';
 import {IHToken} from '../../../interfaces/IHToken.sol';
+import {IAbsGauge} from '../../../interfaces/IAbsGauge.sol';
+import {ILendingGauge} from '../../../interfaces/ILendingGauge.sol';
 import {Errors} from '../helpers/Errors.sol';
 import {UserConfiguration} from '../configuration/UserConfiguration.sol';
 import {DataTypes} from '../types/DataTypes.sol';
@@ -73,6 +75,11 @@ library SupplyLogic {
       reserveCache.nextLiquidityIndex
     );
 
+    ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
+    if (address(lendingGauge) != address(0)) {
+      lendingGauge.updateAllocation(0, 0);
+    }
+
     if (isFirstSupply) {
       if (
         ValidationLogic.validateUseAsCollateral(
@@ -141,6 +148,13 @@ library SupplyLogic {
       amountToWithdraw,
       reserveCache.nextLiquidityIndex
     );
+
+    {
+      ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
+      if (address(lendingGauge) != address(0)) {
+        lendingGauge.updateAllocation(0, 0);
+      }
+    }
 
     if (isCollateral && userConfig.isBorrowingAny()) {
       ValidationLogic.validateHFAndLtv(

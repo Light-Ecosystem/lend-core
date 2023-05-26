@@ -1,4 +1,4 @@
-import { Signer } from 'ethers';
+import { Contract, Signer } from 'ethers';
 import {
   getPool,
   getPoolAddressesProvider,
@@ -13,19 +13,32 @@ import {
   getHopeOracle,
   getACLManager,
   getFallbackOracle,
+  getLendingGauge,
+  getGaugeFactory,
+  getLT,
+  getMinter,
+  getGaugeController,
+  getVotingEscrow,
 } from 'lend-deploy/dist/helpers/contract-getters';
 import { tEthereumAddress } from '../../helpers/types';
-import { Pool } from '../../types/Pool';
-import { HopeLendProtocolDataProvider } from '../../types/HopeLendProtocolDataProvider';
-import { MintableERC20 } from '../../types/MintableERC20';
-import { HToken } from '../../types/HToken';
-import { PoolConfigurator } from '../../types/PoolConfigurator';
+import {
+  Pool,
+  HopeLendProtocolDataProvider,
+  MintableERC20,
+  HToken,
+  PoolConfigurator,
+  PriceOracle,
+  PoolAddressesProvider,
+  PoolAddressesProviderRegistry,
+  WETH9Mocked,
+  HopeOracle,
+  ACLManager,
+  StableDebtToken,
+  VariableDebtToken,
+  LendingGauge,
+  GaugeFactory,
+} from '../../types';
 
-import { PriceOracle } from '../../types/PriceOracle';
-import { PoolAddressesProvider } from '../../types/PoolAddressesProvider';
-import { PoolAddressesProviderRegistry } from '../../types/PoolAddressesProviderRegistry';
-import { WETH9Mocked } from '../../types/WETH9Mocked';
-import { HopeOracle, ACLManager, StableDebtToken, VariableDebtToken } from '../../types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { usingTenderly } from '../../helpers/tenderly-utils';
 import { waitForTx, evmSnapshot, evmRevert, getEthersSigners } from 'lend-deploy';
@@ -60,6 +73,13 @@ export interface TestEnv {
   addressesProvider: PoolAddressesProvider;
   registry: PoolAddressesProviderRegistry;
   aclManager: ACLManager;
+  lendingGauge: LendingGauge;
+  daiLendingGauge: LendingGauge;
+  gaugeFactory: GaugeFactory;
+  lt: Contract;
+  gaugeController: Contract;
+  veLT: Contract;
+  minter: Contract;
 }
 
 let HardhatSnapshotId: string = '0x1';
@@ -90,6 +110,13 @@ const testEnv: TestEnv = {
   addressesProvider: {} as PoolAddressesProvider,
   registry: {} as PoolAddressesProviderRegistry,
   aclManager: {} as ACLManager,
+  lendingGauge: {} as LendingGauge,
+  daiLendingGauge: {} as LendingGauge,
+  gaugeFactory: {} as GaugeFactory,
+  minter: {} as Contract,
+  gaugeController: {} as Contract,
+  lt: {} as Contract,
+  veLT: {} as Contract,
 } as TestEnv;
 
 export async function initializeMakeSuite() {
@@ -120,6 +147,13 @@ export async function initializeMakeSuite() {
   testEnv.oracle = await getFallbackOracle();
   testEnv.hopeOracle = await getHopeOracle();
 
+  testEnv.lendingGauge = await getLendingGauge();
+  testEnv.gaugeFactory = await getGaugeFactory();
+  testEnv.gaugeController = await getGaugeController();
+  testEnv.lt = await getLT();
+  testEnv.minter = await getMinter();
+  testEnv.veLT = await getVotingEscrow();
+
   testEnv.helpersContract = await getHopeLendProtocolDataProvider();
 
   const allTokens = await testEnv.helpersContract.getAllHTokens();
@@ -140,7 +174,7 @@ export async function initializeMakeSuite() {
   const wethAddress = reservesTokens.find((token) => token.symbol === 'WETH')?.tokenAddress;
 
   if (!hDaiAddress || !hWEthAddress) {
-    throw 'Missing mandatory atokens';
+    throw 'Missing mandatory htokens';
   }
   if (!daiAddress || !usdcAddress || !hopeAddress || !wethAddress) {
     throw 'Missing mandatory tokens';
@@ -157,6 +191,9 @@ export async function initializeMakeSuite() {
   testEnv.hope = await getMintableERC20(hopeAddress);
   testEnv.usdc = await getMintableERC20(usdcAddress);
   testEnv.weth = await getWETHMocked(wethAddress);
+
+  const daiLendingGaugeAddress = await testEnv.gaugeFactory.lendingGauge(daiAddress);
+  testEnv.daiLendingGauge = await getLendingGauge(daiLendingGaugeAddress);
 
   // Setup admins
   await waitForTx(await testEnv.aclManager.addRiskAdmin(testEnv.riskAdmin.address));

@@ -11,7 +11,7 @@ import {
   getIRStrategy,
 } from 'lend-deploy/dist/helpers/contract-getters';
 import { tEthereumAddress } from '../../../helpers/types';
-import { HToken, HopeLendProtocolDataProvider, Pool } from '../../../types';
+import { HToken, HopeLendProtocolDataProvider, Pool } from './../../../types';
 import { ReserveData, UserReserveData } from './interfaces';
 import { rayDiv } from './wadraymath';
 

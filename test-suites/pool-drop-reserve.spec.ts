@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { utils } from 'ethers';
 import { ProtocolErrors } from '../helpers/types';
 import { MAX_UINT_AMOUNT, ZERO_ADDRESS } from '../helpers/constants';
-import { MockFlashLoanReceiver } from '../types/MockFlashLoanReceiver';
+import { MockFlashLoanReceiver } from './../types';
 import { getMockFlashLoanReceiver } from 'lend-deploy/dist/helpers/contract-getters';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 
@@ -46,7 +46,9 @@ makeSuite('Pool: Drop Reserve', (testEnv: TestEnv) => {
 
     await pool.deposit(dai.address, depositedAmount, deployer.address, 0);
 
-    await expect(configurator.dropReserve(dai.address)).to.be.revertedWith(UNDERLYING_CLAIMABLE_RIGHTS_NOT_ZERO);
+    await expect(configurator.dropReserve(dai.address)).to.be.revertedWith(
+      UNDERLYING_CLAIMABLE_RIGHTS_NOT_ZERO
+    );
 
     await pool.connect(user1.signer).deposit(weth.address, depositedAmount, user1.address, 0);
 
@@ -71,7 +73,9 @@ makeSuite('Pool: Drop Reserve', (testEnv: TestEnv) => {
     );
 
     expect(await pool.connect(user1.signer).repay(dai.address, MAX_UINT_AMOUNT, 2, user1.address));
-    await expect(configurator.dropReserve(dai.address)).to.be.revertedWith(UNDERLYING_CLAIMABLE_RIGHTS_NOT_ZERO);
+    await expect(configurator.dropReserve(dai.address)).to.be.revertedWith(
+      UNDERLYING_CLAIMABLE_RIGHTS_NOT_ZERO
+    );
   });
 
   it('User 1 withdraw DAI, drop DAI reserve should succeed', async () => {

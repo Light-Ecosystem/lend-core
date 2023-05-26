@@ -1,4 +1,4 @@
-import { MockHTokenRepayment__factory } from './../../../types/factories/mocks/tokens/MockHTokenRepayment__factory';
+import { MockHTokenRepayment__factory } from './../../../types';
 import { ethers } from 'hardhat';
 import { utils } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -12,7 +12,7 @@ import {
   StableDebtToken__factory,
   VariableDebtToken,
   VariableDebtToken__factory,
-} from '../../../types';
+} from './../../../types';
 import { ZERO_ADDRESS } from '../../../helpers/constants';
 import { SignerWithAddress } from '../make-suite';
 import { calcExpectedStableDebtTokenBalance } from './calculations';
@@ -24,7 +24,7 @@ import './wadraymath';
 import { expect } from 'chai';
 import { rayDiv, rayMul } from './wadraymath';
 
-const ATOKEN_EVENTS = [
+const HTOKEN_EVENTS = [
   { sig: 'Transfer(address,address,uint256)', args: ['from', 'to', 'value'] },
   {
     sig: 'Mint(address,address,uint256,uint256,uint256)',
@@ -564,7 +564,7 @@ export const repayStableBorrow = async (
 };
 
 export const printHTokenEvents = (hToken: HToken, receipt: TransactionReceipt) => {
-  for (const eventSig of ATOKEN_EVENTS) {
+  for (const eventSig of HTOKEN_EVENTS) {
     const eventName = eventSig.sig.split('(')[0];
     const encodedSig = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(eventSig.sig));
     const rawEvents = receipt.logs.filter(
@@ -588,7 +588,7 @@ export const printHTokenEvents = (hToken: HToken, receipt: TransactionReceipt) =
 };
 
 export const getHTokenEvent = (hToken: HToken, receipt: TransactionReceipt, eventName: string) => {
-  const eventSig = ATOKEN_EVENTS.find((item) => item.sig.split('(')[0] === eventName);
+  const eventSig = HTOKEN_EVENTS.find((item) => item.sig.split('(')[0] === eventName);
   const results: utils.Result = [];
   if (eventSig) {
     const encodedSig = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(eventSig.sig));

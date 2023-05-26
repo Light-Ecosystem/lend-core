@@ -6,7 +6,7 @@ import { TransactionReceipt } from '@ethersproject/providers';
 import { MAX_UINT_AMOUNT } from '../helpers/constants';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { RateMode } from '../helpers/types';
-import { Pool, StableDebtToken } from '../types';
+import { Pool, StableDebtToken } from './../types';
 import { makeSuite, SignerWithAddress, TestEnv } from './helpers/make-suite';
 import {
   supply,

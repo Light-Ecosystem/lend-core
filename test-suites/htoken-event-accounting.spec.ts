@@ -1,4 +1,4 @@
-import { MockHTokenRepayment } from './../types/mocks/tokens/MockHTokenRepayment';
+import { MockHTokenRepayment, MockHTokenRepayment__factory } from './../types';
 import { waitForTx, increaseTime, ZERO_ADDRESS } from 'lend-deploy';
 import { expect } from 'chai';
 import { BigNumber, utils } from 'ethers';
@@ -7,7 +7,6 @@ import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { RateMode } from '../helpers/types';
 import { makeSuite } from './helpers/make-suite';
 import { getHTokenEvent, getVariableDebtTokenEvent } from './helpers/utils/tokenization-events';
-import { MockHTokenRepayment__factory } from '../types';
 
 makeSuite('HToken: Mint and Burn Event Accounting', (testEnv) => {
   let firstDaiDeposit;

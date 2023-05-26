@@ -11,7 +11,7 @@ import {
   MockFlashLoanSimpleReceiver__factory,
   FlashloanAttacker__factory,
   IERC20Detailed__factory,
-} from '../types';
+} from './../types';
 import { parseEther, parseUnits } from '@ethersproject/units';
 import { waitForTx } from 'lend-deploy';
 

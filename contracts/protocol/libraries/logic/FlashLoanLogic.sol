@@ -5,6 +5,8 @@ import {GPv2SafeERC20} from '../../../dependencies/gnosis/contracts/GPv2SafeERC2
 import {SafeCast} from '../../../dependencies/openzeppelin/contracts/SafeCast.sol';
 import {IERC20} from '../../../dependencies/openzeppelin/contracts/IERC20.sol';
 import {IHToken} from '../../../interfaces/IHToken.sol';
+import {IAbsGauge} from '../../../interfaces/IAbsGauge.sol';
+import {ILendingGauge} from '../../../interfaces/ILendingGauge.sol';
 import {IFlashLoanReceiver} from '../../../flashloan/interfaces/IFlashLoanReceiver.sol';
 import {IFlashLoanSimpleReceiver} from '../../../flashloan/interfaces/IFlashLoanSimpleReceiver.sol';
 import {IPoolAddressesProvider} from '../../../interfaces/IPoolAddressesProvider.sol';
@@ -17,6 +19,7 @@ import {DataTypes} from '../types/DataTypes.sol';
 import {ValidationLogic} from './ValidationLogic.sol';
 import {BorrowLogic} from './BorrowLogic.sol';
 import {ReserveLogic} from './ReserveLogic.sol';
+import 'hardhat/console.sol';
 
 /**
  * @title FlashLoanLogic library
@@ -239,7 +242,6 @@ library FlashLoanLogic {
     reserve.accruedToTreasury += premiumToProtocol
       .rayDiv(reserveCache.nextLiquidityIndex)
       .toUint128();
-
     reserve.updateInterestRates(reserveCache, params.asset, amountPlusPremium, 0);
 
     IERC20(params.asset).safeTransferFrom(
@@ -247,6 +249,11 @@ library FlashLoanLogic {
       reserveCache.hTokenAddress,
       amountPlusPremium
     );
+
+    ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
+    if (address(lendingGauge) != address(0)) {
+      lendingGauge.updateAllocation(0, 0);
+    }
 
     IHToken(reserveCache.hTokenAddress).handleRepayment(
       params.receiverAddress,

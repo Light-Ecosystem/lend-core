@@ -8,7 +8,7 @@ import {
   PriceOracleSentinel__factory,
   SequencerOracle,
   SequencerOracle__factory,
-} from '../types';
+} from './../types';
 import { getFirstSigner } from 'lend-deploy/dist/helpers/utilities/signer';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';

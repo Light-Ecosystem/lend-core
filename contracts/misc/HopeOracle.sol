@@ -7,7 +7,6 @@ import {IACLManager} from '../interfaces/IACLManager.sol';
 import {IPoolAddressesProvider} from '../interfaces/IPoolAddressesProvider.sol';
 import {IPriceOracleGetter} from '../interfaces/IPriceOracleGetter.sol';
 import {IHopeOracle} from '../interfaces/IHopeOracle.sol';
-import "hardhat/console.sol";
 
 /**
  * @title HopeOracle

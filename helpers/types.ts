@@ -1,4 +1,4 @@
-import {BigNumber} from '@ethersproject/bignumber';
+import { BigNumber } from '@ethersproject/bignumber';
 
 export interface SymbolMap<T> {
   [symbol: string]: T;
@@ -81,7 +81,7 @@ export enum ProtocolErrors {
   INVALID_ADDRESSES_PROVIDER_ID = '8', // 'Invalid id for the pool addresses provider'
   NOT_CONTRACT = '9', // 'Address is not a contract'
   CALLER_NOT_POOL_CONFIGURATOR = '10', // 'The caller of the function is not the pool configurator'
-  CALLER_NOT_ATOKEN = '11', // 'The caller of the function is not an HToken'
+  CALLER_NOT_HTOKEN = '11', // 'The caller of the function is not an HToken'
   INVALID_ADDRESSES_PROVIDER = '12', // 'The address of the pool addresses provider is invalid'
   INVALID_FLASHLOAN_EXECUTOR_RETURN = '13', // 'Invalid return value of the flashloan executor function'
   RESERVE_ALREADY_ADDED = '14', // 'Reserve has already been added to reserve list'
@@ -161,6 +161,12 @@ export enum ProtocolErrors {
   SILOED_BORROWING_VIOLATION = '89', // user is trying to violate the siloed borrowing rule
   RESERVE_DEBT_NOT_ZERO = '90', // the total debt of the reserve needs to be 0
   FLASHLOAN_DISABLED = '91', // FlashLoaning for this asset is disabled
+  CALLER_MUST_BE_LENDING_GAUGE = '94', // 'The caller of this function must be a lending gauge'
+  PARAMETER_ADDRESS_NOT_ZERO = '95', // 'Parameter address is not zero'
+  LENDING_GAUGE_PERCENTAGE_NOT_MATCH = '96', // 'LendingGauge end percentage must greater than start percentage && start percentage must be increasing'
+  INVALID_PHASES_LENGTH = '97', // 'LendingGauge phases length invalid'
+  PHASES_NOT_DEFINED = '98', // 'LendingGauge phases not defined'
+  MUST_BE_NON_NEGATIVE = '99', // 'Result must be non-negative'
   // SafeCast
   SAFECAST_UINT128_OVERFLOW = "SafeCast: value doesn't fit in 128 bits",
 

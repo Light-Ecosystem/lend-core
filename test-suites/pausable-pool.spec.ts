@@ -3,7 +3,6 @@ import { utils } from 'ethers';
 import { ProtocolErrors, RateMode } from '../helpers/types';
 import { MAX_UINT_AMOUNT, ZERO_ADDRESS } from '../helpers/constants';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
-import { MockFlashLoanReceiver } from '../types/MockFlashLoanReceiver';
 import {
   getMockFlashLoanReceiver,
   getMockPool,
@@ -16,7 +15,8 @@ import {
   ConfiguratorLogic__factory,
   PoolAddressesProvider__factory,
   PoolConfigurator__factory,
-} from '../types';
+  MockFlashLoanReceiver,
+} from './../types';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import { evmSnapshot, evmRevert } from 'lend-deploy';
 import { percentMul } from './helpers/utils/wadraymath';

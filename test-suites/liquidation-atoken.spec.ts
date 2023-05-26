@@ -1,4 +1,4 @@
-import { MockHTokenRepayment__factory } from './../types/factories/mocks/tokens/MockHTokenRepayment__factory';
+import { MockHTokenRepayment__factory } from './../types';
 import { expect } from 'chai';
 import { BigNumber } from 'ethers';
 import { MAX_UINT_AMOUNT, oneEther } from '../helpers/constants';

@@ -352,7 +352,7 @@ interface IPoolConfigurator {
 
   /**
    * @notice Pauses a reserve. A paused reserve does not allow any interaction (supply, borrow, repay,
-   * swap interest rate, liquidate, atoken transfers).
+   * swap interest rate, liquidate, htoken transfers).
    * @param asset The address of the underlying asset of the reserve
    * @param paused True if pausing the reserve, false if unpausing
    */

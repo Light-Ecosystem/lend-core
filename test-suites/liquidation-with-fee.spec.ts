@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { MAX_UINT_AMOUNT, oneEther } from '../helpers/constants';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { ProtocolErrors, RateMode } from '../helpers/types';
-import { HToken__factory } from '../types';
+import { HToken__factory } from './../types';
 import { calcExpectedStableDebtTokenBalance } from './helpers/utils/calculations';
 import { getReserveData, getUserData } from './helpers/utils/helpers';
 import { makeSuite } from './helpers/make-suite';

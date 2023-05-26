@@ -5,7 +5,7 @@ import { tEthereumAddress, tStringTokenSmallUnits } from './types';
 import { getContract } from 'lend-deploy';
 import { impersonateAccountsHardhat } from './misc-utils';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { InitializableImmutableAdminUpgradeabilityProxy } from '../types';
+import { InitializableImmutableAdminUpgradeabilityProxy } from './../types';
 
 declare var hre: HardhatRuntimeEnvironment;
 

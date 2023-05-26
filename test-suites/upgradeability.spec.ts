@@ -25,7 +25,7 @@ import {
 import {
   InitializableImmutableAdminUpgradeabilityProxy,
   InitializableImmutableAdminUpgradeabilityProxy__factory,
-} from '../types';
+} from './../types';
 import { evmSnapshot, evmRevert, getEthersSigners } from 'lend-deploy';
 
 makeSuite('Upgradeability', (testEnv: TestEnv) => {
@@ -376,7 +376,7 @@ makeSuite('Upgradeability', (testEnv: TestEnv) => {
       newStableTokenAddress = stableDebtTokenInstance.address;
     });
 
-    it('Tries to update the DAI Atoken implementation with a different address than the poolManager', async () => {
+    it('Tries to update the DAI Htoken implementation with a different address than the poolManager', async () => {
       const { dai, configurator, users } = testEnv;
 
       const name = await (await getHToken(newHTokenAddress)).name();
@@ -404,7 +404,7 @@ makeSuite('Upgradeability', (testEnv: TestEnv) => {
       ).to.be.revertedWith(CALLER_NOT_POOL_ADMIN);
     });
 
-    it('Upgrades the DAI Atoken implementation ', async () => {
+    it('Upgrades the DAI Htoken implementation ', async () => {
       const { dai, configurator, hDai } = testEnv;
 
       const name = await (await getHToken(newHTokenAddress)).name();

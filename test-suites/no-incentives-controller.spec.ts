@@ -10,7 +10,7 @@ import {
   MintableERC20__factory,
   StableDebtToken__factory,
   VariableDebtToken__factory,
-} from '../types';
+} from './../types';
 import { getFirstSigner } from 'lend-deploy/dist/helpers/utilities/signer';
 import { makeSuite } from './helpers/make-suite';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';

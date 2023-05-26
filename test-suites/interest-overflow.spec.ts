@@ -17,7 +17,7 @@ import {
   VariableDebtToken__factory,
   StableDebtToken__factory,
   MockFlashLoanReceiver__factory,
-} from '../types';
+} from './../types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { evmSnapshot, evmRevert, increaseTime } from 'lend-deploy';
 

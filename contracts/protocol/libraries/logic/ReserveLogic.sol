@@ -136,7 +136,7 @@ library ReserveLogic {
   /**
    * @notice Initializes a reserve.
    * @param reserve The reserve object
-   * @param hTokenAddress The address of the overlying atoken contract
+   * @param hTokenAddress The address of the overlying htoken contract
    * @param stableDebtTokenAddress The address of the overlying stable debt token contract
    * @param variableDebtTokenAddress The address of the overlying variable debt token contract
    * @param interestRateStrategyAddress The address of the interest rate strategy contract
@@ -348,8 +348,10 @@ library ReserveLogic {
     reserveCache.reserveLastUpdateTimestamp = reserve.lastUpdateTimestamp;
 
     reserveCache.currScaledVariableDebt = reserveCache.nextScaledVariableDebt = IVariableDebtToken(
-      reserveCache.variableDebtTokenAddress
-    ).scaledTotalSupply();
+      reserveCache
+        .variableDebtTokenAddress
+    )
+      .scaledTotalSupply();
 
     (
       reserveCache.currPrincipalStableDebt,

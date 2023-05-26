@@ -16,7 +16,7 @@ import '@nomicfoundation/hardhat-chai-matchers';
 
 import { DEFAULT_NAMED_ACCOUNTS } from 'lend-deploy';
 
-const DEFAULT_BLOCK_GAS_LIMIT = 12450000;
+const DEFAULT_BLOCK_GAS_LIMIT = 124500000;
 const HARDFORK = 'london';
 
 const hardhatConfig = {

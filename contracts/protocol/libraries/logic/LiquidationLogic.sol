@@ -18,6 +18,8 @@ import {IHToken} from '../../../interfaces/IHToken.sol';
 import {IStableDebtToken} from '../../../interfaces/IStableDebtToken.sol';
 import {IVariableDebtToken} from '../../../interfaces/IVariableDebtToken.sol';
 import {IPriceOracleGetter} from '../../../interfaces/IPriceOracleGetter.sol';
+import {IAbsGauge} from '../../../interfaces/IAbsGauge.sol';
+import {ILendingGauge} from '../../../interfaces/ILendingGauge.sol';
 
 /**
  * @title LiquidationLogic library
@@ -185,6 +187,11 @@ library LiquidationLogic {
       0
     );
 
+    ILendingGauge lendingGauge = IAbsGauge(vars.debtReserveCache.hTokenAddress).lendingGauge();
+    if (address(lendingGauge) != address(0)) {
+      lendingGauge.updateAllocation(vars.actualDebtToLiquidate, 0);
+    }
+
     IsolationModeLogic.updateIsolatedDebtIfIsolated(
       reservesData,
       reservesList,
@@ -269,6 +276,11 @@ library LiquidationLogic {
       vars.actualCollateralToLiquidate,
       collateralReserveCache.nextLiquidityIndex
     );
+
+    ILendingGauge lendingGauge = IAbsGauge(collateralReserveCache.hTokenAddress).lendingGauge();
+    if (address(lendingGauge) != address(0)) {
+      lendingGauge.updateAllocation(0, 0);
+    }
   }
 
   /**

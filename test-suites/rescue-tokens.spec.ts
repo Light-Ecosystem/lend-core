@@ -4,7 +4,7 @@ import { ProtocolErrors } from '../helpers/types';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import { evmSnapshot, evmRevert, ONE_ADDRESS } from 'lend-deploy';
 import { deployMintableERC20 } from 'lend-deploy/dist/helpers/contract-deployments';
-import { MintableERC20 } from '../types';
+import { MintableERC20 } from './../types';
 
 makeSuite('Rescue tokens', (testEnv: TestEnv) => {
   const { CALLER_NOT_POOL_ADMIN, CALLER_MUST_BE_POOL, UNDERLYING_CANNOT_BE_RESCUED } =

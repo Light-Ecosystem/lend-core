@@ -78,11 +78,7 @@ library DataTypes {
     string label;
   }
 
-  enum InterestRateMode {
-    NONE,
-    STABLE,
-    VARIABLE
-  }
+  enum InterestRateMode {NONE, STABLE, VARIABLE}
 
   struct ReserveCache {
     uint256 currScaledVariableDebt;
@@ -264,5 +260,20 @@ library DataTypes {
     address interestRateStrategyAddress;
     uint16 reservesCount;
     uint16 maxNumberReserves;
+  }
+
+  struct Phase {
+    uint256 startPercentage;
+    uint256 endPercentage;
+    int256 k;
+    uint256 b;
+  }
+
+  struct CheckPointParameters {
+    uint256 period;
+    uint256 periodTime;
+    uint256 rate;
+    uint256 newRate;
+    uint256 prevFutureEpoch;
   }
 }

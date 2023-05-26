@@ -1,5 +1,5 @@
 import { BigNumber, Signer } from 'ethers';
-import { SelfdestructTransfer__factory } from '../../../types';
+import { SelfdestructTransfer__factory } from './../../../types';
 
 export const topUpNonPayableWithEther = async (
   holder: Signer,

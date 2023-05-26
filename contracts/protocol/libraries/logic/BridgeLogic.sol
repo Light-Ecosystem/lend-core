@@ -5,6 +5,8 @@ import {IERC20} from '../../../dependencies/openzeppelin/contracts/IERC20.sol';
 import {GPv2SafeERC20} from '../../../dependencies/gnosis/contracts/GPv2SafeERC20.sol';
 import {SafeCast} from '../../../dependencies/openzeppelin/contracts/SafeCast.sol';
 import {IHToken} from '../../../interfaces/IHToken.sol';
+import {IAbsGauge} from '../../../interfaces/IAbsGauge.sol';
+import {ILendingGauge} from '../../../interfaces/ILendingGauge.sol';
 import {DataTypes} from '../types/DataTypes.sol';
 import {UserConfiguration} from '../configuration/UserConfiguration.sol';
 import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
@@ -81,6 +83,11 @@ library BridgeLogic {
       reserveCache.nextLiquidityIndex
     );
 
+    ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
+    if (address(lendingGauge) != address(0)) {
+      lendingGauge.updateAllocation(0, 0);
+    }
+
     if (isFirstSupply) {
       if (
         ValidationLogic.validateUseAsCollateral(
@@ -138,6 +145,11 @@ library BridgeLogic {
     reserve.updateInterestRates(reserveCache, asset, added, 0);
 
     IERC20(asset).safeTransferFrom(msg.sender, reserveCache.hTokenAddress, added);
+
+    ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
+    if (address(lendingGauge) != address(0)) {
+      lendingGauge.updateAllocation(0, 0);
+    }
 
     emit BackUnbacked(asset, msg.sender, backingAmount, fee);
 

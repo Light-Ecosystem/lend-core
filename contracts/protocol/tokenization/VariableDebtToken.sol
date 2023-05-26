@@ -154,4 +154,12 @@ contract VariableDebtToken is DebtTokenBase, ScaledBalanceTokenBase, IVariableDe
   function UNDERLYING_ASSET_ADDRESS() external view override returns (address) {
     return _underlyingAsset;
   }
+
+  function lpBalanceOf(address _addr) public view override returns (uint256) {
+    return balanceOf(_addr);
+  }
+
+  function lpTotalSupply() public view override returns (uint256) {
+    return totalSupply();
+  }
 }

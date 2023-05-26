@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { deployMockReserveConfiguration } from 'lend-deploy/dist/helpers/contract-deployments';
 import { ProtocolErrors } from '../helpers/types';
 import { evmSnapshot, evmRevert } from 'lend-deploy';
-import { MockReserveConfiguration } from '../types';
+import { MockReserveConfiguration } from './../types';
 
 describe('ReserveConfiguration', async () => {
   let snap: string;

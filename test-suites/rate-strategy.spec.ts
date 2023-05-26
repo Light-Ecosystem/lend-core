@@ -3,7 +3,7 @@ import { BigNumberish, utils } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber';
 import { deployDefaultReserveInterestRateStrategy } from 'lend-deploy/dist/helpers/contract-deployments';
 import { PERCENTAGE_FACTOR } from '../helpers/constants';
-import { HToken, DefaultReserveInterestRateStrategy, MintableERC20 } from '../types';
+import { HToken, DefaultReserveInterestRateStrategy, MintableERC20 } from './../types';
 import { strategyDAI } from 'lend-deploy/dist/markets/test/reservesConfigs';
 import { rateStrategyStableTwo } from 'lend-deploy/dist/markets/test/rateStrategies';
 import { TestEnv, makeSuite } from './helpers/make-suite';

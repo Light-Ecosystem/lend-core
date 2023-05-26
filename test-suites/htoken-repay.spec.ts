@@ -1,5 +1,5 @@
-import { MockHTokenRepayment } from './../types/mocks/tokens/MockHTokenRepayment';
-import { MockHTokenRepayment__factory } from './../types/factories/mocks/tokens/MockHTokenRepayment__factory';
+import { MockHTokenRepayment } from './../types';
+import { MockHTokenRepayment__factory } from './../types';
 import {
   waitForTx,
   evmSnapshot,

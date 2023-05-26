@@ -11,7 +11,6 @@ import {
   DefaultReserveInterestRateStrategy__factory,
   VariableDebtToken__factory,
   increaseTime,
-  HopeDistributionManager,
 } from 'lend-deploy';
 import {
   InitializableImmutableAdminUpgradeabilityProxy,
@@ -19,7 +18,7 @@ import {
   MockL2Pool,
   L2Encoder,
   L2Encoder__factory,
-} from '../types';
+} from './../types';
 import { ethers, getChainId } from 'hardhat';
 import {
   buildPermitParams,
@@ -39,7 +38,7 @@ makeSuite('Pool: L2 functions', (testEnv: TestEnv) => {
   const {
     INVALID_HF,
     NO_MORE_RESERVES_ALLOWED,
-    CALLER_NOT_ATOKEN,
+    CALLER_NOT_HTOKEN,
     NOT_CONTRACT,
     CALLER_NOT_POOL_CONFIGURATOR,
     RESERVE_ALREADY_INITIALIZED,

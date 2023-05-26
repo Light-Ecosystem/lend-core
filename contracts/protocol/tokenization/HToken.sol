@@ -28,14 +28,14 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
   bytes32 public constant PERMIT_TYPEHASH =
     keccak256('Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)');
 
-  uint256 public constant ATOKEN_REVISION = 0x1;
+  uint256 public constant HTOKEN_REVISION = 0x1;
 
   address internal _treasury;
   address internal _underlyingAsset;
 
   /// @inheritdoc VersionedInitializable
   function getRevision() internal pure virtual override returns (uint256) {
-    return ATOKEN_REVISION;
+    return HTOKEN_REVISION;
   }
 
   /**
@@ -43,7 +43,7 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
    * @param pool The address of the Pool contract
    */
   constructor(IPool pool)
-    ScaledBalanceTokenBase(pool, 'ATOKEN_IMPL', 'ATOKEN_IMPL', 0)
+    ScaledBalanceTokenBase(pool, 'HTOKEN_IMPL', 'HTOKEN_IMPL', 0)
     EIP712Base()
   {
     // Intentionally left blank
@@ -270,5 +270,13 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
   ) external override onlyPoolAdmin {
     require(token != _underlyingAsset, Errors.UNDERLYING_CANNOT_BE_RESCUED);
     IERC20(token).safeTransfer(to, amount);
+  }
+
+  function lpBalanceOf(address _addr) public view override returns (uint256) {
+    return balanceOf(_addr);
+  }
+
+  function lpTotalSupply() public view override returns (uint256) {
+    return totalSupply();
   }
 }

@@ -1,4 +1,4 @@
-import { DelegationAwareHToken, MintableDelegationERC20 } from '../types';
+import { DelegationAwareHToken, MintableDelegationERC20 } from './../types';
 import { expect } from 'chai';
 import { ZERO_ADDRESS } from '../helpers/constants';
 import { ProtocolErrors } from '../helpers/types';

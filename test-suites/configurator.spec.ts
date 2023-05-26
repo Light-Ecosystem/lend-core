@@ -11,7 +11,7 @@ import {
   MockReserveInterestRateStrategy__factory,
   StableDebtToken__factory,
   VariableDebtToken__factory,
-} from '../types';
+} from './../types';
 import { TestEnv, makeSuite } from './helpers/make-suite';
 import { advanceTimeAndBlock, evmRevert, evmSnapshot } from 'lend-deploy';
 

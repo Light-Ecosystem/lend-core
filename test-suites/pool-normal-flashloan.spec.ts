@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { BigNumber, ethers } from 'ethers';
 import { MAX_UINT_AMOUNT } from '../helpers/constants';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
-import { MockFlashLoanReceiver } from '../types/MockFlashLoanReceiver';
+import { MockFlashLoanReceiver } from './../types';
 import { ProtocolErrors } from '../helpers/types';
 import {
   getMockFlashLoanReceiver,

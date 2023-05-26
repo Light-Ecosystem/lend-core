@@ -12,7 +12,7 @@ import {
   getFirstSigner,
   InitializableAdminUpgradeabilityProxy__factory,
 } from 'lend-deploy';
-import { MockPeripheryContractV1__factory, MockPeripheryContractV2__factory } from '../types';
+import { MockPeripheryContractV1__factory, MockPeripheryContractV2__factory } from './../types';
 import { getProxyAdmin, getProxyImplementation } from '../helpers/contracts-helpers';
 
 makeSuite('PoolAddressesProvider', (testEnv: TestEnv) => {

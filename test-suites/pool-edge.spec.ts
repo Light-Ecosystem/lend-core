@@ -25,7 +25,7 @@ import {
   HToken__factory,
   Pool__factory,
   ERC20__factory,
-} from '../types';
+} from './../types';
 import { convertToCurrencyDecimals, getProxyImplementation } from '../helpers/contracts-helpers';
 import { ethers } from 'hardhat';
 import { deposit, getTxCostAndTimestamp } from './helpers/actions';
@@ -95,7 +95,7 @@ const setupPositions = async (testEnv: TestEnv, borrowingMode: RateMode) => {
 makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
   const {
     NO_MORE_RESERVES_ALLOWED,
-    CALLER_NOT_ATOKEN,
+    CALLER_NOT_HTOKEN,
     NOT_CONTRACT,
     CALLER_NOT_POOL_CONFIGURATOR,
     RESERVE_ALREADY_INITIALIZED,
@@ -341,7 +341,7 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
       pool
         .connect(users[0].signer)
         .finalizeTransfer(dai.address, users[0].address, users[1].address, 0, 0, 0)
-    ).to.be.revertedWith(CALLER_NOT_ATOKEN);
+    ).to.be.revertedWith(CALLER_NOT_HTOKEN);
   });
 
   it('Tries to call `initReserve()` with an EOA as reserve (revert expected)', async () => {

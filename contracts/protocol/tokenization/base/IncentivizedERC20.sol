@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: LGPL-3.0
 pragma solidity 0.8.17;
 
-import {Context} from '../../../dependencies/openzeppelin/contracts/Context.sol';
 import {IERC20} from '../../../dependencies/openzeppelin/contracts/IERC20.sol';
 import {IERC20Detailed} from '../../../dependencies/openzeppelin/contracts/IERC20Detailed.sol';
 import {SafeCast} from '../../../dependencies/openzeppelin/contracts/SafeCast.sol';
@@ -11,13 +10,14 @@ import {IHopeLendIncentivesController} from '../../../interfaces/IHopeLendIncent
 import {IPoolAddressesProvider} from '../../../interfaces/IPoolAddressesProvider.sol';
 import {IPool} from '../../../interfaces/IPool.sol';
 import {IACLManager} from '../../../interfaces/IACLManager.sol';
+import {AbsGauge} from '../../gauge/AbsGauge.sol';
 
 /**
  * @title IncentivizedERC20
  * @author HopeLend, inspired by the Openzeppelin ERC20 implementation
  * @notice Basic ERC20 implementation
  */
-abstract contract IncentivizedERC20 is Context, IERC20Detailed {
+abstract contract IncentivizedERC20 is AbsGauge, IERC20Detailed {
   using WadRayMath for uint256;
   using SafeCast for uint256;
 
@@ -80,6 +80,10 @@ abstract contract IncentivizedERC20 is Context, IERC20Detailed {
     _symbol = symbol;
     _decimals = decimals;
     POOL = pool;
+  }
+
+  function setLendingGauge(address _lendingGauge) external onlyPool {
+    _initGauge(_lendingGauge);
   }
 
   /// @inheritdoc IERC20Detailed
@@ -196,17 +200,22 @@ abstract contract IncentivizedERC20 is Context, IERC20Detailed {
     address recipient,
     uint128 amount
   ) internal virtual {
+    if (address(lendingGauge) != address(0)) {
+      lendingGauge.hvCheckpoint(sender);
+      if (sender != recipient) {
+        lendingGauge.hvCheckpoint(recipient);
+      }
+    }
+
     uint128 oldSenderBalance = _userState[sender].balance;
     _userState[sender].balance = oldSenderBalance - amount;
     uint128 oldRecipientBalance = _userState[recipient].balance;
     _userState[recipient].balance = oldRecipientBalance + amount;
 
-    IHopeLendIncentivesController incentivesControllerLocal = _incentivesController;
-    if (address(incentivesControllerLocal) != address(0)) {
-      uint256 currentTotalSupply = _totalSupply;
-      incentivesControllerLocal.handleAction(sender, currentTotalSupply, oldSenderBalance);
+    if (address(lendingGauge) != address(0)) {
+      lendingGauge.hvUpdateLiquidityLimit(sender);
       if (sender != recipient) {
-        incentivesControllerLocal.handleAction(recipient, currentTotalSupply, oldRecipientBalance);
+        lendingGauge.hvUpdateLiquidityLimit(recipient);
       }
     }
   }

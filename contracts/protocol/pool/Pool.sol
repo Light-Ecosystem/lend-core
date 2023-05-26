@@ -17,6 +17,9 @@ import {IERC20WithPermit} from '../../interfaces/IERC20WithPermit.sol';
 import {IPoolAddressesProvider} from '../../interfaces/IPoolAddressesProvider.sol';
 import {IPool} from '../../interfaces/IPool.sol';
 import {IACLManager} from '../../interfaces/IACLManager.sol';
+import {IHTokenRewards} from '../../interfaces/IHTokenRewards.sol';
+import {IVariableDebtTokenRewards} from '../../interfaces/IVariableDebtTokenRewards.sol';
+import {IStableDebtTokenRewards} from '../../interfaces/IStableDebtTokenRewards.sol';
 import {PoolStorage} from './PoolStorage.sol';
 
 /**
@@ -593,7 +596,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
     uint256 balanceFromBefore,
     uint256 balanceToBefore
   ) external virtual override {
-    require(msg.sender == _reserves[asset].hTokenAddress, Errors.CALLER_NOT_ATOKEN);
+    require(msg.sender == _reserves[asset].hTokenAddress, Errors.CALLER_NOT_HTOKEN);
     SupplyLogic.executeFinalizeTransfer(
       _reserves,
       _reservesList,
@@ -655,6 +658,15 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
     require(asset != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
     require(_reserves[asset].id != 0 || _reservesList[0] == asset, Errors.ASSET_NOT_LISTED);
     _reserves[asset].interestRateStrategyAddress = rateStrategyAddress;
+  }
+
+  function setLendingGauge(address asset, address lendingGauge) external onlyPoolAdmin {
+    require(lendingGauge != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
+    require(asset != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
+    require(_reserves[asset].id != 0 || _reservesList[0] == asset, Errors.ASSET_NOT_LISTED);
+    IHTokenRewards(_reserves[asset].hTokenAddress).setLendingGauge(lendingGauge);
+    IVariableDebtTokenRewards(_reserves[asset].variableDebtTokenAddress).setLendingGauge(lendingGauge);
+    IStableDebtTokenRewards(_reserves[asset].stableDebtTokenAddress).setLendingGauge(lendingGauge);
   }
 
   /// @inheritdoc IPool

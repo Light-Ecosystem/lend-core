@@ -6,7 +6,7 @@ import { getACLManager } from 'lend-deploy/dist/helpers/contract-getters';
 import { ReserveData, UserReserveData } from './helpers/utils/interfaces';
 import { ProtocolErrors, RateMode } from '../helpers/types';
 import { MAX_UINT_AMOUNT, MAX_UNBACKED_MINT_CAP } from '../helpers/constants';
-import { ACLManager } from '../types';
+import { ACLManager } from './../types';
 import { TestEnv, makeSuite } from './helpers/make-suite';
 import { getReserveData } from './helpers/utils/helpers';
 import { getTxCostAndTimestamp } from './helpers/actions';

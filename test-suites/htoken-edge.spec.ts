@@ -121,7 +121,7 @@ makeSuite('HToken: Edge cases', (testEnv: TestEnv) => {
     const { deployer, pool, hDai, users } = testEnv;
 
     // Impersonate Pool
-    await topUpNonPayableWithEther(deployer.signer, [pool.address], utils.parseEther('1'));
+    await topUpNonPayableWithEther(deployer.signer, [pool.address], utils.parseEther('10'));
     await impersonateAccountsHardhat([pool.address]);
     const poolSigner = await hre.ethers.getSigner(pool.address);
 

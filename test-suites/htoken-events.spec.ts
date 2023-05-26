@@ -12,7 +12,7 @@ import { TransactionReceipt } from '@ethersproject/providers';
 import { MAX_UINT_AMOUNT } from '../helpers/constants';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { RateMode } from '../helpers/types';
-import { Pool, HToken } from '../types';
+import { Pool, HToken } from './../types';
 import { makeSuite, SignerWithAddress, TestEnv } from './helpers/make-suite';
 import {
   supply,
@@ -22,7 +22,7 @@ import {
   transferFrom,
   printHTokenEvents,
 } from './helpers/utils/tokenization-events';
-import {percentMul} from './helpers/utils/wadraymath';
+import { percentMul } from './helpers/utils/wadraymath';
 
 const DEBUG = false;
 
@@ -78,7 +78,7 @@ const increaseSupplyIndex = async (
       borrower.address
     );
 
-  await advanceTimeAndBlock(10000000000);
+  await advanceTimeAndBlock(10000);
 };
 
 const updateBalances = (balances: any, hToken: HToken, receipt: TransactionReceipt) => {
