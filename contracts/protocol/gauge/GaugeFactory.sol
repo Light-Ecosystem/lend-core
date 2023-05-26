@@ -33,15 +33,6 @@ contract GaugeFactory is AccessControl, IGaugeFactory {
     _;
   }
 
-  /**
-   * @dev Only pool admin can call functions marked by this modifier.
-   */
-  modifier onlyPoolAdminOrOperator() {
-    IACLManager aclManager = IACLManager(_addressesProvider.getACLManager());
-    require(aclManager.isPoolAdmin(msg.sender), Errors.CALLER_NOT_POOL_ADMIN);
-    _;
-  }
-
   constructor(
     address _pool,
     address _lendingGaugeImplementation,

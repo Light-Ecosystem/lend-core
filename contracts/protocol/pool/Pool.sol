@@ -19,7 +19,6 @@ import {IPool} from '../../interfaces/IPool.sol';
 import {IACLManager} from '../../interfaces/IACLManager.sol';
 import {IHTokenRewards} from '../../interfaces/IHTokenRewards.sol';
 import {IVariableDebtTokenRewards} from '../../interfaces/IVariableDebtTokenRewards.sol';
-import {IStableDebtTokenRewards} from '../../interfaces/IStableDebtTokenRewards.sol';
 import {PoolStorage} from './PoolStorage.sol';
 
 /**
@@ -666,7 +665,6 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
     require(_reserves[asset].id != 0 || _reservesList[0] == asset, Errors.ASSET_NOT_LISTED);
     IHTokenRewards(_reserves[asset].hTokenAddress).setLendingGauge(lendingGauge);
     IVariableDebtTokenRewards(_reserves[asset].variableDebtTokenAddress).setLendingGauge(lendingGauge);
-    IStableDebtTokenRewards(_reserves[asset].stableDebtTokenAddress).setLendingGauge(lendingGauge);
   }
 
   /// @inheritdoc IPool

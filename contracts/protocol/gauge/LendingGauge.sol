@@ -10,7 +10,6 @@ import '../../interfaces/IMinter.sol';
 import '../../dependencies/openzeppelin/contracts/IERC20Detailed.sol';
 import '../../interfaces/IHTokenRewards.sol';
 import '../../interfaces/IVariableDebtTokenRewards.sol';
-import '../../interfaces/IStableDebtTokenRewards.sol';
 import '../../interfaces/IACLManager.sol';
 import '../../interfaces/IPool.sol';
 import '../../interfaces/ILendingGauge.sol';
@@ -128,12 +127,14 @@ contract LendingGauge is ILendingGauge, Initializable {
     override
     returns (bool)
   {
-    uint256 availableBalance = IERC20(underlyingAsset).balanceOf(hToken);
     uint256 stableDebtTokenTotalSupply = IERC20(stableDebtToken).totalSupply();
     uint256 variableDebtTokenTotalSupply = IERC20(variableDebtToken).totalSupply();
-
     uint256 totalDebt = stableDebtTokenTotalSupply + variableDebtTokenTotalSupply;
-
+    if (totalDebt == 0) {
+      borrowAllocation = 0;
+      return true;
+    }
+    uint256 availableBalance = IERC20(underlyingAsset).balanceOf(hToken);
     uint256 availableLiquidity = availableBalance + liquidityAdded - liquidityTaken;
     uint256 availableLiquidityPlusDebt = availableLiquidity + totalDebt;
     if (availableLiquidityPlusDebt == 0) {
