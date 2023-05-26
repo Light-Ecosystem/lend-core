@@ -15,6 +15,11 @@ contract MockAggregator {
     return _latestAnswer;
   }
 
+  function setLatestAnswer(int256 answer) external {
+    _latestAnswer = answer;
+    emit AnswerUpdated(answer, 0, block.timestamp);
+  }
+
   function getTokenType() external pure returns (uint256) {
     return 1;
   }
