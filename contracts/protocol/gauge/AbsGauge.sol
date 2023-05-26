@@ -13,7 +13,6 @@ import '../../interfaces/ILendingGauge.sol';
 import '../../interfaces/IAbsGauge.sol';
 import '../libraries/types/DataTypes.sol';
 import '../libraries/helpers/Errors.sol';
-import 'hardhat/console.sol';
 
 abstract contract AbsGauge is Context, IAbsGauge {
   event UpdateLiquidityLimit(

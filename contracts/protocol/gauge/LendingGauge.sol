@@ -18,7 +18,6 @@ import '../../dependencies/openzeppelin/upgradeability/Initializable.sol';
 import '../../dependencies/openzeppelin/contracts/SafeCast.sol';
 import '../libraries/types/DataTypes.sol';
 import '../libraries/helpers/Errors.sol';
-import 'hardhat/console.sol';
 
 contract LendingGauge is ILendingGauge, Initializable {
   event UpdateStableDebtPercentage(uint256 time, uint256 oldPercentage, uint256 newPercentage);
