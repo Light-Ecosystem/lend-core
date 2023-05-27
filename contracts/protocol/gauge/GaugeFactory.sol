@@ -55,6 +55,7 @@ contract GaugeFactory is AccessControl, IGaugeFactory {
     onlyRole(OPERATOR_ROLE)
     returns (address lendingGaugeAddress)
   {
+    require(_underlyingAsset != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
     bytes32 salt = keccak256(abi.encodePacked(_underlyingAsset));
     lendingGaugeAddress = Clones.cloneDeterministic(lendingGaugeImplementation, salt);
     ILendingGauge(lendingGaugeAddress).initialize(
@@ -73,20 +74,22 @@ contract GaugeFactory is AccessControl, IGaugeFactory {
   }
 
   function setLendingGaugeImplementation(address _gaugeAddress) external onlyPoolAdmin {
-    require(_gaugeAddress != address(0), 'PARAMETER_ADDRESS_NOT_ZERO');
+    require(_gaugeAddress != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
     lendingGaugeImplementation = _gaugeAddress;
     emit SetLendingGaugeImplementation(_gaugeAddress);
   }
 
-  function isOperator(address operator) external view override returns (bool) {
-    return hasRole(OPERATOR_ROLE, operator);
+  function isOperator(address _operator) external view override returns (bool) {
+    return hasRole(OPERATOR_ROLE, _operator);
   }
 
-  function addOperator(address operator) external override onlyPoolAdmin {
-    _grantRole(OPERATOR_ROLE, operator);
+  function addOperator(address _operator) external override onlyPoolAdmin {
+    require(_operator != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
+    _grantRole(OPERATOR_ROLE, _operator);
   }
 
-  function removeOperator(address operator) external override onlyPoolAdmin {
-    _revokeRole(OPERATOR_ROLE, operator);
+  function removeOperator(address _operator) external override onlyPoolAdmin {
+    require(_operator != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
+    _revokeRole(OPERATOR_ROLE, _operator);
   }
 }

@@ -6,7 +6,7 @@ import { ProtocolErrors } from '../helpers/types';
 import { makeSuite } from './helpers/make-suite';
 import { parseUnits } from 'ethers/lib/utils';
 
-makeSuite('LendingGauge', (testEnv) => {
+makeSuite('LendingGauge: Config', (testEnv) => {
   const {
     PARAMETER_ADDRESS_NOT_ZERO,
     CALLER_NOT_POOL_ADMIN,

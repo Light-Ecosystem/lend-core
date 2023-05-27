@@ -10,7 +10,7 @@ import { supply, variableBorrow } from './helpers/utils/tokenization-events';
 
 const DEBUG = false;
 
-makeSuite('LendingGauge', (testEnv) => {
+makeSuite('LendingGauge: Allocation', (testEnv) => {
   let alice, bob, eve;
   let snapId;
 

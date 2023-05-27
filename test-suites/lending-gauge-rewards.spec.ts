@@ -9,7 +9,7 @@ import { supply, variableBorrow } from './helpers/utils/tokenization-events';
 
 const DEBUG = false;
 
-makeSuite('LendingGauge', (testEnv) => {
+makeSuite('LendingGauge: Rewards', (testEnv) => {
   let RATE;
   let WEIGHT;
   const TIME_INCREASE = 30;
