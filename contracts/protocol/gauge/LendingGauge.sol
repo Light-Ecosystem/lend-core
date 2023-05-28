@@ -122,11 +122,7 @@ contract LendingGauge is ILendingGauge, Initializable {
   /**
    * Update debt token allocation ratio based on fund utilization rate
    */
-  function updateAllocation(uint256 liquidityAdded, uint256 liquidityTaken)
-    external
-    override
-    returns (bool)
-  {
+  function updateAllocation() external override returns (bool) {
     uint256 stableDebtTokenTotalSupply = IERC20(stableDebtToken).totalSupply();
     uint256 variableDebtTokenTotalSupply = IERC20(variableDebtToken).totalSupply();
     uint256 totalDebt = stableDebtTokenTotalSupply + variableDebtTokenTotalSupply;
@@ -134,8 +130,7 @@ contract LendingGauge is ILendingGauge, Initializable {
       borrowAllocation = 0;
       return true;
     }
-    uint256 availableBalance = IERC20(underlyingAsset).balanceOf(hToken);
-    uint256 availableLiquidity = availableBalance + liquidityAdded - liquidityTaken;
+    uint256 availableLiquidity = IERC20(underlyingAsset).balanceOf(hToken);
     uint256 availableLiquidityPlusDebt = availableLiquidity + totalDebt;
     if (availableLiquidityPlusDebt == 0) {
       borrowAllocation = 0;

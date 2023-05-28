@@ -85,7 +85,7 @@ library BridgeLogic {
 
     ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
     if (address(lendingGauge) != address(0)) {
-      lendingGauge.updateAllocation(0, 0);
+      lendingGauge.updateAllocation();
     }
 
     if (isFirstSupply) {
@@ -148,7 +148,7 @@ library BridgeLogic {
 
     ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
     if (address(lendingGauge) != address(0)) {
-      lendingGauge.updateAllocation(0, 0);
+      lendingGauge.updateAllocation();
     }
 
     emit BackUnbacked(asset, msg.sender, backingAmount, fee);

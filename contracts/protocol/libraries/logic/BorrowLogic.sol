@@ -154,15 +154,15 @@ library BorrowLogic {
       params.releaseUnderlying ? params.amount : 0
     );
 
+    if (params.releaseUnderlying) {
+      IHToken(reserveCache.hTokenAddress).transferUnderlyingTo(params.user, params.amount);
+    }
+
     {
       ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
       if (address(lendingGauge) != address(0)) {
-        lendingGauge.updateAllocation(0, params.releaseUnderlying ? params.amount : 0);
+        lendingGauge.updateAllocation();
       }
-    }
-
-    if (params.releaseUnderlying) {
-      IHToken(reserveCache.hTokenAddress).transferUnderlyingTo(params.user, params.amount);
     }
 
     emit Borrow(
@@ -246,12 +246,6 @@ library BorrowLogic {
       params.useHTokens ? 0 : paybackAmount,
       0
     );
-
-    ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
-    if (address(lendingGauge) != address(0)) {
-      lendingGauge.updateAllocation(params.useHTokens ? 0 : paybackAmount, 0);
-    }
-
     if (stableDebt + variableDebt - paybackAmount == 0) {
       userConfig.setBorrowing(reserve.id, false);
     }
@@ -278,6 +272,11 @@ library BorrowLogic {
         params.onBehalfOf,
         paybackAmount
       );
+    }
+
+    ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
+    if (address(lendingGauge) != address(0)) {
+      lendingGauge.updateAllocation();
     }
 
     emit Repay(params.asset, params.onBehalfOf, msg.sender, paybackAmount, params.useHTokens);
@@ -313,11 +312,6 @@ library BorrowLogic {
       .mint(user, user, stableDebt, reserve.currentStableBorrowRate);
 
     reserve.updateInterestRates(reserveCache, asset, 0, 0);
-
-    ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
-    if (address(lendingGauge) != address(0)) {
-      lendingGauge.updateAllocation(0, 0);
-    }
 
     emit RebalanceStableBorrowRate(asset, user);
   }
@@ -381,11 +375,6 @@ library BorrowLogic {
     }
 
     reserve.updateInterestRates(reserveCache, asset, 0, 0);
-
-    ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
-    if (address(lendingGauge) != address(0)) {
-      lendingGauge.updateAllocation(0, 0);
-    }
 
     emit SwapBorrowRateMode(asset, msg.sender, interestRateMode);
   }
