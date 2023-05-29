@@ -63,7 +63,7 @@ contract LendingGauge is ILendingGauge, Initializable {
   DataTypes.Phase[] public phases;
   uint256 public borrowAllocation;
 
-  constructor() public {
+  constructor() {
     factory = address(0xdead);
   }
 
@@ -97,10 +97,7 @@ contract LendingGauge is ILendingGauge, Initializable {
   }
 
   function _addPhase(DataTypes.Phase memory _phase) internal {
-    require(
-      _phase.endPercentage > _phase.startPercentage,
-      Errors.LENDING_GAUGE_PERCENTAGE_NOT_MATCH
-    );
+    require(_phase.endPercentage > _phase.startPercentage, Errors.LENDING_GAUGE_PERCENTAGE_NOT_MATCH);
     require(
       phases.length == 0 || _phase.startPercentage == phases[phases.length - 1].endPercentage,
       Errors.LENDING_GAUGE_PERCENTAGE_NOT_MATCH
@@ -136,9 +133,7 @@ contract LendingGauge is ILendingGauge, Initializable {
       borrowAllocation = 0;
       return false;
     }
-    borrowAllocation = _getAllocationByUtilizationRate(
-      totalDebt.rayDiv(availableLiquidityPlusDebt)
-    );
+    borrowAllocation = _getAllocationByUtilizationRate(totalDebt.rayDiv(availableLiquidityPlusDebt));
     return true;
   }
 
@@ -146,9 +141,7 @@ contract LendingGauge is ILendingGauge, Initializable {
    * Reserve incentive aggregation
    */
   function integrateFraction(address _addr) public view returns (uint256) {
-    return
-      IHTokenRewards(hToken).integrateFraction(_addr) +
-      IVariableDebtTokenRewards(variableDebtToken).integrateFraction(_addr);
+    return IHTokenRewards(hToken).integrateFraction(_addr) + IVariableDebtTokenRewards(variableDebtToken).integrateFraction(_addr);
   }
 
   /**
@@ -179,11 +172,7 @@ contract LendingGauge is ILendingGauge, Initializable {
       IHTokenRewards(hToken).checkpoint(_addr, _calRelativeWeightByAllocation(hToken), _st);
     }
     if (IVariableDebtTokenRewards(variableDebtToken).totalSupply() != 0) {
-      IVariableDebtTokenRewards(variableDebtToken).checkpoint(
-        _addr,
-        _calRelativeWeightByAllocation(variableDebtToken),
-        _st
-      );
+      IVariableDebtTokenRewards(variableDebtToken).checkpoint(_addr, _calRelativeWeightByAllocation(variableDebtToken), _st);
     }
     _st.period += 1;
     period = _st.period;
@@ -239,22 +228,15 @@ contract LendingGauge is ILendingGauge, Initializable {
    */
   function kick(address _addr) external {
     uint256 _hTokenLast = IHTokenRewards(hToken).integrateCheckpointOf(_addr);
-    uint256 _variableDebtTokenLast = IVariableDebtTokenRewards(variableDebtToken)
-      .integrateCheckpointOf(_addr);
+    uint256 _variableDebtTokenLast = IVariableDebtTokenRewards(variableDebtToken).integrateCheckpointOf(_addr);
     uint256 _tVe = votingEscrow.userPointHistoryTs(_addr, votingEscrow.userPointEpoch(_addr));
     uint256 _hTokenBalance = IHTokenRewards(hToken).lpBalanceOf(_addr);
     uint256 _variableDebtTokenBalance = IHTokenRewards(hToken).lpBalanceOf(_addr);
 
-    require(
-      votingEscrow.balanceOfAtTime(_addr, block.timestamp) == 0 ||
-        _tVe > _hTokenLast ||
-        _tVe > _variableDebtTokenLast,
-      'GP001'
-    );
+    require(votingEscrow.balanceOfAtTime(_addr, block.timestamp) == 0 || _tVe > _hTokenLast || _tVe > _variableDebtTokenLast, 'GP001');
     require(
       IHTokenRewards(hToken).workingBalances(_addr) > (_hTokenBalance * 40) / 100 ||
-        IVariableDebtTokenRewards(variableDebtToken).workingBalances(_addr) >
-        (_variableDebtTokenBalance * 40) / 100,
+        IVariableDebtTokenRewards(variableDebtToken).workingBalances(_addr) > (_variableDebtTokenBalance * 40) / 100,
       'GP001'
     );
 
@@ -274,22 +256,14 @@ contract LendingGauge is ILendingGauge, Initializable {
    * @dev borrowAllocation = kx + b. k = (y2 - y1) / (x2 - x1). b = y1 - m * x1.
    * @param _utilizationRate Utilization rate
    */
-  function _getAllocationByUtilizationRate(uint256 _utilizationRate)
-    internal
-    view
-    returns (uint256)
-  {
+  function _getAllocationByUtilizationRate(uint256 _utilizationRate) internal view returns (uint256) {
     require(phases.length > 0, Errors.PHASES_NOT_DEFINED);
     if (_utilizationRate == 0) {
       return 0;
     }
     for (uint256 i = 0; i < phases.length; i++) {
-      if (
-        _utilizationRate > phases[i].startPercentage && _utilizationRate <= phases[i].endPercentage
-      ) {
-        int256 _borrowAllocation = (phases[i].k * _utilizationRate.toInt256()) /
-          WadRayMath.RAY.toInt256() +
-          phases[i].b.toInt256();
+      if (_utilizationRate > phases[i].startPercentage && _utilizationRate <= phases[i].endPercentage) {
+        int256 _borrowAllocation = (phases[i].k * _utilizationRate.toInt256()) / WadRayMath.RAY.toInt256() + phases[i].b.toInt256();
         require(_borrowAllocation >= 0, Errors.MUST_BE_NON_NEGATIVE);
         return _borrowAllocation.toUint256();
       }
@@ -328,11 +302,7 @@ contract LendingGauge is ILendingGauge, Initializable {
       IHTokenRewards(hToken).updateLiquidityLimit(_addr);
     }
     if (IVariableDebtTokenRewards(variableDebtToken).totalSupply() != 0) {
-      IVariableDebtTokenRewards(variableDebtToken).checkpoint(
-        _addr,
-        _calRelativeWeightByAllocation(variableDebtToken),
-        _st
-      );
+      IVariableDebtTokenRewards(variableDebtToken).checkpoint(_addr, _calRelativeWeightByAllocation(variableDebtToken), _st);
       IVariableDebtTokenRewards(variableDebtToken).updateLiquidityLimit(_addr);
     }
     _st.period += 1;

@@ -130,20 +130,11 @@ abstract contract AbsGauge is Context, IAbsGauge {
         }
         if (_workingSupply > 0) {
           if (_st.prevFutureEpoch >= _prevWeekTime && _st.prevFutureEpoch < _weekTime) {
-            _integrateInvSupply +=
-              (_st.rate * _w * _allocation * (_st.prevFutureEpoch - _prevWeekTime)) /
-              _workingSupply /
-              WadRayMath.RAY;
+            _integrateInvSupply += (_st.rate * _w * _allocation * (_st.prevFutureEpoch - _prevWeekTime)) / _workingSupply / WadRayMath.RAY;
             _st.rate = _st.newRate;
-            _integrateInvSupply +=
-              (_st.rate * _w * _allocation * (_weekTime - _st.prevFutureEpoch)) /
-              _workingSupply /
-              WadRayMath.RAY;
+            _integrateInvSupply += (_st.rate * _w * _allocation * (_weekTime - _st.prevFutureEpoch)) / _workingSupply / WadRayMath.RAY;
           } else {
-            _integrateInvSupply +=
-              (_st.rate * _w * _allocation * _dt) /
-              _workingSupply /
-              WadRayMath.RAY;
+            _integrateInvSupply += (_st.rate * _w * _allocation * _dt) / _workingSupply / WadRayMath.RAY;
           }
         }
         if (_weekTime == block.timestamp) {
@@ -154,9 +145,7 @@ abstract contract AbsGauge is Context, IAbsGauge {
       }
     }
     uint256 _workingBalance = workingBalances[_addr];
-    integrateFraction[_addr] +=
-      (_workingBalance * (_integrateInvSupply - integrateInvSupplyOf[_addr])) /
-      10**18;
+    integrateFraction[_addr] += (_workingBalance * (_integrateInvSupply - integrateInvSupplyOf[_addr])) / 10**18;
     integrateInvSupplyOf[_addr] = _integrateInvSupply;
     integrateCheckpointOf[_addr] = block.timestamp;
   }

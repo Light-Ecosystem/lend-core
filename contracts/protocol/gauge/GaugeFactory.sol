@@ -11,7 +11,7 @@ import '../../interfaces/IGaugeFactory.sol';
 import '../libraries/helpers/Errors.sol';
 
 contract GaugeFactory is AccessControl, IGaugeFactory {
-  bytes32 public constant override OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
+  bytes32 public constant override OPERATOR_ROLE = keccak256('OPERATOR_ROLE');
 
   IPoolAddressesProvider internal _addressesProvider;
 
@@ -50,20 +50,11 @@ contract GaugeFactory is AccessControl, IGaugeFactory {
     _addressesProvider = IPool(_pool).ADDRESSES_PROVIDER();
   }
 
-  function createLendingGauge(address _underlyingAsset)
-    external
-    onlyRole(OPERATOR_ROLE)
-    returns (address lendingGaugeAddress)
-  {
+  function createLendingGauge(address _underlyingAsset) external onlyRole(OPERATOR_ROLE) returns (address lendingGaugeAddress) {
     require(_underlyingAsset != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
     bytes32 salt = keccak256(abi.encodePacked(_underlyingAsset));
     lendingGaugeAddress = Clones.cloneDeterministic(lendingGaugeImplementation, salt);
-    ILendingGauge(lendingGaugeAddress).initialize(
-      pool,
-      minter,
-      votingEscrow,
-      _underlyingAsset
-    );
+    ILendingGauge(lendingGaugeAddress).initialize(pool, minter, votingEscrow, _underlyingAsset);
     lendingGauge[_underlyingAsset] = lendingGaugeAddress;
     allLendingGauges.push(lendingGaugeAddress);
     emit LendingGaugeCreated(_underlyingAsset, lendingGaugeAddress, allLendingGauges.length);
@@ -79,7 +70,7 @@ contract GaugeFactory is AccessControl, IGaugeFactory {
     emit SetLendingGaugeImplementation(_gaugeAddress);
   }
 
-  function isOperator(address _operator) external view override returns (bool) {
+  function isOperator(address _operator) external override view returns (bool) {
     return hasRole(OPERATOR_ROLE, _operator);
   }
 
