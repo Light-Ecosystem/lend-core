@@ -97,12 +97,9 @@ contract LendingGauge is ILendingGauge, Initializable {
   }
 
   function _addPhase(DataTypes.Phase memory _phase) internal {
-    require(_phase.endPercentage > _phase.startPercentage, Errors.LENDING_GAUGE_PERCENTAGE_NOT_MATCH);
-    require(
-      phases.length == 0 || _phase.startPercentage == phases[phases.length - 1].endPercentage,
-      Errors.LENDING_GAUGE_PERCENTAGE_NOT_MATCH
-    );
-    phases.push(DataTypes.Phase(_phase.startPercentage, _phase.endPercentage, _phase.k, _phase.b));
+    require(_phase.end > _phase.start, Errors.LENDING_GAUGE_PERCENTAGE_NOT_MATCH);
+    require(phases.length == 0 || _phase.start == phases[phases.length - 1].end, Errors.LENDING_GAUGE_PERCENTAGE_NOT_MATCH);
+    phases.push(DataTypes.Phase(_phase.start, _phase.end, _phase.k, _phase.b));
   }
 
   /**
@@ -262,7 +259,7 @@ contract LendingGauge is ILendingGauge, Initializable {
       return 0;
     }
     for (uint256 i = 0; i < phases.length; i++) {
-      if (_utilizationRate > phases[i].startPercentage && _utilizationRate <= phases[i].endPercentage) {
+      if (_utilizationRate > phases[i].start && _utilizationRate <= phases[i].end) {
         int256 _borrowAllocation = (phases[i].k * _utilizationRate.toInt256()) / WadRayMath.RAY.toInt256() + phases[i].b.toInt256();
         require(_borrowAllocation >= 0, Errors.MUST_BE_NON_NEGATIVE);
         return _borrowAllocation.toUint256();

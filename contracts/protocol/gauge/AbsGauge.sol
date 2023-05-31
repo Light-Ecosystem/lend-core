@@ -30,7 +30,6 @@ abstract contract AbsGauge is Context, IAbsGauge {
   uint256 internal constant _WEEK = _DAY * 7;
 
   ILendingGauge public lendingGauge;
-  ILT public ltToken;
   IGaugeController public controller;
   IVotingEscrow public votingEscrow;
 
