@@ -48,4 +48,11 @@ contract PoolStorage {
 
   // Maximum number of active reserves there have been in the protocol. It is the upper bound of the reserves list
   uint16 internal _reservesCount;
+
+  // for reserve.accruedToTreasury, the percent to vault of HOPE ecosystem
+  uint256 internal _feeToVaultPercent ;
+
+  // the address to receive the feeToVaultPercent
+  address internal _feeToVault ;
+
 }

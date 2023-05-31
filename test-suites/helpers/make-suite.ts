@@ -19,6 +19,7 @@ import {
   getMinter,
   getGaugeController,
   getVotingEscrow,
+  getLendingFeeToVault
 } from 'lend-deploy/dist/helpers/contract-getters';
 import { tEthereumAddress } from '../../helpers/types';
 import {
@@ -37,6 +38,7 @@ import {
   VariableDebtToken,
   LendingGauge,
   GaugeFactory,
+  LendingFeeToVault
 } from '../../types';
 
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
@@ -80,6 +82,7 @@ export interface TestEnv {
   gaugeController: Contract;
   veLT: Contract;
   minter: Contract;
+  lendingFeeToVault: LendingFeeToVault
 }
 
 let HardhatSnapshotId: string = '0x1';
@@ -117,6 +120,7 @@ const testEnv: TestEnv = {
   gaugeController: {} as Contract,
   lt: {} as Contract,
   veLT: {} as Contract,
+  lendingFeeToVault: {} as LendingFeeToVault
 } as TestEnv;
 
 export async function initializeMakeSuite() {
@@ -194,6 +198,9 @@ export async function initializeMakeSuite() {
 
   const daiLendingGaugeAddress = await testEnv.gaugeFactory.lendingGauge(daiAddress);
   testEnv.daiLendingGauge = await getLendingGauge(daiLendingGaugeAddress);
+
+  const vaultAddress = await testEnv.pool.getFeeToVault();
+  testEnv.lendingFeeToVault = await getLendingFeeToVault(vaultAddress);
 
   // Setup admins
   await waitForTx(await testEnv.aclManager.addRiskAdmin(testEnv.riskAdmin.address));

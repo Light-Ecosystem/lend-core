@@ -651,6 +651,30 @@ interface IPool {
   ) external;
 
   /**
+   * @notice Updates the percent fo fee to Vault.
+   * @param feeToVaultPercent The percent fo fee to Vault. 100% = 1e4
+   */
+  function updateFeeToVaultPercent(uint256 feeToVaultPercent) external;
+
+    /**
+   * @notice Returns the percent of fee
+   * @return feeToVaultPercent The the percent of fee, 100% = 1e4
+   */
+  function getFeeToVaultPercent() external view returns (uint256 feeToVaultPercent);
+
+  /**
+   * @notice Returns the address of vault
+   * @return feeToVault The the address of vault
+   */
+  function getFeeToVault() external view returns (address feeToVault);
+
+  /**
+   * @notice Set the address of vault
+   * @param feeToVault The id of the category
+   */
+  function setFeeToVault(address feeToVault) external;
+
+  /**
    * @notice Configures a new category for the eMode.
    * @dev In eMode, the protocol allows very high borrowing power to borrow assets of the same category.
    * The category 0 is reserved as it's the default for volatile assets

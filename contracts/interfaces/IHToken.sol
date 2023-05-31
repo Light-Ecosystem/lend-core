@@ -152,4 +152,12 @@ interface IHToken is IERC20, IScaledBalanceToken, IInitializableHToken {
     address to,
     uint256 amount
   ) external;
+
+  /**
+   * @notice if the asset is stHOPE, there will be LT rewards.
+   * @param stHope The address of the stakingHOPE
+   * @param to The address of the recipient
+   * @return The amount of withdrew
+   */
+  function withdrawLTRewards(address stHope, address to) external returns (uint256);
 }

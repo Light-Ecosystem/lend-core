@@ -7,6 +7,7 @@ import {SafeCast} from '../../dependencies/openzeppelin/contracts/SafeCast.sol';
 import {VersionedInitializable} from '../libraries/hopelend-upgradeability/VersionedInitializable.sol';
 import {Errors} from '../libraries/helpers/Errors.sol';
 import {WadRayMath} from '../libraries/math/WadRayMath.sol';
+import {PercentageMath} from '../libraries/math/PercentageMath.sol';
 import {IPool} from '../../interfaces/IPool.sol';
 import {IHToken} from '../../interfaces/IHToken.sol';
 import {IHopeLendIncentivesController} from '../../interfaces/IHopeLendIncentivesController.sol';
@@ -14,6 +15,8 @@ import {IInitializableHToken} from '../../interfaces/IInitializableHToken.sol';
 import {ScaledBalanceTokenBase} from './base/ScaledBalanceTokenBase.sol';
 import {IncentivizedERC20} from './base/IncentivizedERC20.sol';
 import {EIP712Base} from './base/EIP712Base.sol';
+import {IMinter} from '../../interfaces/IMinter.sol';
+import {IStakingHOPE} from '../../interfaces/IStakingHOPE.sol';
 
 /**
  * @title HopeLend ERC20 HToken
@@ -24,6 +27,7 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
   using WadRayMath for uint256;
   using SafeCast for uint256;
   using GPv2SafeERC20 for IERC20;
+  using PercentageMath for uint256;
 
   bytes32 public constant PERMIT_TYPEHASH =
     keccak256('Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)');
@@ -111,7 +115,16 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
     if (amount == 0) {
       return;
     }
-    _mintScaled(address(POOL), _treasury, amount, index);
+
+    address feeToVault = POOL.getFeeToVault();
+    uint256 feeToVaultPercent = POOL.getFeeToVaultPercent();
+    if (feeToVault != address(0) && feeToVaultPercent != 0) {
+      uint256 amountToVault = amount.percentMul(feeToVaultPercent);
+      IERC20(_underlyingAsset).safeTransfer(feeToVault, amountToVault);
+      _mintScaled(address(POOL), _treasury, amount - amountToVault, index);
+    } else {
+      _mintScaled(address(POOL), _treasury, amount, index);
+    }
   }
 
   /// @inheritdoc IHToken
@@ -278,5 +291,21 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
 
   function lpTotalSupply() public view override returns (uint256) {
     return totalSupply();
+  }
+
+  /// @inheritdoc IHToken
+  function withdrawLTRewards(address stHope, address to) external onlyPoolAdmin returns (uint256) {
+    if (to == address(0)) to = msg.sender;
+    
+    uint256 claimableTokens = IStakingHOPE(stHope).claimableTokens(address(this));
+    require(claimableTokens > 0, "no rewards to claim");
+
+    address _minter = IStakingHOPE(stHope).minter();
+    address lt = IStakingHOPE(stHope).ltToken();
+    uint256 balanceBefore = IERC20(lt).balanceOf(address(this));
+    IMinter(_minter).mint(stHope);
+    uint256 claimAmount = IERC20(lt).balanceOf(address(this)) - balanceBefore;
+    IERC20(lt).safeTransfer(to, claimAmount);
+    return claimAmount;
   }
 }

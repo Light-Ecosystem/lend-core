@@ -30,7 +30,8 @@
     "ci:test": ". ./setup-test-env.sh  && npm run test",
     "ci:clean": "rm -rf ./artifacts ./cache ./types ./temp-artifacts",
     "build": "tsc --project lib.tsconfig.json",
-    "prepublish": "npm run compile && npm run build"
+    "prepublish": "npm run compile && npm run build",
+    "test-vault": ". ./setup-test-env.sh && TS_NODE_TRANSPILE_ONLY=1 hardhat test test-suites/__setup.spec.ts test-suites/mint-to-treasury.spec.ts"
   },
   "devDependencies": {
     "lend-deploy": "file:../lend-deploy",

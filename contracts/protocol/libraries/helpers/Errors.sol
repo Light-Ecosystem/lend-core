@@ -105,4 +105,5 @@ library Errors {
   string public constant INVALID_PHASES_LENGTH = '97'; // 'LendingGauge phases length invalid'
   string public constant PHASES_NOT_DEFINED = '98'; // 'LendingGauge phases not defined'
   string public constant MUST_BE_NON_NEGATIVE = '99'; // 'Result must be non-negative'
+  string public constant INVALID_FEE_TO_VAULT_PERCENT = '100'; // Invalid FeeToVaultPercent 
 }

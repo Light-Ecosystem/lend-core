@@ -113,6 +113,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
     _maxStableRateBorrowSizePercent = 0.25e4;
     _flashLoanPremiumTotal = 0.0009e4;
     _flashLoanPremiumToProtocol = 0;
+    _feeToVaultPercent = 0.25e4;
   }
 
   /// @inheritdoc IPool
@@ -696,6 +697,30 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
   ) external virtual override onlyPoolConfigurator {
     _flashLoanPremiumTotal = flashLoanPremiumTotal;
     _flashLoanPremiumToProtocol = flashLoanPremiumToProtocol;
+  }
+
+  /// @inheritdoc IPool
+  function updateFeeToVaultPercent(uint256 feeToVaultPercent) external virtual override onlyPoolAdmin {
+    require(
+      feeToVaultPercent > 0 
+      && feeToVaultPercent <= 0.5e4, Errors.INVALID_FEE_TO_VAULT_PERCENT
+    );
+    _feeToVaultPercent = feeToVaultPercent;
+  }
+
+  /// @inheritdoc IPool
+  function getFeeToVaultPercent() external view virtual override returns (uint256) {
+    return _feeToVaultPercent;
+  }
+
+  /// @inheritdoc IPool
+  function getFeeToVault() external view virtual override returns (address) {
+    return _feeToVault;
+  }
+
+  /// @inheritdoc IPool
+  function setFeeToVault(address feeToVault) external virtual override onlyPoolAdmin {
+    _feeToVault = feeToVault;
   }
 
   /// @inheritdoc IPool
