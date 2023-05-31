@@ -21,7 +21,7 @@ interface ILendingGauge {
 
   function minter() external view returns (IMinter);
 
-  function updateAllocation(uint256 liquidityAdded, uint256 liquidityTaken) external returns (bool);
+  function updateAllocation() external returns (bool);
 
   function isKilled() external returns (bool);
 

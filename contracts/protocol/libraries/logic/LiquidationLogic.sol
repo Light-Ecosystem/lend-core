@@ -179,18 +179,12 @@ library LiquidationLogic {
     }
 
     _burnDebtTokens(params, vars);
-
     debtReserve.updateInterestRates(
       vars.debtReserveCache,
       params.debtAsset,
       vars.actualDebtToLiquidate,
       0
     );
-
-    ILendingGauge lendingGauge = IAbsGauge(vars.debtReserveCache.hTokenAddress).lendingGauge();
-    if (address(lendingGauge) != address(0)) {
-      lendingGauge.updateAllocation(vars.actualDebtToLiquidate, 0);
-    }
 
     IsolationModeLogic.updateIsolatedDebtIfIsolated(
       reservesData,
@@ -237,6 +231,11 @@ library LiquidationLogic {
       vars.actualDebtToLiquidate
     );
 
+    ILendingGauge lendingGauge = IAbsGauge(vars.debtReserveCache.hTokenAddress).lendingGauge();
+    if (address(lendingGauge) != address(0)) {
+      lendingGauge.updateAllocation();
+    }
+
     emit LiquidationCall(
       params.collateralAsset,
       params.debtAsset,
@@ -279,7 +278,7 @@ library LiquidationLogic {
 
     ILendingGauge lendingGauge = IAbsGauge(collateralReserveCache.hTokenAddress).lendingGauge();
     if (address(lendingGauge) != address(0)) {
-      lendingGauge.updateAllocation(0, 0);
+      lendingGauge.updateAllocation();
     }
   }
 

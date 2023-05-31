@@ -263,8 +263,8 @@ library DataTypes {
   }
 
   struct Phase {
-    uint256 startPercentage;
-    uint256 endPercentage;
+    uint256 start;
+    uint256 end;
     int256 k;
     uint256 b;
   }

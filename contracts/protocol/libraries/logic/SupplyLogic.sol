@@ -77,7 +77,7 @@ library SupplyLogic {
 
     ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
     if (address(lendingGauge) != address(0)) {
-      lendingGauge.updateAllocation(0, 0);
+      lendingGauge.updateAllocation();
     }
 
     if (isFirstSupply) {
@@ -152,7 +152,7 @@ library SupplyLogic {
     {
       ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
       if (address(lendingGauge) != address(0)) {
-        lendingGauge.updateAllocation(0, 0);
+        lendingGauge.updateAllocation();
       }
     }
 

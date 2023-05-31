@@ -251,7 +251,7 @@ library FlashLoanLogic {
 
     ILendingGauge lendingGauge = IAbsGauge(reserveCache.hTokenAddress).lendingGauge();
     if (address(lendingGauge) != address(0)) {
-      lendingGauge.updateAllocation(0, 0);
+      lendingGauge.updateAllocation();
     }
 
     IHToken(reserveCache.hTokenAddress).handleRepayment(
