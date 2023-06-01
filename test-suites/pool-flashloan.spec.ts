@@ -40,7 +40,6 @@ makeSuite('Pool: FlashLoan', (testEnv: TestEnv) => {
     await configurator.updateHToken({
       asset: usdc.address,
       treasury: await hUsdc.RESERVE_TREASURY_ADDRESS(),
-      incentivesController: await hUsdc.getIncentivesController(),
       name: await hUsdc.name(),
       symbol: await hUsdc.symbol(),
       implementation: hTokenRepayImpl.address,

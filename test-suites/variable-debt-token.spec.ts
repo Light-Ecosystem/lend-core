@@ -40,7 +40,6 @@ makeSuite('VariableDebtToken', (testEnv: TestEnv) => {
 
     expect(await variableDebtContract.UNDERLYING_ASSET_ADDRESS()).to.be.eq(dai.address);
     expect(await variableDebtContract.POOL()).to.be.eq(pool.address);
-    expect(await variableDebtContract.getIncentivesController()).to.not.be.eq(ZERO_ADDRESS);
 
     const scaledUserBalanceAndSupplyUser0Before =
       await variableDebtContract.getScaledUserBalanceAndSupply(users[0].address);
@@ -248,46 +247,6 @@ makeSuite('VariableDebtToken', (testEnv: TestEnv) => {
         .connect(users[0].signer)
         .transferFrom(users[0].address, users[1].address, 500)
     ).to.be.revertedWith(ProtocolErrors.OPERATION_NOT_SUPPORTED);
-  });
-
-  it('setIncentivesController() ', async () => {
-    const { dai, helpersContract, poolAdmin, aclManager, deployer } = testEnv;
-    const daiVariableDebtTokenAddress = (
-      await helpersContract.getReserveTokensAddresses(dai.address)
-    ).variableDebtTokenAddress;
-    const variableDebtContract = VariableDebtToken__factory.connect(
-      daiVariableDebtTokenAddress,
-      deployer.signer
-    );
-
-    expect(await aclManager.connect(deployer.signer).addPoolAdmin(poolAdmin.address));
-
-    expect(await variableDebtContract.getIncentivesController()).to.not.be.eq(ZERO_ADDRESS);
-    expect(
-      await variableDebtContract.connect(poolAdmin.signer).setIncentivesController(ZERO_ADDRESS)
-    );
-    expect(await variableDebtContract.getIncentivesController()).to.be.eq(ZERO_ADDRESS);
-  });
-
-  it('setIncentivesController() from not pool admin (revert expected)', async () => {
-    const {
-      dai,
-      helpersContract,
-      users: [user],
-    } = testEnv;
-    const daiVariableDebtTokenAddress = (
-      await helpersContract.getReserveTokensAddresses(dai.address)
-    ).variableDebtTokenAddress;
-    const variableDebtContract = VariableDebtToken__factory.connect(
-      daiVariableDebtTokenAddress,
-      user.signer
-    );
-
-    expect(await variableDebtContract.getIncentivesController()).to.not.be.eq(ZERO_ADDRESS);
-
-    await expect(
-      variableDebtContract.connect(user.signer).setIncentivesController(ZERO_ADDRESS)
-    ).to.be.revertedWith(CALLER_NOT_POOL_ADMIN);
   });
 
   it('Check Mint and Transfer events when borrowing on behalf', async () => {

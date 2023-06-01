@@ -46,7 +46,6 @@ makeSuite('HToken: Repay', (testEnv: TestEnv) => {
     await configurator.updateHToken({
       asset: dai.address,
       treasury: await hDai.RESERVE_TREASURY_ADDRESS(),
-      incentivesController: await hDai.getIncentivesController(),
       name: await hDai.name(),
       symbol: await hDai.symbol(),
       implementation: hTokenRepayImpl.address,

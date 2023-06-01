@@ -6,7 +6,6 @@ import {IERC20Detailed} from '../../../dependencies/openzeppelin/contracts/IERC2
 import {SafeCast} from '../../../dependencies/openzeppelin/contracts/SafeCast.sol';
 import {WadRayMath} from '../../libraries/math/WadRayMath.sol';
 import {Errors} from '../../libraries/helpers/Errors.sol';
-import {IHopeLendIncentivesController} from '../../../interfaces/IHopeLendIncentivesController.sol';
 import {IPoolAddressesProvider} from '../../../interfaces/IPoolAddressesProvider.sol';
 import {IPool} from '../../../interfaces/IPool.sol';
 import {IACLManager} from '../../../interfaces/IACLManager.sol';
@@ -58,7 +57,6 @@ abstract contract IncentivizedERC20 is AbsGauge, IERC20Detailed {
   string private _name;
   string private _symbol;
   uint8 private _decimals;
-  IHopeLendIncentivesController internal _incentivesController;
   IPoolAddressesProvider internal immutable _addressesProvider;
   IPool public immutable POOL;
 
@@ -87,44 +85,28 @@ abstract contract IncentivizedERC20 is AbsGauge, IERC20Detailed {
   }
 
   /// @inheritdoc IERC20Detailed
-  function name() public view override returns (string memory) {
+  function name() public override view returns (string memory) {
     return _name;
   }
 
   /// @inheritdoc IERC20Detailed
-  function symbol() external view override returns (string memory) {
+  function symbol() external override view returns (string memory) {
     return _symbol;
   }
 
   /// @inheritdoc IERC20Detailed
-  function decimals() external view override returns (uint8) {
+  function decimals() external override view returns (uint8) {
     return _decimals;
   }
 
   /// @inheritdoc IERC20
-  function totalSupply() public view virtual override returns (uint256) {
+  function totalSupply() public virtual override view returns (uint256) {
     return _totalSupply;
   }
 
   /// @inheritdoc IERC20
-  function balanceOf(address account) public view virtual override returns (uint256) {
+  function balanceOf(address account) public virtual override view returns (uint256) {
     return _userState[account].balance;
-  }
-
-  /**
-   * @notice Returns the address of the Incentives Controller contract
-   * @return The address of the Incentives Controller
-   */
-  function getIncentivesController() external view virtual returns (IHopeLendIncentivesController) {
-    return _incentivesController;
-  }
-
-  /**
-   * @notice Sets a new Incentives Controller
-   * @param controller the new Incentives controller
-   */
-  function setIncentivesController(IHopeLendIncentivesController controller) external onlyPoolAdmin {
-    _incentivesController = controller;
   }
 
   /// @inheritdoc IERC20
@@ -135,13 +117,7 @@ abstract contract IncentivizedERC20 is AbsGauge, IERC20Detailed {
   }
 
   /// @inheritdoc IERC20
-  function allowance(address owner, address spender)
-    external
-    view
-    virtual
-    override
-    returns (uint256)
-  {
+  function allowance(address owner, address spender) external virtual override view returns (uint256) {
     return _allowances[owner][spender];
   }
 
@@ -180,11 +156,7 @@ abstract contract IncentivizedERC20 is AbsGauge, IERC20Detailed {
    * @param subtractedValue The amount being subtracted to the allowance
    * @return `true`
    */
-  function decreaseAllowance(address spender, uint256 subtractedValue)
-    external
-    virtual
-    returns (bool)
-  {
+  function decreaseAllowance(address spender, uint256 subtractedValue) external virtual returns (bool) {
     _approve(_msgSender(), spender, _allowances[_msgSender()][spender] - subtractedValue);
     return true;
   }

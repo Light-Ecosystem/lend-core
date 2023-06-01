@@ -38,5 +38,4 @@ cp -r node_modules/lend-deploy/artifacts/contracts/* temp-artifacts/deploy
 
 # Export MARKET_NAME variable to use HopeLend market as testnet deployment setup
 export MARKET_NAME="Test"
-export ENABLE_REWARDS="false"
 echo "[BASH] Testnet environment ready"

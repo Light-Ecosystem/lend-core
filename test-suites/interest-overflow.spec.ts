@@ -63,7 +63,6 @@ makeSuite('Interest Rate and Index Overflow', (testEnv) => {
       interestRateStrategyAddress: string;
       underlyingAsset: string;
       treasury: string;
-      incentivesController: string;
       hTokenName: string;
       hTokenSymbol: string;
       variableDebtTokenName: string;
@@ -80,7 +79,6 @@ makeSuite('Interest Rate and Index Overflow', (testEnv) => {
         interestRateStrategyAddress: mockRateStrategy.address,
         underlyingAsset: mockToken.address,
         treasury: ZERO_ADDRESS,
-        incentivesController: ZERO_ADDRESS,
         hTokenName: 'AMOCK',
         hTokenSymbol: 'AMOCK',
         variableDebtTokenName: 'VMOCK',

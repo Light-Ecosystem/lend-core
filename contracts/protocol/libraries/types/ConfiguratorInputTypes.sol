@@ -10,7 +10,6 @@ library ConfiguratorInputTypes {
     address interestRateStrategyAddress;
     address underlyingAsset;
     address treasury;
-    address incentivesController;
     string hTokenName;
     string hTokenSymbol;
     string variableDebtTokenName;
@@ -23,7 +22,6 @@ library ConfiguratorInputTypes {
   struct UpdateHTokenInput {
     address asset;
     address treasury;
-    address incentivesController;
     string name;
     string symbol;
     address implementation;
@@ -32,7 +30,6 @@ library ConfiguratorInputTypes {
 
   struct UpdateDebtTokenInput {
     address asset;
-    address incentivesController;
     string name;
     string symbol;
     address implementation;

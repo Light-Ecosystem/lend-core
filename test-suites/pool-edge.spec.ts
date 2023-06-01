@@ -601,7 +601,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
       interestRateStrategyAddress: string;
       underlyingAsset: string;
       treasury: string;
-      incentivesController: string;
       hTokenName: string;
       hTokenSymbol: string;
       variableDebtTokenName: string;
@@ -618,7 +617,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
         interestRateStrategyAddress: mockRateStrategy.address,
         underlyingAsset: mockToken.address,
         treasury: ZERO_ADDRESS,
-        incentivesController: ZERO_ADDRESS,
         hTokenName: 'AMOCK',
         hTokenSymbol: 'AMOCK',
         variableDebtTokenName: 'VMOCK',
@@ -825,7 +823,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
       interestRateStrategyAddress: string;
       underlyingAsset: string;
       treasury: string;
-      incentivesController: string;
       underlyingAssetName: string;
       hTokenName: string;
       hTokenSymbol: string;
@@ -843,7 +840,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
         interestRateStrategyAddress: mockRateStrategy.address,
         underlyingAsset: mockErc20.address,
         treasury: ZERO_ADDRESS,
-        incentivesController: ZERO_ADDRESS,
         underlyingAssetName: 'MOCK',
         hTokenName: 'AMOCK',
         hTokenSymbol: 'AMOCK',

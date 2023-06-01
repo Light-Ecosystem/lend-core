@@ -7,7 +7,6 @@ import {VersionedInitializable} from '../libraries/hopelend-upgradeability/Versi
 import {WadRayMath} from '../libraries/math/WadRayMath.sol';
 import {Errors} from '../libraries/helpers/Errors.sol';
 import {IPool} from '../../interfaces/IPool.sol';
-import {IHopeLendIncentivesController} from '../../interfaces/IHopeLendIncentivesController.sol';
 import {IInitializableDebtToken} from '../../interfaces/IInitializableDebtToken.sol';
 import {IVariableDebtToken} from '../../interfaces/IVariableDebtToken.sol';
 import {EIP712Base} from './base/EIP712Base.sol';
@@ -31,10 +30,7 @@ contract VariableDebtToken is DebtTokenBase, ScaledBalanceTokenBase, IVariableDe
    * @dev Constructor.
    * @param pool The address of the Pool contract
    */
-  constructor(IPool pool)
-    DebtTokenBase()
-    ScaledBalanceTokenBase(pool, 'VARIABLE_DEBT_TOKEN_IMPL', 'VARIABLE_DEBT_TOKEN_IMPL', 0)
-  {
+  constructor(IPool pool) DebtTokenBase() ScaledBalanceTokenBase(pool, 'VARIABLE_DEBT_TOKEN_IMPL', 'VARIABLE_DEBT_TOKEN_IMPL', 0) {
     // Intentionally left blank
   }
 
@@ -42,7 +38,6 @@ contract VariableDebtToken is DebtTokenBase, ScaledBalanceTokenBase, IVariableDe
   function initialize(
     IPool initializingPool,
     address underlyingAsset,
-    IHopeLendIncentivesController incentivesController,
     uint8 debtTokenDecimals,
     string memory debtTokenName,
     string memory debtTokenSymbol,
@@ -54,28 +49,19 @@ contract VariableDebtToken is DebtTokenBase, ScaledBalanceTokenBase, IVariableDe
     _setDecimals(debtTokenDecimals);
 
     _underlyingAsset = underlyingAsset;
-    _incentivesController = incentivesController;
 
     _domainSeparator = _calculateDomainSeparator();
 
-    emit Initialized(
-      underlyingAsset,
-      address(POOL),
-      address(incentivesController),
-      debtTokenDecimals,
-      debtTokenName,
-      debtTokenSymbol,
-      params
-    );
+    emit Initialized(underlyingAsset, address(POOL), debtTokenDecimals, debtTokenName, debtTokenSymbol, params);
   }
 
   /// @inheritdoc VersionedInitializable
-  function getRevision() internal pure virtual override returns (uint256) {
+  function getRevision() internal virtual override pure returns (uint256) {
     return DEBT_TOKEN_REVISION;
   }
 
   /// @inheritdoc IERC20
-  function balanceOf(address user) public view virtual override returns (uint256) {
+  function balanceOf(address user) public virtual override view returns (uint256) {
     uint256 scaledBalance = super.balanceOf(user);
 
     if (scaledBalance == 0) {
@@ -109,12 +95,12 @@ contract VariableDebtToken is DebtTokenBase, ScaledBalanceTokenBase, IVariableDe
   }
 
   /// @inheritdoc IERC20
-  function totalSupply() public view virtual override returns (uint256) {
+  function totalSupply() public virtual override view returns (uint256) {
     return super.totalSupply().rayMul(POOL.getReserveNormalizedVariableDebt(_underlyingAsset));
   }
 
   /// @inheritdoc EIP712Base
-  function _EIP712BaseId() internal view override returns (string memory) {
+  function _EIP712BaseId() internal override view returns (string memory) {
     return name();
   }
 
@@ -126,7 +112,7 @@ contract VariableDebtToken is DebtTokenBase, ScaledBalanceTokenBase, IVariableDe
     revert(Errors.OPERATION_NOT_SUPPORTED);
   }
 
-  function allowance(address, address) external view virtual override returns (uint256) {
+  function allowance(address, address) external virtual override view returns (uint256) {
     revert(Errors.OPERATION_NOT_SUPPORTED);
   }
 
@@ -151,15 +137,15 @@ contract VariableDebtToken is DebtTokenBase, ScaledBalanceTokenBase, IVariableDe
   }
 
   /// @inheritdoc IVariableDebtToken
-  function UNDERLYING_ASSET_ADDRESS() external view override returns (address) {
+  function UNDERLYING_ASSET_ADDRESS() external override view returns (address) {
     return _underlyingAsset;
   }
 
-  function lpBalanceOf(address _addr) public view override returns (uint256) {
+  function lpBalanceOf(address _addr) public override view returns (uint256) {
     return balanceOf(_addr);
   }
 
-  function lpTotalSupply() public view override returns (uint256) {
+  function lpTotalSupply() public override view returns (uint256) {
     return totalSupply();
   }
 }

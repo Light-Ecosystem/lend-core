@@ -10,7 +10,6 @@ import {WadRayMath} from '../libraries/math/WadRayMath.sol';
 import {PercentageMath} from '../libraries/math/PercentageMath.sol';
 import {IPool} from '../../interfaces/IPool.sol';
 import {IHToken} from '../../interfaces/IHToken.sol';
-import {IHopeLendIncentivesController} from '../../interfaces/IHopeLendIncentivesController.sol';
 import {IInitializableHToken} from '../../interfaces/IInitializableHToken.sol';
 import {ScaledBalanceTokenBase} from './base/ScaledBalanceTokenBase.sol';
 import {IncentivizedERC20} from './base/IncentivizedERC20.sol';
@@ -29,8 +28,7 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
   using GPv2SafeERC20 for IERC20;
   using PercentageMath for uint256;
 
-  bytes32 public constant PERMIT_TYPEHASH =
-    keccak256('Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)');
+  bytes32 public constant PERMIT_TYPEHASH = keccak256('Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)');
 
   uint256 public constant HTOKEN_REVISION = 0x1;
 
@@ -38,7 +36,7 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
   address internal _underlyingAsset;
 
   /// @inheritdoc VersionedInitializable
-  function getRevision() internal pure virtual override returns (uint256) {
+  function getRevision() internal virtual override pure returns (uint256) {
     return HTOKEN_REVISION;
   }
 
@@ -46,10 +44,7 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
    * @dev Constructor.
    * @param pool The address of the Pool contract
    */
-  constructor(IPool pool)
-    ScaledBalanceTokenBase(pool, 'HTOKEN_IMPL', 'HTOKEN_IMPL', 0)
-    EIP712Base()
-  {
+  constructor(IPool pool) ScaledBalanceTokenBase(pool, 'HTOKEN_IMPL', 'HTOKEN_IMPL', 0) EIP712Base() {
     // Intentionally left blank
   }
 
@@ -58,7 +53,6 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
     IPool initializingPool,
     address treasury,
     address underlyingAsset,
-    IHopeLendIncentivesController incentivesController,
     uint8 hTokenDecimals,
     string calldata hTokenName,
     string calldata hTokenSymbol,
@@ -71,20 +65,10 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
 
     _treasury = treasury;
     _underlyingAsset = underlyingAsset;
-    _incentivesController = incentivesController;
 
     _domainSeparator = _calculateDomainSeparator();
 
-    emit Initialized(
-      underlyingAsset,
-      address(POOL),
-      treasury,
-      address(incentivesController),
-      hTokenDecimals,
-      hTokenName,
-      hTokenSymbol,
-      params
-    );
+    emit Initialized(underlyingAsset, address(POOL), treasury, hTokenDecimals, hTokenName, hTokenSymbol, params);
   }
 
   /// @inheritdoc IHToken
@@ -139,18 +123,12 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
   }
 
   /// @inheritdoc IERC20
-  function balanceOf(address user)
-    public
-    view
-    virtual
-    override(IncentivizedERC20, IERC20)
-    returns (uint256)
-  {
+  function balanceOf(address user) public virtual override(IncentivizedERC20, IERC20) view returns (uint256) {
     return super.balanceOf(user).rayMul(POOL.getReserveNormalizedIncome(_underlyingAsset));
   }
 
   /// @inheritdoc IERC20
-  function totalSupply() public view virtual override(IncentivizedERC20, IERC20) returns (uint256) {
+  function totalSupply() public virtual override(IncentivizedERC20, IERC20) view returns (uint256) {
     uint256 currentSupplyScaled = super.totalSupply();
 
     if (currentSupplyScaled == 0) {
@@ -161,12 +139,12 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
   }
 
   /// @inheritdoc IHToken
-  function RESERVE_TREASURY_ADDRESS() external view override returns (address) {
+  function RESERVE_TREASURY_ADDRESS() external override view returns (address) {
     return _treasury;
   }
 
   /// @inheritdoc IHToken
-  function UNDERLYING_ASSET_ADDRESS() external view override returns (address) {
+  function UNDERLYING_ASSET_ADDRESS() external override view returns (address) {
     return _underlyingAsset;
   }
 
@@ -258,7 +236,7 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
    * @dev Overrides the base function to fully implement IHToken
    * @dev see `EIP712Base.DOMAIN_SEPARATOR()` for more detailed documentation
    */
-  function DOMAIN_SEPARATOR() public view override(IHToken, EIP712Base) returns (bytes32) {
+  function DOMAIN_SEPARATOR() public override(IHToken, EIP712Base) view returns (bytes32) {
     return super.DOMAIN_SEPARATOR();
   }
 
@@ -266,12 +244,12 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
    * @dev Overrides the base function to fully implement IHToken
    * @dev see `EIP712Base.nonces()` for more detailed documentation
    */
-  function nonces(address owner) public view override(IHToken, EIP712Base) returns (uint256) {
+  function nonces(address owner) public override(IHToken, EIP712Base) view returns (uint256) {
     return super.nonces(owner);
   }
 
   /// @inheritdoc EIP712Base
-  function _EIP712BaseId() internal view override returns (string memory) {
+  function _EIP712BaseId() internal override view returns (string memory) {
     return name();
   }
 
@@ -285,20 +263,20 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
     IERC20(token).safeTransfer(to, amount);
   }
 
-  function lpBalanceOf(address _addr) public view override returns (uint256) {
+  function lpBalanceOf(address _addr) public override view returns (uint256) {
     return balanceOf(_addr);
   }
 
-  function lpTotalSupply() public view override returns (uint256) {
+  function lpTotalSupply() public override view returns (uint256) {
     return totalSupply();
   }
 
   /// @inheritdoc IHToken
   function withdrawLTRewards(address stHope, address to) external onlyPoolAdmin returns (uint256) {
     if (to == address(0)) to = msg.sender;
-    
+
     uint256 claimableTokens = IStakingHOPE(stHope).claimableTokens(address(this));
-    require(claimableTokens > 0, "no rewards to claim");
+    require(claimableTokens > 0, 'no rewards to claim');
 
     address _minter = IStakingHOPE(stHope).minter();
     address lt = IStakingHOPE(stHope).ltToken();

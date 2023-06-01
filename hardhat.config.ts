@@ -21,7 +21,7 @@ const HARDFORK = 'london';
 
 const hardhatConfig = {
   gasReporter: {
-    enabled: true,
+    enabled: false,
   },
   contractSizer: {
     alphaSort: true,

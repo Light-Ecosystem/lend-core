@@ -27,7 +27,6 @@ makeSuite('PoolConfigurator: Modifiers', (testEnv: TestEnv) => {
         interestRateStrategyAddress: randomAddress,
         underlyingAsset: randomAddress,
         treasury: randomAddress,
-        incentivesController: randomAddress,
         hTokenName: 'MOCK',
         hTokenSymbol: 'MOCK',
         variableDebtTokenName: 'MOCK',
@@ -55,7 +54,6 @@ makeSuite('PoolConfigurator: Modifiers', (testEnv: TestEnv) => {
     const randomUpdateHToken = {
       asset: randomAddress,
       treasury: randomAddress,
-      incentivesController: randomAddress,
       name: 'MOCK',
       symbol: 'MOCK',
       implementation: randomAddress,
@@ -63,7 +61,6 @@ makeSuite('PoolConfigurator: Modifiers', (testEnv: TestEnv) => {
     };
     const randomUpdateDebtToken = {
       asset: randomAddress,
-      incentivesController: randomAddress,
       name: 'MOCK',
       symbol: 'MOCK',
       implementation: randomAddress,

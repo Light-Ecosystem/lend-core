@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: LGPL-3.0
 pragma solidity 0.8.17;
 
-import {IHopeLendIncentivesController} from '../../../interfaces/IHopeLendIncentivesController.sol';
 import {IPool} from '../../../interfaces/IPool.sol';
 import {IncentivizedERC20} from './IncentivizedERC20.sol';
 

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: LGPL-3.0
 pragma solidity 0.8.17;
 
-import {IHopeLendIncentivesController} from './IHopeLendIncentivesController.sol';
 import {IPool} from './IPool.sol';
 
 /**
@@ -15,7 +14,6 @@ interface IInitializableHToken {
    * @param underlyingAsset The address of the underlying asset
    * @param pool The address of the associated pool
    * @param treasury The address of the treasury
-   * @param incentivesController The address of the incentives controller for this hToken
    * @param hTokenDecimals The decimals of the underlying
    * @param hTokenName The name of the hToken
    * @param hTokenSymbol The symbol of the hToken
@@ -25,7 +23,6 @@ interface IInitializableHToken {
     address indexed underlyingAsset,
     address indexed pool,
     address treasury,
-    address incentivesController,
     uint8 hTokenDecimals,
     string hTokenName,
     string hTokenSymbol,
@@ -37,7 +34,6 @@ interface IInitializableHToken {
    * @param pool The pool contract that is initializing this contract
    * @param treasury The address of the HopeLend treasury, receiving the fees on this hToken
    * @param underlyingAsset The address of the underlying asset of this hToken (E.g. WETH for hWETH)
-   * @param incentivesController The smart contract managing potential incentives distribution
    * @param hTokenDecimals The decimals of the hToken, same as the underlying asset's
    * @param hTokenName The name of the hToken
    * @param hTokenSymbol The symbol of the hToken
@@ -47,7 +43,6 @@ interface IInitializableHToken {
     IPool pool,
     address treasury,
     address underlyingAsset,
-    IHopeLendIncentivesController incentivesController,
     uint8 hTokenDecimals,
     string calldata hTokenName,
     string calldata hTokenSymbol,

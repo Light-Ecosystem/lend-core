@@ -458,7 +458,6 @@ makeSuite('Isolation mode', (testEnv: TestEnv) => {
     await hope.connect(users[6].signer)['mint(uint256)'](hopeAmount);
     await hope.connect(users[6].signer).approve(pool.address, MAX_UINT_AMOUNT);
     await pool.connect(users[6].signer).supply(hope.address, hopeAmount, users[6].address, 0);
-
     // borrow with health factor just above 1
     const userGlobalData = await pool.getUserAccountData(users[6].address);
     const daiPrice = await oracle.getAssetPrice(dai.address);
@@ -469,9 +468,9 @@ makeSuite('Isolation mode', (testEnv: TestEnv) => {
     await pool
       .connect(users[6].signer)
       .borrow(dai.address, amountDAIToBorrow, RateMode.Variable, 0, users[6].address);
-
     // advance time so health factor is less than one and liquidate
-    await advanceTimeAndBlock(86400 * 365 * 100);
+    await oracle.setAssetPrice(dai.address, percentMul(daiPrice, 15200));
+    // await advanceTimeAndBlock(86400 * 365 * 100);
     const userDaiReserveDataBefore = await getUserData(
       pool,
       helpersContract,

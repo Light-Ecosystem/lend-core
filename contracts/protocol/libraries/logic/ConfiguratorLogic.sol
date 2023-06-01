@@ -4,7 +4,9 @@ pragma solidity 0.8.17;
 import {IPool} from '../../../interfaces/IPool.sol';
 import {IInitializableHToken} from '../../../interfaces/IInitializableHToken.sol';
 import {IInitializableDebtToken} from '../../../interfaces/IInitializableDebtToken.sol';
-import {InitializableImmutableAdminUpgradeabilityProxy} from '../hopelend-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol';
+import {
+  InitializableImmutableAdminUpgradeabilityProxy
+} from '../hopelend-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol';
 import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
 import {DataTypes} from '../types/DataTypes.sol';
 import {ConfiguratorInputTypes} from '../types/ConfiguratorInputTypes.sol';
@@ -25,21 +27,9 @@ library ConfiguratorLogic {
     address variableDebtToken,
     address interestRateStrategyAddress
   );
-  event HTokenUpgraded(
-    address indexed asset,
-    address indexed proxy,
-    address indexed implementation
-  );
-  event StableDebtTokenUpgraded(
-    address indexed asset,
-    address indexed proxy,
-    address indexed implementation
-  );
-  event VariableDebtTokenUpgraded(
-    address indexed asset,
-    address indexed proxy,
-    address indexed implementation
-  );
+  event HTokenUpgraded(address indexed asset, address indexed proxy, address indexed implementation);
+  event StableDebtTokenUpgraded(address indexed asset, address indexed proxy, address indexed implementation);
+  event VariableDebtTokenUpgraded(address indexed asset, address indexed proxy, address indexed implementation);
 
   /**
    * @notice Initialize a reserve by creating and initializing hToken, stable debt token and variable debt token
@@ -47,9 +37,7 @@ library ConfiguratorLogic {
    * @param pool The Pool in which the reserve will be initialized
    * @param input The needed parameters for the initialization
    */
-  function executeInitReserve(IPool pool, ConfiguratorInputTypes.InitReserveInput calldata input)
-    public
-  {
+  function executeInitReserve(IPool pool, ConfiguratorInputTypes.InitReserveInput calldata input) public {
     address hTokenProxyAddress = _initTokenWithProxy(
       input.hTokenImpl,
       abi.encodeWithSelector(
@@ -57,7 +45,6 @@ library ConfiguratorLogic {
         pool,
         input.treasury,
         input.underlyingAsset,
-        input.incentivesController,
         input.underlyingAssetDecimals,
         input.hTokenName,
         input.hTokenSymbol,
@@ -71,7 +58,6 @@ library ConfiguratorLogic {
         IInitializableDebtToken.initialize.selector,
         pool,
         input.underlyingAsset,
-        input.incentivesController,
         input.underlyingAssetDecimals,
         input.stableDebtTokenName,
         input.stableDebtTokenSymbol,
@@ -85,7 +71,6 @@ library ConfiguratorLogic {
         IInitializableDebtToken.initialize.selector,
         pool,
         input.underlyingAsset,
-        input.incentivesController,
         input.underlyingAssetDecimals,
         input.variableDebtTokenName,
         input.variableDebtTokenSymbol,
@@ -126,10 +111,7 @@ library ConfiguratorLogic {
    * @param cachedPool The Pool containing the reserve with the hToken
    * @param input The parameters needed for the initialize call
    */
-  function executeUpdateHToken(
-    IPool cachedPool,
-    ConfiguratorInputTypes.UpdateHTokenInput calldata input
-  ) public {
+  function executeUpdateHToken(IPool cachedPool, ConfiguratorInputTypes.UpdateHTokenInput calldata input) public {
     DataTypes.ReserveData memory reserveData = cachedPool.getReserveData(input.asset);
 
     (, , , uint256 decimals, , ) = cachedPool.getConfiguration(input.asset).getParams();
@@ -139,7 +121,6 @@ library ConfiguratorLogic {
       cachedPool,
       input.treasury,
       input.asset,
-      input.incentivesController,
       decimals,
       input.name,
       input.symbol,
@@ -157,10 +138,7 @@ library ConfiguratorLogic {
    * @param cachedPool The Pool containing the reserve with the stable debt token
    * @param input The parameters needed for the initialize call
    */
-  function executeUpdateStableDebtToken(
-    IPool cachedPool,
-    ConfiguratorInputTypes.UpdateDebtTokenInput calldata input
-  ) public {
+  function executeUpdateStableDebtToken(IPool cachedPool, ConfiguratorInputTypes.UpdateDebtTokenInput calldata input) public {
     DataTypes.ReserveData memory reserveData = cachedPool.getReserveData(input.asset);
 
     (, , , uint256 decimals, , ) = cachedPool.getConfiguration(input.asset).getParams();
@@ -169,24 +147,15 @@ library ConfiguratorLogic {
       IInitializableDebtToken.initialize.selector,
       cachedPool,
       input.asset,
-      input.incentivesController,
       decimals,
       input.name,
       input.symbol,
       input.params
     );
 
-    _upgradeTokenImplementation(
-      reserveData.stableDebtTokenAddress,
-      input.implementation,
-      encodedCall
-    );
+    _upgradeTokenImplementation(reserveData.stableDebtTokenAddress, input.implementation, encodedCall);
 
-    emit StableDebtTokenUpgraded(
-      input.asset,
-      reserveData.stableDebtTokenAddress,
-      input.implementation
-    );
+    emit StableDebtTokenUpgraded(input.asset, reserveData.stableDebtTokenAddress, input.implementation);
   }
 
   /**
@@ -195,10 +164,7 @@ library ConfiguratorLogic {
    * @param cachedPool The Pool containing the reserve with the variable debt token
    * @param input The parameters needed for the initialize call
    */
-  function executeUpdateVariableDebtToken(
-    IPool cachedPool,
-    ConfiguratorInputTypes.UpdateDebtTokenInput calldata input
-  ) public {
+  function executeUpdateVariableDebtToken(IPool cachedPool, ConfiguratorInputTypes.UpdateDebtTokenInput calldata input) public {
     DataTypes.ReserveData memory reserveData = cachedPool.getReserveData(input.asset);
 
     (, , , uint256 decimals, , ) = cachedPool.getConfiguration(input.asset).getParams();
@@ -207,24 +173,15 @@ library ConfiguratorLogic {
       IInitializableDebtToken.initialize.selector,
       cachedPool,
       input.asset,
-      input.incentivesController,
       decimals,
       input.name,
       input.symbol,
       input.params
     );
 
-    _upgradeTokenImplementation(
-      reserveData.variableDebtTokenAddress,
-      input.implementation,
-      encodedCall
-    );
+    _upgradeTokenImplementation(reserveData.variableDebtTokenAddress, input.implementation, encodedCall);
 
-    emit VariableDebtTokenUpgraded(
-      input.asset,
-      reserveData.variableDebtTokenAddress,
-      input.implementation
-    );
+    emit VariableDebtTokenUpgraded(input.asset, reserveData.variableDebtTokenAddress, input.implementation);
   }
 
   /**
@@ -233,13 +190,8 @@ library ConfiguratorLogic {
    * @param initParams The parameters that is passed to the implementation to initialize
    * @return The address of initialized proxy
    */
-  function _initTokenWithProxy(address implementation, bytes memory initParams)
-    internal
-    returns (address)
-  {
-    InitializableImmutableAdminUpgradeabilityProxy proxy = new InitializableImmutableAdminUpgradeabilityProxy(
-        address(this)
-      );
+  function _initTokenWithProxy(address implementation, bytes memory initParams) internal returns (address) {
+    InitializableImmutableAdminUpgradeabilityProxy proxy = new InitializableImmutableAdminUpgradeabilityProxy(address(this));
 
     proxy.initialize(implementation, initParams);
 
@@ -258,9 +210,7 @@ library ConfiguratorLogic {
     address implementation,
     bytes memory initParams
   ) internal {
-    InitializableImmutableAdminUpgradeabilityProxy proxy = InitializableImmutableAdminUpgradeabilityProxy(
-        payable(proxyAddress)
-      );
+    InitializableImmutableAdminUpgradeabilityProxy proxy = InitializableImmutableAdminUpgradeabilityProxy(payable(proxyAddress));
 
     proxy.upgradeToAndCall(implementation, initParams);
   }

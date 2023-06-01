@@ -25,7 +25,6 @@ makeSuite('HToken: Edge cases', (testEnv: TestEnv) => {
     expect(await hDai.decimals()).to.be.eq(await dai.decimals());
     expect(await hDai.UNDERLYING_ASSET_ADDRESS()).to.be.eq(dai.address);
     expect(await hDai.POOL()).to.be.eq(pool.address);
-    expect(await hDai.getIncentivesController()).to.not.be.eq(ZERO_ADDRESS);
 
     const scaledUserBalanceAndSupplyBefore = await hDai.getScaledUserBalanceAndSupply(
       users[0].address
@@ -194,32 +193,6 @@ makeSuite('HToken: Edge cases', (testEnv: TestEnv) => {
     expect(await hDai.connect(poolSigner).mintToTreasury(0, utils.parseUnits('1', 27)));
   });
 
-  it('setIncentivesController() ', async () => {
-    const snapshot = await evmSnapshot();
-    const { deployer, poolAdmin, hWETH, aclManager } = testEnv;
-
-    expect(await aclManager.connect(deployer.signer).addPoolAdmin(poolAdmin.address));
-
-    expect(await hWETH.getIncentivesController()).to.not.be.eq(ZERO_ADDRESS);
-    expect(await hWETH.connect(poolAdmin.signer).setIncentivesController(ZERO_ADDRESS));
-    expect(await hWETH.getIncentivesController()).to.be.eq(ZERO_ADDRESS);
-
-    await evmRevert(snapshot);
-  });
-
-  it('setIncentivesController() from not pool admin (revert expected)', async () => {
-    const {
-      users: [user],
-      hWETH,
-    } = testEnv;
-
-    expect(await hWETH.getIncentivesController()).to.not.be.eq(ZERO_ADDRESS);
-
-    await expect(
-      hWETH.connect(user.signer).setIncentivesController(ZERO_ADDRESS)
-    ).to.be.revertedWith(CALLER_NOT_POOL_ADMIN);
-  });
-
   it('transfer() amount > MAX_UINT_128', async () => {
     const {
       hDai,
@@ -229,31 +202,5 @@ makeSuite('HToken: Edge cases', (testEnv: TestEnv) => {
     expect(hDai.transfer(borrower.address, MAX_UINT_AMOUNT)).to.be.revertedWith(
       SAFECAST_UINT128_OVERFLOW
     );
-  });
-
-  it('setIncentivesController() ', async () => {
-    const snapshot = await evmSnapshot();
-    const { deployer, poolAdmin, hWETH, aclManager } = testEnv;
-
-    expect(await aclManager.connect(deployer.signer).addPoolAdmin(poolAdmin.address));
-
-    expect(await hWETH.getIncentivesController()).to.not.be.eq(ZERO_ADDRESS);
-    expect(await hWETH.connect(poolAdmin.signer).setIncentivesController(ZERO_ADDRESS));
-    expect(await hWETH.getIncentivesController()).to.be.eq(ZERO_ADDRESS);
-
-    await evmRevert(snapshot);
-  });
-
-  it('setIncentivesController() from not pool admin (revert expected)', async () => {
-    const {
-      users: [user],
-      hWETH,
-    } = testEnv;
-
-    expect(await hWETH.getIncentivesController()).to.not.be.eq(ZERO_ADDRESS);
-
-    await expect(
-      hWETH.connect(user.signer).setIncentivesController(ZERO_ADDRESS)
-    ).to.be.revertedWith(CALLER_NOT_POOL_ADMIN);
   });
 });

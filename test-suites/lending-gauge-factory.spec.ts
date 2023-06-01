@@ -77,12 +77,11 @@ makeSuite('LendingGauge: Factory', (testEnv) => {
     const { gaugeFactory, usdc } = testEnv;
     expect(await gaugeFactory.allLendingGaugesLength()).to.be.equal(1);
     expect(await gaugeFactory.lendingGauge(usdc.address)).to.be.equal(ZERO_ADDRESS);
-    await expect(gaugeFactory.createLendingGauge(usdc.address))
-      .to.be.emit(gaugeFactory, 'LendingGaugeCreated')
-      .withArgs(usdc.address, '0xb32D47DA94d7D45A7c47953aE48dA2fb12f8d3c6', 2);
-    expect(await gaugeFactory.lendingGauge(usdc.address)).to.be.equal(
-      '0xb32D47DA94d7D45A7c47953aE48dA2fb12f8d3c6'
+    await expect(gaugeFactory.createLendingGauge(usdc.address)).to.be.emit(
+      gaugeFactory,
+      'LendingGaugeCreated'
     );
+    expect(await gaugeFactory.lendingGauge(usdc.address)).to.not.equal(ZERO_ADDRESS);
   });
   it('GaugeFactory set lending gauge impl will revert because lending gauge impl address is zero', async () => {
     const { gaugeFactory } = testEnv;

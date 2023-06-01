@@ -347,7 +347,6 @@ makeSuite('Upgradeability', (testEnv: TestEnv) => {
         pool.address,
         dai.address,
         ZERO_ADDRESS,
-        ZERO_ADDRESS,
         'Hope Interest bearing DAI updated',
         'aDAI',
         '0x10',
@@ -356,7 +355,6 @@ makeSuite('Upgradeability', (testEnv: TestEnv) => {
       const stableDebtTokenInstance = await deployMockStableDebtToken([
         pool.address,
         dai.address,
-        ZERO_ADDRESS,
         'Hope stable debt bearing DAI updated',
         'stableDebtDAI',
         '0x10',
@@ -365,7 +363,6 @@ makeSuite('Upgradeability', (testEnv: TestEnv) => {
       const variableDebtTokenInstance = await deployMockVariableDebtToken([
         pool.address,
         dai.address,
-        ZERO_ADDRESS,
         'Hope variable debt bearing DAI updated',
         'variableDebtDAI',
         '0x10',
@@ -385,7 +382,6 @@ makeSuite('Upgradeability', (testEnv: TestEnv) => {
       const updateHTokenInputParams: {
         asset: string;
         treasury: string;
-        incentivesController: string;
         name: string;
         symbol: string;
         implementation: string;
@@ -393,7 +389,6 @@ makeSuite('Upgradeability', (testEnv: TestEnv) => {
       } = {
         asset: dai.address,
         treasury: ZERO_ADDRESS,
-        incentivesController: ZERO_ADDRESS,
         name: name,
         symbol: symbol,
         implementation: newHTokenAddress,
@@ -413,7 +408,6 @@ makeSuite('Upgradeability', (testEnv: TestEnv) => {
       const updateHTokenInputParams: {
         asset: string;
         treasury: string;
-        incentivesController: string;
         name: string;
         symbol: string;
         implementation: string;
@@ -421,7 +415,6 @@ makeSuite('Upgradeability', (testEnv: TestEnv) => {
       } = {
         asset: dai.address,
         treasury: ZERO_ADDRESS,
-        incentivesController: ZERO_ADDRESS,
         name: name,
         symbol: symbol,
         implementation: newHTokenAddress,
@@ -442,14 +435,12 @@ makeSuite('Upgradeability', (testEnv: TestEnv) => {
 
       const updateDebtTokenInput: {
         asset: string;
-        incentivesController: string;
         name: string;
         symbol: string;
         implementation: string;
         params: string;
       } = {
         asset: dai.address,
-        incentivesController: ZERO_ADDRESS,
         name: name,
         symbol: symbol,
         implementation: newStableTokenAddress,
@@ -469,14 +460,12 @@ makeSuite('Upgradeability', (testEnv: TestEnv) => {
 
       const updateDebtTokenInput: {
         asset: string;
-        incentivesController: string;
         name: string;
         symbol: string;
         implementation: string;
         params: string;
       } = {
         asset: dai.address,
-        incentivesController: ZERO_ADDRESS,
         name: name,
         symbol: symbol,
         implementation: newStableTokenAddress,
@@ -504,14 +493,12 @@ makeSuite('Upgradeability', (testEnv: TestEnv) => {
 
       const updateDebtTokenInput: {
         asset: string;
-        incentivesController: string;
         name: string;
         symbol: string;
         implementation: string;
         params: string;
       } = {
         asset: dai.address,
-        incentivesController: ZERO_ADDRESS,
         name: name,
         symbol: symbol,
         implementation: newVariableTokenAddress,
@@ -531,14 +518,12 @@ makeSuite('Upgradeability', (testEnv: TestEnv) => {
 
       const updateDebtTokenInput: {
         asset: string;
-        incentivesController: string;
         name: string;
         symbol: string;
         implementation: string;
         params: string;
       } = {
         asset: dai.address,
-        incentivesController: ZERO_ADDRESS,
         name: name,
         symbol: symbol,
         implementation: newVariableTokenAddress,

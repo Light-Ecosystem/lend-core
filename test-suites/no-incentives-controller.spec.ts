@@ -17,7 +17,7 @@ import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { setBlocktime, timeLatest } from '../helpers/misc-utils';
 import { config } from 'process';
 
-makeSuite('Reserve Without Incentives Controller', (testEnv) => {
+makeSuite('Reserve Without Incentives', (testEnv) => {
   let mockToken: MintableERC20;
   let aMockToken: ERC20;
   let mockStableDebt: ERC20;
@@ -55,7 +55,6 @@ makeSuite('Reserve Without Incentives Controller', (testEnv) => {
       interestRateStrategyAddress: string;
       underlyingAsset: string;
       treasury: string;
-      incentivesController: string;
       hTokenName: string;
       hTokenSymbol: string;
       variableDebtTokenName: string;
@@ -72,7 +71,6 @@ makeSuite('Reserve Without Incentives Controller', (testEnv) => {
         interestRateStrategyAddress: interestRateStrategyAddress,
         underlyingAsset: mockToken.address,
         treasury: ZERO_ADDRESS,
-        incentivesController: ZERO_ADDRESS,
         hTokenName: 'AMOCK',
         hTokenSymbol: 'AMOCK',
         variableDebtTokenName: 'VMOCK',

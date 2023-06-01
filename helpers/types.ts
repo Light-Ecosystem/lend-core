@@ -44,7 +44,6 @@ export enum eContractid {
   MockFlashLoanReceiver = 'MockFlashLoanReceiver',
   HToken = 'HToken',
   MockHToken = 'MockHToken',
-  DelegationAwareHToken = 'DelegationAwareHToken',
   MockStableDebtToken = 'MockStableDebtToken',
   MockVariableDebtToken = 'MockVariableDebtToken',
   HopeLendProtocolDataProvider = 'HopeLendProtocolDataProvider',
@@ -58,7 +57,6 @@ export enum eContractid {
   WETHMocked = 'WETHMocked',
   PoolImpl = 'PoolImpl',
   PoolConfiguratorImpl = 'PoolConfiguratorImpl',
-  MockIncentivesController = 'MockIncentivesController',
   MockReserveConfiguration = 'MockReserveConfiguration',
   MockPool = 'MockPool',
   MockInitializableImple = 'MockInitializableImple',
@@ -408,7 +406,6 @@ export interface ICommonConfiguration {
   WETH: tEthereumAddress | undefined;
   WrappedNativeToken: tEthereumAddress | undefined;
   ReserveFactorTreasuryAddress: tEthereumAddress;
-  IncentivesController: tEthereumAddress | undefined;
 }
 
 export interface IHopeLendConfiguration extends ICommonConfiguration {

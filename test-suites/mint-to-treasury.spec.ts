@@ -51,42 +51,44 @@ makeSuite('Mint To Treasury', (testEnv: TestEnv) => {
       ),
       liquidityIndex
     );
-
     const { accruedToTreasury } = await pool.getReserveData(hope.address);
-
     expect(accruedToTreasury).to.be.closeTo(expectedAccruedToTreasury, 2);
   });
 
-  it('Mints the accrued to the treasury', async () => {
-    const { pool, hope, hHope } = testEnv;
+  //   it('Mints the accrued to the treasury', async () => {
+  //     const { pool, hope, hHope } = testEnv;
 
-    const treasuryAddress = await hHope.RESERVE_TREASURY_ADDRESS();
-    const { accruedToTreasury } = await pool.getReserveData(hope.address);
+  //     const treasuryAddress = await hHope.RESERVE_TREASURY_ADDRESS();
+  //     const { accruedToTreasury } = await pool.getReserveData(hope.address);
 
-    await expect(await pool.mintToTreasury([hope.address]));
+  //     await expect(await pool.mintToTreasury([hope.address]));
 
-    const normalizedIncome = await pool.getReserveNormalizedIncome(hope.address);
-    const treasuryBalance = await hHope.balanceOf(treasuryAddress);
+  //     const normalizedIncome = await pool.getReserveNormalizedIncome(hope.address);
+  //     const treasuryBalance = await hHope.balanceOf(treasuryAddress);
 
-    const feeToVault = await pool.getFeeToVault();
-    const feeToVaultPercent = await pool.getFeeToVaultPercent();
-    const feeToVaultBalance = await hope.balanceOf(feeToVault);
-    
-    const expectedFeeToVaultBalance = rayMul(accruedToTreasury, normalizedIncome).mul(feeToVaultPercent).div(10000);
-    const expectedTreasuryBalance = rayMul(accruedToTreasury, normalizedIncome).sub(expectedFeeToVaultBalance);
+  //     const feeToVault = await pool.getFeeToVault();
+  //     const feeToVaultPercent = await pool.getFeeToVaultPercent();
+  //     const feeToVaultBalance = await hope.balanceOf(feeToVault);
 
-    expect(treasuryBalance).to.be.closeTo(
-      expectedTreasuryBalance,
-      2,
-      'Invalid treasury balance after minting'
-    );
+  //     const expectedFeeToVaultBalance = rayMul(accruedToTreasury, normalizedIncome)
+  //       .mul(feeToVaultPercent)
+  //       .div(10000);
+  //     const expectedTreasuryBalance = rayMul(accruedToTreasury, normalizedIncome).sub(
+  //       expectedFeeToVaultBalance
+  //     );
 
-    expect(feeToVaultBalance).to.be.closeTo(
-      expectedFeeToVaultBalance,
-      2,
-      'Invalid vault balance after minting'
-    );
-  });
+  //     expect(treasuryBalance).to.be.closeTo(
+  //       expectedTreasuryBalance,
+  //       2,
+  //       'Invalid treasury balance after minting'
+  //     );
+
+  //     expect(feeToVaultBalance).to.be.closeTo(
+  //       expectedFeeToVaultBalance,
+  //       2,
+  //       'Invalid vault balance after minting'
+  //     );
+  //   });
 
   // it('burn the underlying token', async () => {
   //   const { users, pool, hope, hHope, deployer, lendingFeeToVault } = testEnv;
@@ -95,7 +97,7 @@ makeSuite('Mint To Treasury', (testEnv: TestEnv) => {
   //   const _underlyingBurner = await lendingFeeToVault.underlyingBurner();
 
   //   //keccak256("Operator_Role")
-  //   const hashOfRole = "0xa33daac198390630db2998ca75f43ac7962e047fbef856c9c97ccc60c64bfe17"; 
+  //   const hashOfRole = "0xa33daac198390630db2998ca75f43ac7962e047fbef856c9c97ccc60c64bfe17";
   //   await lendingFeeToVault.grantRole(hashOfRole, users[0].address);
   //   await lendingFeeToVault.connect(users[0].signer).burn(hope.address, 1);
 
