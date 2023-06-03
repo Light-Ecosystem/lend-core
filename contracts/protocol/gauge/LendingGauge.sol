@@ -19,9 +19,6 @@ import '../libraries/types/DataTypes.sol';
 import '../libraries/helpers/Errors.sol';
 
 contract LendingGauge is ILendingGauge, Initializable {
-  event UpdateStableDebtPercentage(uint256 time, uint256 oldPercentage, uint256 newPercentage);
-  event UpdateAllocation(uint256 time, uint256 allocation);
-
   using WadRayMath for uint256;
   using SafeCast for uint256;
   using SafeCast for int256;
@@ -96,12 +93,6 @@ contract LendingGauge is ILendingGauge, Initializable {
     futureEpochTime = ltToken.futureEpochTimeWrite();
   }
 
-  function _addPhase(DataTypes.Phase memory _phase) internal {
-    require(_phase.end > _phase.start, Errors.LENDING_GAUGE_PERCENTAGE_NOT_MATCH);
-    require(phases.length == 0 || _phase.start == phases[phases.length - 1].end, Errors.LENDING_GAUGE_PERCENTAGE_NOT_MATCH);
-    phases.push(DataTypes.Phase(_phase.start, _phase.end, _phase.k, _phase.b));
-  }
-
   /**
    * Add parameters for calculating fund utilization rate and allocation ratio
    */
@@ -111,6 +102,7 @@ contract LendingGauge is ILendingGauge, Initializable {
     for (uint256 i = 0; i < _phases.length; i++) {
       _addPhase(_phases[i]);
     }
+    emit AddPhases(_phases);
   }
 
   /**
@@ -238,6 +230,12 @@ contract LendingGauge is ILendingGauge, Initializable {
     );
 
     _userCheckpoint(_addr);
+  }
+
+  function _addPhase(DataTypes.Phase memory _phase) internal {
+    require(_phase.end > _phase.start, Errors.LENDING_GAUGE_PERCENTAGE_NOT_MATCH);
+    require(phases.length == 0 || _phase.start == phases[phases.length - 1].end, Errors.LENDING_GAUGE_PERCENTAGE_NOT_MATCH);
+    phases.push(DataTypes.Phase(_phase.start, _phase.end, _phase.k, _phase.b));
   }
 
   /**

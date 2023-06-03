@@ -6,8 +6,11 @@ import './ILT.sol';
 import './IGaugeController.sol';
 import './IVotingEscrow.sol';
 import './IMinter.sol';
+import '../protocol/libraries/types/DataTypes.sol';
 
 interface ILendingGauge {
+  event AddPhases(DataTypes.Phase[] _phases);
+
   function initialize(
     address _pool,
     address _minter,
