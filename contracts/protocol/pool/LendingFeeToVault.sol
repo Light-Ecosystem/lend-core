@@ -64,4 +64,12 @@ contract LendingFeeToVault is Ownable, Pausable, AccessControl {
     function revokeRole(bytes32 role, address account) public override onlyOwner {
         _revokeRole(role, account);
     }
+
+    function addOperator(address account) public onlyOwner {
+        _grantRole(OPERATOR_ROLE, account);
+    }
+
+    function removeOperator(address account) public onlyOwner {
+        _revokeRole(OPERATOR_ROLE, account);
+    }
 }
