@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { RateMode } from '../helpers/types';
 import { MAX_UINT_AMOUNT, ONE_YEAR } from '../helpers/constants';
-import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { makeSuite, TestEnv } from './helpers/make-suite';
+import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import './helpers/utils/wadraymath';
 import { advanceTimeAndBlock } from 'lend-deploy';
 import { percentMul, rayDiv, rayMul } from './helpers/utils/wadraymath';
@@ -55,54 +55,57 @@ makeSuite('Mint To Treasury', (testEnv: TestEnv) => {
     expect(accruedToTreasury).to.be.closeTo(expectedAccruedToTreasury, 2);
   });
 
-  //   it('Mints the accrued to the treasury', async () => {
-  //     const { pool, hope, hHope } = testEnv;
+  it('Mints the accrued to the treasury', async () => {
+    const { pool, hope, hHope, lendingFeeToVault } = testEnv;
 
-  //     const treasuryAddress = await hHope.RESERVE_TREASURY_ADDRESS();
-  //     const { accruedToTreasury } = await pool.getReserveData(hope.address);
+    await pool.setFeeToVault(lendingFeeToVault.address);
 
-  //     await expect(await pool.mintToTreasury([hope.address]));
+    const treasuryAddress = await hHope.RESERVE_TREASURY_ADDRESS();
+    const { accruedToTreasury } = await pool.getReserveData(hope.address);
 
-  //     const normalizedIncome = await pool.getReserveNormalizedIncome(hope.address);
-  //     const treasuryBalance = await hHope.balanceOf(treasuryAddress);
+    await expect(await pool.mintToTreasury([hope.address]));
 
-  //     const feeToVault = await pool.getFeeToVault();
-  //     const feeToVaultPercent = await pool.getFeeToVaultPercent();
-  //     const feeToVaultBalance = await hope.balanceOf(feeToVault);
+    const normalizedIncome = await pool.getReserveNormalizedIncome(hope.address);
+    const treasuryBalance = await hHope.balanceOf(treasuryAddress);
 
-  //     const expectedFeeToVaultBalance = rayMul(accruedToTreasury, normalizedIncome)
-  //       .mul(feeToVaultPercent)
-  //       .div(10000);
-  //     const expectedTreasuryBalance = rayMul(accruedToTreasury, normalizedIncome).sub(
-  //       expectedFeeToVaultBalance
-  //     );
+    const feeToVault = await pool.getFeeToVault();
+    const feeToVaultPercent = await pool.getFeeToVaultPercent();
+    const feeToVaultBalance = await hope.balanceOf(feeToVault);
 
-  //     expect(treasuryBalance).to.be.closeTo(
-  //       expectedTreasuryBalance,
-  //       2,
-  //       'Invalid treasury balance after minting'
-  //     );
+    const expectedFeeToVaultBalance = rayMul(accruedToTreasury, normalizedIncome)
+      .mul(feeToVaultPercent)
+      .div(10000);
+    const expectedTreasuryBalance = rayMul(accruedToTreasury, normalizedIncome).sub(
+      expectedFeeToVaultBalance
+    );
 
-  //     expect(feeToVaultBalance).to.be.closeTo(
-  //       expectedFeeToVaultBalance,
-  //       2,
-  //       'Invalid vault balance after minting'
-  //     );
-  //   });
+    expect(treasuryBalance).to.be.closeTo(
+      expectedTreasuryBalance,
+      2,
+      'Invalid treasury balance after minting'
+    );
 
-  // it('burn the underlying token', async () => {
-  //   const { users, pool, hope, hHope, deployer, lendingFeeToVault } = testEnv;
+    expect(feeToVaultBalance).to.be.closeTo(
+      expectedFeeToVaultBalance,
+      2,
+      'Invalid vault balance after minting'
+    );
+  });
 
-  //   const burnerManager = await lendingFeeToVault.burnerManager();
-  //   const _underlyingBurner = await lendingFeeToVault.underlyingBurner();
+  it('burn the underlying token', async () => {
+    const { users, hope, lendingFeeToVault } = testEnv;
 
-  //   //keccak256("Operator_Role")
-  //   const hashOfRole = "0xa33daac198390630db2998ca75f43ac7962e047fbef856c9c97ccc60c64bfe17";
-  //   await lendingFeeToVault.grantRole(hashOfRole, users[0].address);
-  //   await lendingFeeToVault.connect(users[0].signer).burn(hope.address, 1);
+    const balanceOfVault = await hope.balanceOf(lendingFeeToVault.address);
+    expect(balanceOfVault).to.be.gt(0);
 
-  //   const underlyingBurner = await lendingFeeToVault.underlyingBurner();
-  //   const underlyingBurnerBalance = await hope.balanceOf(underlyingBurner);
-  //   expect(underlyingBurnerBalance).to.be.gt(0);
-  // });
+    //keccak256("Operator_Role")
+    const hashOfRole = "0xa33daac198390630db2998ca75f43ac7962e047fbef856c9c97ccc60c64bfe17";
+    await lendingFeeToVault.grantRole(hashOfRole, users[0].address);
+    await lendingFeeToVault.connect(users[0].signer).burn(hope.address, 1);
+
+    // in test unit, no cover swap case
+    const underlyingBurner = await lendingFeeToVault.underlyingBurner();
+    const underlyingBurnerBalance = await hope.balanceOf(underlyingBurner);
+    expect(underlyingBurnerBalance).to.be.equal(balanceOfVault);
+  });
 });

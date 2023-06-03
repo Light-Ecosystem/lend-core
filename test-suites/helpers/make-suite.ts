@@ -20,6 +20,7 @@ import {
   getGaugeController,
   getVotingEscrow,
   getLendingFeeToVault,
+  getStakingHope,
 } from 'lend-deploy/dist/helpers/contract-getters';
 import { tEthereumAddress } from '../../helpers/types';
 import {
@@ -83,6 +84,8 @@ export interface TestEnv {
   veLT: Contract;
   minter: Contract;
   lendingFeeToVault: LendingFeeToVault;
+  stakingHOPE: Contract;
+  hstHOPE: Contract;
 }
 
 let HardhatSnapshotId: string = '0x1';
@@ -121,6 +124,8 @@ const testEnv: TestEnv = {
   lt: {} as Contract,
   veLT: {} as Contract,
   lendingFeeToVault: {} as LendingFeeToVault,
+  stakingHOPE: {} as Contract,
+  hstHOPE: {} as Contract,
 } as TestEnv;
 
 export async function initializeMakeSuite() {
@@ -161,10 +166,12 @@ export async function initializeMakeSuite() {
   testEnv.helpersContract = await getHopeLendProtocolDataProvider();
 
   const allTokens = await testEnv.helpersContract.getAllHTokens();
+ 
   const hDaiAddress = allTokens.find((hToken) => hToken.symbol.includes('DAI'))?.tokenAddress;
   const hUsdcAddress = allTokens.find((hToken) => hToken.symbol.includes('USDC'))?.tokenAddress;
   const hWEthAddress = allTokens.find((hToken) => hToken.symbol.includes('WETH'))?.tokenAddress;
   const hHopeAddress = allTokens.find((hToken) => hToken.symbol.includes('HOPE'))?.tokenAddress;
+  const hstHOPEAddress = allTokens.find((hToken) => hToken.symbol.includes('StakingHOPE'))?.tokenAddress;
 
   const reservesTokens = await testEnv.helpersContract.getAllReservesTokens();
 
@@ -199,8 +206,10 @@ export async function initializeMakeSuite() {
   const daiLendingGaugeAddress = await testEnv.gaugeFactory.lendingGauge(daiAddress);
   testEnv.daiLendingGauge = await getLendingGauge(daiLendingGaugeAddress);
 
-  const vaultAddress = await testEnv.pool.getFeeToVault();
-  testEnv.lendingFeeToVault = await getLendingFeeToVault(vaultAddress);
+  testEnv.lendingFeeToVault = await getLendingFeeToVault();
+
+  testEnv.stakingHOPE = await getStakingHope();
+  testEnv.hstHOPE = await getHToken(hstHOPEAddress);
 
   // Setup admins
   await waitForTx(await testEnv.aclManager.addRiskAdmin(testEnv.riskAdmin.address));

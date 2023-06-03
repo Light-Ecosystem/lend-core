@@ -31,7 +31,8 @@
     "ci:clean": "rm -rf ./artifacts ./cache ./types ./temp-artifacts",
     "build": "tsc --project lib.tsconfig.json",
     "prepublish": "npm run compile && npm run build",
-    "test-vault": ". ./setup-test-env.sh && TS_NODE_TRANSPILE_ONLY=1 hardhat test test-suites/__setup.spec.ts test-suites/mint-to-treasury.spec.ts"
+    "test-vault": ". ./setup-test-env.sh && TS_NODE_TRANSPILE_ONLY=1 hardhat test test-suites/__setup.spec.ts test-suites/mint-to-treasury.spec.ts",
+    "test-withdraw-lt": ". ./setup-test-env.sh && TS_NODE_TRANSPILE_ONLY=1 hardhat test test-suites/__setup.spec.ts test-suites/withdraw-lt-rewards.spec.ts"
   },
   "devDependencies": {
     "lend-deploy": "file:../lend-deploy",
