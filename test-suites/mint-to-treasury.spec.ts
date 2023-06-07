@@ -98,10 +98,8 @@ makeSuite('Mint To Treasury', (testEnv: TestEnv) => {
     const balanceOfVault = await hope.balanceOf(lendingFeeToVault.address);
     expect(balanceOfVault).to.be.gt(0);
 
-    //keccak256("Operator_Role")
-    const hashOfRole = "0xa33daac198390630db2998ca75f43ac7962e047fbef856c9c97ccc60c64bfe17";
-    await lendingFeeToVault.grantRole(hashOfRole, users[0].address);
-    await lendingFeeToVault.connect(users[0].signer).burn(hope.address, 1);
+    await lendingFeeToVault.addOperator(users[0].address);
+    await lendingFeeToVault.connect(users[0].signer).burn(hope.address, balanceOfVault, 1);
 
     // in test unit, no cover swap case
     const underlyingBurner = await lendingFeeToVault.underlyingBurner();
