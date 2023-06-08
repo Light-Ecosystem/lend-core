@@ -5,6 +5,7 @@ import "../../dependencies/openzeppelin/contracts/Pausable.sol";
 import "../../dependencies/openzeppelin/contracts/Ownable2Step.sol";
 import "../../dependencies/openzeppelin/contracts/AccessControl.sol";
 import "../../dependencies/openzeppelin/contracts/IERC20.sol";
+import '../libraries/helpers/Errors.sol';
 
 interface IBurner {
     function burn(address to, IERC20 token, uint amount, uint amountOutMin) external;
@@ -61,11 +62,13 @@ contract LendingFeeToVault is Ownable2Step, Pausable, AccessControl {
         return hasRole(OPERATOR_ROLE, _operator);
     }
 
-    function addOperator(address account) public onlyOwner {
-        _grantRole(OPERATOR_ROLE, account);
+    function addOperator(address _operator) public onlyOwner {
+        require(_operator != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
+        _grantRole(OPERATOR_ROLE, _operator);
     }
 
-    function removeOperator(address account) public onlyOwner {
-        _revokeRole(OPERATOR_ROLE, account);
+    function removeOperator(address _operator) public onlyOwner {
+        require(_operator != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
+        _revokeRole(OPERATOR_ROLE, _operator);
     }
 }
