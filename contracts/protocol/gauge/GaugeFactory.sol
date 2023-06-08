@@ -13,7 +13,7 @@ import '../libraries/helpers/Errors.sol';
 contract GaugeFactory is AccessControl, IGaugeFactory {
   bytes32 public constant override OPERATOR_ROLE = keccak256('OPERATOR_ROLE');
 
-  IPoolAddressesProvider internal _addressesProvider;
+  IPoolAddressesProvider immutable internal _addressesProvider;
 
   address public immutable pool;
   address public immutable minter;
@@ -57,7 +57,7 @@ contract GaugeFactory is AccessControl, IGaugeFactory {
     ILendingGauge(lendingGaugeAddress).initialize(pool, minter, votingEscrow, _underlyingAsset);
     lendingGauge[_underlyingAsset] = lendingGaugeAddress;
     allLendingGauges.push(lendingGaugeAddress);
-    emit LendingGaugeCreated(_underlyingAsset, lendingGaugeAddress, allLendingGauges.length);
+    emit LendingGaugeCreated(address(_addressesProvider), _underlyingAsset, lendingGaugeAddress, allLendingGauges.length);
   }
 
   function allLendingGaugesLength() external view returns (uint256) {
@@ -67,7 +67,7 @@ contract GaugeFactory is AccessControl, IGaugeFactory {
   function setLendingGaugeImplementation(address _gaugeAddress) external onlyPoolAdmin {
     require(_gaugeAddress != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
     lendingGaugeImplementation = _gaugeAddress;
-    emit SetLendingGaugeImplementation(_gaugeAddress);
+    emit SetLendingGaugeImplementation(address(_addressesProvider), _gaugeAddress);
   }
 
   function isOperator(address _operator) external override view returns (bool) {

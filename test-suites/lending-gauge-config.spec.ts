@@ -7,7 +7,12 @@ import { makeSuite } from './helpers/make-suite';
 import { parseUnits } from 'ethers/lib/utils';
 
 makeSuite('LendingGauge: Config', (testEnv) => {
-  const { PARAMETER_ADDRESS_NOT_ZERO, CALLER_NOT_POOL_ADMIN, INVALID_PHASES_LENGTH, LENDING_GAUGE_PERCENTAGE_NOT_MATCH } = ProtocolErrors;
+  const {
+    PARAMETER_ADDRESS_NOT_ZERO,
+    CALLER_NOT_POOL_ADMIN,
+    INVALID_PHASES_LENGTH,
+    LENDING_GAUGE_PERCENTAGE_NOT_MATCH,
+  } = ProtocolErrors;
   let alice, bob;
 
   const correctInputParams: {
@@ -58,13 +63,15 @@ makeSuite('LendingGauge: Config', (testEnv) => {
 
   it('Initialize will revert because address is zero', async () => {
     const { lendingGauge } = testEnv;
-    await expect(lendingGauge.initialize(ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS)).to.be.revertedWith(
-      PARAMETER_ADDRESS_NOT_ZERO
-    );
+    await expect(
+      lendingGauge.initialize(ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS)
+    ).to.be.revertedWith(PARAMETER_ADDRESS_NOT_ZERO);
   });
   it('Add phase will revert because caller not pool admin', async () => {
     const { daiLendingGauge } = testEnv;
-    await expect(daiLendingGauge.connect(alice.signer).addPhases([])).to.be.revertedWith(CALLER_NOT_POOL_ADMIN);
+    await expect(daiLendingGauge.connect(alice.signer).addPhases([])).to.be.revertedWith(
+      CALLER_NOT_POOL_ADMIN
+    );
   });
 
   it('Add phase will revert because length is invalid', async () => {
@@ -76,7 +83,10 @@ makeSuite('LendingGauge: Config', (testEnv) => {
       b: BigNumberish;
     }[] = correctInputParams.slice(0, 2);
     await expect(daiLendingGauge.addPhases(inputParams)).to.be.revertedWith(INVALID_PHASES_LENGTH);
-    inputParams = inputParams.concat(correctInputParams).concat(correctInputParams).concat(correctInputParams);
+    inputParams = inputParams
+      .concat(correctInputParams)
+      .concat(correctInputParams)
+      .concat(correctInputParams);
     await expect(daiLendingGauge.addPhases(inputParams)).to.be.revertedWith(INVALID_PHASES_LENGTH);
   });
 
@@ -113,8 +123,12 @@ makeSuite('LendingGauge: Config', (testEnv) => {
         b: parseUnits('0', 0),
       },
     ];
-    await expect(daiLendingGauge.addPhases(inputParams)).to.be.revertedWith(LENDING_GAUGE_PERCENTAGE_NOT_MATCH);
+    await expect(daiLendingGauge.addPhases(inputParams)).to.be.revertedWith(
+      LENDING_GAUGE_PERCENTAGE_NOT_MATCH
+    );
     inputParams = correctInputParams.concat(correctInputParams);
-    await expect(daiLendingGauge.addPhases(inputParams)).to.be.revertedWith(LENDING_GAUGE_PERCENTAGE_NOT_MATCH);
+    await expect(daiLendingGauge.addPhases(inputParams)).to.be.revertedWith(
+      LENDING_GAUGE_PERCENTAGE_NOT_MATCH
+    );
   });
 });

@@ -531,7 +531,7 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
     expect(await mockPool.setMaxNumberOfReserves(numberOfReserves));
     expect(await mockPool.MAX_NUMBER_RESERVES()).to.be.eq(numberOfReserves);
 
-    const freshContract = await deployMintableERC20(['MOCK', 'MOCK', '18']);
+    const freshContract = await deployMintableERC20(['MOCK', 'MOCK', '18', deployer.address]);
     const config = await pool.getReserveData(dai.address);
     await expect(
       pool.connect(configSigner).initReserve(
@@ -551,7 +551,7 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
      * 3. Init a new asset.
      * Intended behaviour new asset is inserted into one of the available spots in
      */
-    const { configurator, pool, poolAdmin, addressesProvider } = testEnv;
+    const { configurator, pool, poolAdmin, addressesProvider, deployer } = testEnv;
 
     const reservesListBefore = await pool.connect(configurator.signer).getReservesList();
 
@@ -578,7 +578,7 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
     expect(reservesListAfterDrop.length).to.be.eq(reservesListBefore.length - 2);
 
     // Deploy new token and implementations
-    const mockToken = await deployMintableERC20(['MOCK', 'MOCK', '18']);
+    const mockToken = await deployMintableERC20(['MOCK', 'MOCK', '18', deployer.address]);
     const stableDebtTokenImplementation = await new StableDebtToken__factory(
       await getFirstSigner()
     ).deploy(pool.address);
@@ -724,7 +724,7 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
       expect(reservesListLengthAfterDrop).to.be.eq(reservesListBefore.length - 1);
       expect(reservesListLengthAfterDrop).to.be.lt(await mockPool.MAX_NUMBER_RESERVES());
 
-      const freshContract = await deployMintableERC20(['MOCK', 'MOCK', '18']);
+      const freshContract = await deployMintableERC20(['MOCK', 'MOCK', '18', deployer.address]);
       const config = await pool.getReserveData(dai.address);
       expect(
         await pool.connect(configSigner).initReserve(
@@ -737,7 +737,7 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
       );
     }
 
-    const freshContract = await deployMintableERC20(['MOCK', 'MOCK', '18']);
+    const freshContract = await deployMintableERC20(['MOCK', 'MOCK', '18', deployer.address]);
     const config = await pool.getReserveData(dai.address);
     expect(
       await pool.connect(configSigner).initReserve(
@@ -877,6 +877,7 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
     } = testEnv;
 
     _mockFlashLoanReceiver = await getMockFlashLoanReceiver();
+    await weth.addMinter(_mockFlashLoanReceiver.address);
 
     await configurator.updateFlashloanPremiumTotal(TOTAL_PREMIUM);
     await configurator.updateFlashloanPremiumToProtocol(PREMIUM_TO_PROTOCOL);
@@ -931,6 +932,7 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
     } = testEnv;
 
     _mockFlashLoanReceiver = await getMockFlashLoanReceiver();
+    await weth.addMinter(_mockFlashLoanReceiver.address);
 
     await configurator.updateFlashloanPremiumTotal(TOTAL_PREMIUM);
     await configurator.updateFlashloanPremiumToProtocol(PREMIUM_TO_PROTOCOL);
@@ -981,6 +983,7 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
     } = testEnv;
 
     _mockFlashLoanReceiver = await getMockFlashLoanReceiver();
+    await weth.addMinter(_mockFlashLoanReceiver.address);
 
     await configurator.updateFlashloanPremiumTotal(TOTAL_PREMIUM);
     await configurator.updateFlashloanPremiumToProtocol(PREMIUM_TO_PROTOCOL);

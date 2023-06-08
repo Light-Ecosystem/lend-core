@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: LGPL-3.0
 pragma solidity 0.8.17;
 
-import {Ownable} from '../../dependencies/openzeppelin/contracts/Ownable.sol';
+import {Ownable2Step} from '../../dependencies/openzeppelin/contracts/Ownable2Step.sol';
 import {ISequencerOracle} from '../../interfaces/ISequencerOracle.sol';
 
-contract SequencerOracle is ISequencerOracle, Ownable {
+contract SequencerOracle is ISequencerOracle, Ownable2Step {
   bool internal _isDown;
   uint256 internal _timestampGotUp;
 
@@ -13,7 +13,7 @@ contract SequencerOracle is ISequencerOracle, Ownable {
    * @param owner The owner address of this contract
    */
   constructor(address owner) {
-    transferOwnership(owner);
+    _transferOwnership(owner);
   }
 
   /**

@@ -2,7 +2,7 @@
 pragma solidity 0.8.17;
 
 import {PoolConfigurator} from '../protocol/pool/PoolConfigurator.sol';
-import {Ownable} from '../dependencies/openzeppelin/contracts/Ownable.sol';
+import {Ownable2Step} from '../dependencies/openzeppelin/contracts/Ownable2Step.sol';
 
 /**
  * @title ReservesSetupHelper
@@ -10,7 +10,7 @@ import {Ownable} from '../dependencies/openzeppelin/contracts/Ownable.sol';
  * @notice Deployment helper to setup the assets risk parameters at PoolConfigurator in batch.
  * @dev The ReservesSetupHelper is an Ownable contract, so only the deployer or future owners can call this contract.
  */
-contract ReservesSetupHelper is Ownable {
+contract ReservesSetupHelper is Ownable2Step {
   struct ConfigureReserveInput {
     address asset;
     uint256 baseLTV;
@@ -30,10 +30,7 @@ contract ReservesSetupHelper is Ownable {
    * @param configurator The address of PoolConfigurator contract
    * @param inputParams An array of ConfigureReserveInput struct that contains the assets and their risk parameters
    */
-  function configureReserves(
-    PoolConfigurator configurator,
-    ConfigureReserveInput[] calldata inputParams
-  ) external onlyOwner {
+  function configureReserves(PoolConfigurator configurator, ConfigureReserveInput[] calldata inputParams) external onlyOwner {
     for (uint256 i = 0; i < inputParams.length; i++) {
       configurator.configureReserveAsCollateral(
         inputParams[i].asset,
@@ -46,10 +43,7 @@ contract ReservesSetupHelper is Ownable {
         configurator.setReserveBorrowing(inputParams[i].asset, true);
 
         configurator.setBorrowCap(inputParams[i].asset, inputParams[i].borrowCap);
-        configurator.setReserveStableRateBorrowing(
-          inputParams[i].asset,
-          inputParams[i].stableBorrowingEnabled
-        );
+        configurator.setReserveStableRateBorrowing(inputParams[i].asset, inputParams[i].stableBorrowingEnabled);
       }
       configurator.setReserveFlashLoaning(inputParams[i].asset, inputParams[i].flashLoanEnabled);
       configurator.setSupplyCap(inputParams[i].asset, inputParams[i].supplyCap);

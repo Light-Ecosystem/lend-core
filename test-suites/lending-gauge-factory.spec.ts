@@ -96,9 +96,9 @@ makeSuite('LendingGauge: Factory', (testEnv) => {
     ).to.be.revertedWith(CALLER_NOT_POOL_ADMIN);
   });
   it('GaugeFactory set lending gauge impl success', async () => {
-    const { gaugeFactory, lendingGauge } = testEnv;
+    const { addressesProvider, gaugeFactory, lendingGauge } = testEnv;
     await expect(gaugeFactory.setLendingGaugeImplementation(lendingGauge.address))
       .to.be.emit(gaugeFactory, 'SetLendingGaugeImplementation')
-      .withArgs(lendingGauge.address);
+      .withArgs(addressesProvider.address, lendingGauge.address);
   });
 });

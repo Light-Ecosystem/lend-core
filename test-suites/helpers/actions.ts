@@ -124,9 +124,10 @@ export const mint = async (reserveSymbol: string, amount: string, user: SignerWi
   const token = await getMintableERC20(reserve);
 
   await waitForTx(
-    await token
-      .connect(user.signer)
-      ['mint(uint256)'](await convertToCurrencyDecimals(reserve, amount))
+    await token['mint(address,uint256)'](
+      user.address,
+      await convertToCurrencyDecimals(reserve, amount)
+    )
   );
 };
 

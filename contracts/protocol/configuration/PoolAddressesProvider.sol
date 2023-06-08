@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0
 pragma solidity 0.8.17;
 
-import {Ownable} from '../../dependencies/openzeppelin/contracts/Ownable.sol';
+import {Ownable2Step} from '../../dependencies/openzeppelin/contracts/Ownable2Step.sol';
 import {IPoolAddressesProvider} from '../../interfaces/IPoolAddressesProvider.sol';
 import {InitializableImmutableAdminUpgradeabilityProxy} from '../libraries/hopelend-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol';
 
@@ -12,7 +12,7 @@ import {InitializableImmutableAdminUpgradeabilityProxy} from '../libraries/hopel
  * @dev Acts as factory of proxies and admin of those, so with right to change its implementations
  * @dev Owned by the HopeLend Governance
  */
-contract PoolAddressesProvider is Ownable, IPoolAddressesProvider {
+contract PoolAddressesProvider is Ownable2Step, IPoolAddressesProvider {
   // Identifier of the HopeLend Market
   string private _marketId;
 
@@ -35,7 +35,7 @@ contract PoolAddressesProvider is Ownable, IPoolAddressesProvider {
    */
   constructor(string memory marketId, address owner) {
     _setMarketId(marketId);
-    transferOwnership(owner);
+    _transferOwnership(owner);
   }
 
   /// @inheritdoc IPoolAddressesProvider

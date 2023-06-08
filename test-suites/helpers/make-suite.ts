@@ -166,12 +166,14 @@ export async function initializeMakeSuite() {
   testEnv.helpersContract = await getHopeLendProtocolDataProvider();
 
   const allTokens = await testEnv.helpersContract.getAllHTokens();
- 
+
   const hDaiAddress = allTokens.find((hToken) => hToken.symbol.includes('DAI'))?.tokenAddress;
   const hUsdcAddress = allTokens.find((hToken) => hToken.symbol.includes('USDC'))?.tokenAddress;
   const hWEthAddress = allTokens.find((hToken) => hToken.symbol.includes('WETH'))?.tokenAddress;
   const hHopeAddress = allTokens.find((hToken) => hToken.symbol.includes('HOPE'))?.tokenAddress;
-  const hstHOPEAddress = allTokens.find((hToken) => hToken.symbol.includes('StakingHOPE'))?.tokenAddress;
+  const hstHOPEAddress = allTokens.find((hToken) =>
+    hToken.symbol.includes('StakingHOPE')
+  )?.tokenAddress;
 
   const reservesTokens = await testEnv.helpersContract.getAllReservesTokens();
 
@@ -202,6 +204,13 @@ export async function initializeMakeSuite() {
   testEnv.hope = await getMintableERC20(hopeAddress);
   testEnv.usdc = await getMintableERC20(usdcAddress);
   testEnv.weth = await getWETHMocked(wethAddress);
+
+  const mintableERC20Tokens = [testEnv.dai, testEnv.hope, testEnv.usdc, testEnv.weth];
+  for (const token of mintableERC20Tokens) {
+    for (const user of testEnv.users) {
+      await waitForTx(await token.addMinter(user.address));
+    }
+  }
 
   const daiLendingGaugeAddress = await testEnv.gaugeFactory.lendingGauge(daiAddress);
   testEnv.daiLendingGauge = await getLendingGauge(daiLendingGaugeAddress);

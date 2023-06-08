@@ -2,18 +2,21 @@
 pragma solidity 0.8.17;
 
 import {ERC20} from '../../dependencies/openzeppelin/contracts/ERC20.sol';
+import {Ownable2Step} from '../../dependencies/openzeppelin/contracts/Ownable2Step.sol';
+import {AccessControl} from '../../dependencies/openzeppelin/contracts/AccessControl.sol';
 import {IERC20WithPermit} from '../../interfaces/IERC20WithPermit.sol';
 
 /**
  * @title ERC20Mintable
  * @dev ERC20 minting logic
  */
-contract MintableERC20 is IERC20WithPermit, ERC20 {
+contract MintableERC20 is IERC20WithPermit, ERC20, Ownable2Step, AccessControl {
   bytes public constant EIP712_REVISION = bytes('1');
   bytes32 internal constant EIP712_DOMAIN =
     keccak256('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)');
   bytes32 public constant PERMIT_TYPEHASH =
     keccak256('Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)');
+  bytes32 public constant MINTER_ROLE = keccak256('MINTER_ROLE');
 
   // Map of address nonces (address => nonce)
   mapping(address => uint256) internal _nonces;
@@ -23,7 +26,8 @@ contract MintableERC20 is IERC20WithPermit, ERC20 {
   constructor(
     string memory name,
     string memory symbol,
-    uint8 decimals
+    uint8 decimals,
+    address faucet
   ) ERC20(name, symbol) {
     uint256 chainId = block.chainid;
 
@@ -37,6 +41,8 @@ contract MintableERC20 is IERC20WithPermit, ERC20 {
       )
     );
     _setupDecimals(decimals);
+    _grantRole(MINTER_ROLE, _msgSender());
+    _grantRole(MINTER_ROLE, faucet);
   }
 
   /// @inheritdoc IERC20WithPermit
@@ -71,6 +77,7 @@ contract MintableERC20 is IERC20WithPermit, ERC20 {
    * @return A boolean that indicates if the operation was successful.
    */
   function mint(uint256 value) public returns (bool) {
+    require(hasRole(MINTER_ROLE, _msgSender()), "Only minter");
     _mint(_msgSender(), value);
     return true;
   }
@@ -82,11 +89,24 @@ contract MintableERC20 is IERC20WithPermit, ERC20 {
    * @return A boolean that indicates if the operation was successful.
    */
   function mint(address account, uint256 value) public returns (bool) {
+    require(hasRole(MINTER_ROLE, _msgSender()), "Only minter");
     _mint(account, value);
     return true;
   }
 
   function nonces(address owner) public view virtual returns (uint256) {
     return _nonces[owner];
+  }
+
+  function isMinter(address _minter) external view returns (bool) {
+    return hasRole(MINTER_ROLE, _minter);
+  }
+
+  function addMinter(address _minter) external onlyOwner {
+    _grantRole(MINTER_ROLE, _minter);
+  }
+
+  function removeMinter(address _minter) external onlyOwner {
+    _revokeRole(MINTER_ROLE, _minter);
   }
 }

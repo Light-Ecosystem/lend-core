@@ -41,6 +41,8 @@ makeSuite('Pool: liquidity indexes misc tests', (testEnv: TestEnv) => {
     const userAddress = user0.address;
     const amountToDeposit = ethers.utils.parseEther('1');
 
+    await weth.addMinter(_mockFlashLoanReceiver.address);
+
     await weth['mint(uint256)'](amountToDeposit);
 
     await weth.approve(pool.address, MAX_UINT_AMOUNT);

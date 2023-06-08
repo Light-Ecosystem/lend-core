@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0
 pragma solidity 0.8.17;
 
-import {Ownable} from '../../dependencies/openzeppelin/contracts/Ownable.sol';
+import {Ownable2Step} from '../../dependencies/openzeppelin/contracts/Ownable2Step.sol';
 import {Errors} from '../libraries/helpers/Errors.sol';
 import {IPoolAddressesProviderRegistry} from '../../interfaces/IPoolAddressesProviderRegistry.sol';
 
@@ -12,7 +12,7 @@ import {IPoolAddressesProviderRegistry} from '../../interfaces/IPoolAddressesPro
  * @dev Used for indexing purposes of HopeLend protocol's markets. The id assigned to a PoolAddressesProvider refers to the
  * market it is connected with, for example with `1` for the HopeLend main market and `2` for the next created.
  */
-contract PoolAddressesProviderRegistry is Ownable, IPoolAddressesProviderRegistry {
+contract PoolAddressesProviderRegistry is Ownable2Step, IPoolAddressesProviderRegistry {
   // Map of address provider ids (addressesProvider => id)
   mapping(address => uint256) private _addressesProviderToId;
   // Map of id to address provider (id => addressesProvider)
@@ -27,7 +27,7 @@ contract PoolAddressesProviderRegistry is Ownable, IPoolAddressesProviderRegistr
    * @param owner The owner address of this contract.
    */
   constructor(address owner) {
-    transferOwnership(owner);
+    _transferOwnership(owner);
   }
 
   /// @inheritdoc IPoolAddressesProviderRegistry

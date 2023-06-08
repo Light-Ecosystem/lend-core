@@ -23,7 +23,10 @@ makeSuite('Pool: Authorized FlashLoan', (testEnv: TestEnv) => {
   } = ProtocolErrors;
 
   before(async () => {
+    const { weth, usdc } = testEnv;
     _mockFlashLoanReceiver = await getMockFlashLoanReceiver();
+    await weth.addMinter(_mockFlashLoanReceiver.address);
+    await usdc.addMinter(_mockFlashLoanReceiver.address);
   });
 
   it('Authorize a flash borrower', async () => {
@@ -107,6 +110,7 @@ makeSuite('Pool: Authorized FlashLoan', (testEnv: TestEnv) => {
   it('Takes WETH flashloan, does not return the funds with mode = 0 (revert expected)', async () => {
     const { pool, weth, users } = testEnv;
     const caller = users[1];
+
     expect(await _mockFlashLoanReceiver.setFailExecutionTransfer(true));
 
     await expect(
@@ -127,6 +131,7 @@ makeSuite('Pool: Authorized FlashLoan', (testEnv: TestEnv) => {
   it('Takes WETH flash loan, simulating a receiver as EOA (revert expected)', async () => {
     const { pool, weth, users } = testEnv;
     const caller = users[1];
+
     expect(await _mockFlashLoanReceiver.setFailExecutionTransfer(true));
     expect(await _mockFlashLoanReceiver.setSimulateEOA(true));
 

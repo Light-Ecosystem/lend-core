@@ -18,7 +18,9 @@ makeSuite('Pool: Drop Reserve', (testEnv: TestEnv) => {
   } = ProtocolErrors;
 
   before(async () => {
+    const { weth } = testEnv;
     _mockFlashLoanReceiver = await getMockFlashLoanReceiver();
+    await weth.addMinter(_mockFlashLoanReceiver.address);
   });
 
   it('User 1 deposits DAI, User 2 borrow DAI stable and variable, should fail to drop DAI reserve', async () => {

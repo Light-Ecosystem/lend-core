@@ -170,6 +170,8 @@ makeSuite('PausablePool', (testEnv: TestEnv) => {
 
     const flashAmount = utils.parseEther('0.8');
 
+    await weth.addMinter(_mockFlashLoanReceiver.address);
+
     await _mockFlashLoanReceiver.setFailExecutionTransfer(true);
 
     // Pause pool

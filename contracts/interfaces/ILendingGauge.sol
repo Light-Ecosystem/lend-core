@@ -9,7 +9,13 @@ import './IMinter.sol';
 import '../protocol/libraries/types/DataTypes.sol';
 
 interface ILendingGauge {
-  event AddPhases(DataTypes.Phase[] _phases);
+  /**
+   * @dev Emitted when LendingGauge is created.
+   * @param addressesProvider The address of the registered PoolAddressesProvider
+   * @param assset The address of the underlying asset of the reserve
+   * @param _phases Utilization rate and allocation ratio parameter configuration
+   */
+  event AddPhases(address indexed addressesProvider, address indexed assset, DataTypes.Phase[] _phases);
 
   function initialize(
     address _pool,

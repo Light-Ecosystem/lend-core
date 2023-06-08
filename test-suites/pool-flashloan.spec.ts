@@ -30,8 +30,11 @@ makeSuite('Pool: FlashLoan', (testEnv: TestEnv) => {
   const PREMIUM_TO_PROTOCOL = 3000;
 
   before(async () => {
-    const { usdc, hUsdc, pool, configurator, deployer } = testEnv;
+    const { weth, hope, dai, usdc, hUsdc, pool, configurator, deployer } = testEnv;
     _mockFlashLoanReceiver = await getMockFlashLoanReceiver();
+    await weth.addMinter(_mockFlashLoanReceiver.address);
+    await hope.addMinter(_mockFlashLoanReceiver.address);
+    await dai.addMinter(_mockFlashLoanReceiver.address);
 
     const hTokenRepayImpl = await new MockHTokenRepayment__factory(deployer.signer).deploy(
       pool.address

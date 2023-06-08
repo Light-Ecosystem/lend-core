@@ -27,11 +27,13 @@ makeSuite('Pool: Simple FlashLoan', (testEnv: TestEnv) => {
   const PREMIUM_TO_PROTOCOL = 3000;
 
   before(async () => {
-    const { addressesProvider, deployer } = testEnv;
+    const { weth, usdc, addressesProvider, deployer } = testEnv;
 
     _mockFlashLoanSimpleReceiver = await new MockFlashLoanSimpleReceiver__factory(
       deployer.signer
     ).deploy(addressesProvider.address);
+    await weth.addMinter(_mockFlashLoanSimpleReceiver.address);
+    await usdc.addMinter(_mockFlashLoanSimpleReceiver.address);
   });
 
   it('Configurator sets total premium = 9 bps, premium to protocol = 30%', async () => {
@@ -400,6 +402,8 @@ makeSuite('Pool: Simple FlashLoan', (testEnv: TestEnv) => {
     const flashAttacker = await new FlashloanAttacker__factory(deployer.signer).deploy(
       addressesProvider.address
     );
+    await weth.addMinter(flashAttacker.address);
+    await dai.addMinter(flashAttacker.address);
 
     await flashAttacker.connect(user.signer).supplyAsset(weth.address, parseEther('100'));
 

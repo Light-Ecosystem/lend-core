@@ -24,6 +24,7 @@ makeSuite('PoolAddressesProvider', (testEnv: TestEnv) => {
 
     // Transfer ownership to user 1
     await addressesProvider.transferOwnership(users[1].address);
+    await addressesProvider.connect(users[1].signer).acceptOwnership();
 
     // Test accessibility with user 0
     for (const contractFunction of [

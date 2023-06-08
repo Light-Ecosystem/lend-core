@@ -28,7 +28,8 @@ makeSuite('HopeOracle', (testEnv: TestEnv) => {
   let assetPrice: string;
 
   before(async () => {
-    mockToken = await deployMintableERC20(['MOCK', 'MOCK', '18']);
+    const { deployer } = testEnv;
+    mockToken = await deployMintableERC20(['MOCK', 'MOCK', '18', deployer.address]);
     assetPrice = MOCK_CHAINLINK_AGGREGATORS_PRICES.ETH;
     mockAggregator = await deployMockAggregator(assetPrice);
   });
@@ -202,10 +203,9 @@ makeSuite('HopeOracle', (testEnv: TestEnv) => {
     expect(await hopeOracle.getSourceOfAsset(mockToken.address)).to.be.eq(mockAggregator.address);
 
     // activate Failover
-    expect(await hopeOracle.connect(poolAdmin.signer).activateFailover(mockToken.address)).to.emit(
-      hopeOracle,
-      'FailoverActivated'
-    ).withArgs(mockToken.address);
+    expect(await hopeOracle.connect(poolAdmin.signer).activateFailover(mockToken.address))
+      .to.emit(hopeOracle, 'FailoverActivated')
+      .withArgs(mockToken.address);
 
     expect(await hopeOracle.getAssetPrice(mockToken.address)).to.be.eq(0);
   });
@@ -216,13 +216,13 @@ makeSuite('HopeOracle', (testEnv: TestEnv) => {
 
     // Register price on FallbackOracle
     expect(await oracle.setAssetPrice(mockToken.address, fallbackPrice));
-    
+
     // Asset has no source
     expect(await hopeOracle.getSourceOfAsset(mockToken.address)).to.be.eq(ZERO_ADDRESS);
 
     // Add asset source
     expect(
-      await hopeOracle 
+      await hopeOracle
         .connect(poolAdmin.signer)
         .setAssetSources([mockToken.address], [mockAggregator.address])
     )
@@ -232,10 +232,9 @@ makeSuite('HopeOracle', (testEnv: TestEnv) => {
     expect(await hopeOracle.getSourceOfAsset(mockToken.address)).to.be.eq(mockAggregator.address);
 
     // activate Failover
-    expect(await hopeOracle.connect(poolAdmin.signer).activateFailover(mockToken.address)).to.emit(
-      hopeOracle,
-      'FailoverActivated'
-    ).withArgs(mockToken.address);
+    expect(await hopeOracle.connect(poolAdmin.signer).activateFailover(mockToken.address))
+      .to.emit(hopeOracle, 'FailoverActivated')
+      .withArgs(mockToken.address);
 
     expect(await hopeOracle.getAssetPrice(mockToken.address)).to.be.eq(fallbackPrice);
   });
@@ -258,18 +257,16 @@ makeSuite('HopeOracle', (testEnv: TestEnv) => {
     expect(await hopeOracle.getSourceOfAsset(mockToken.address)).to.be.eq(mockAggregator.address);
 
     // activate Failover
-    expect(await hopeOracle.connect(poolAdmin.signer).activateFailover(mockToken.address)).to.emit(
-      hopeOracle,
-      'FailoverActivated'
-    ).withArgs(mockToken.address);
+    expect(await hopeOracle.connect(poolAdmin.signer).activateFailover(mockToken.address))
+      .to.emit(hopeOracle, 'FailoverActivated')
+      .withArgs(mockToken.address);
 
     expect(await hopeOracle.getAssetPrice(mockToken.address)).to.be.eq(0);
 
     // deactivate Failover
-    expect(await hopeOracle.connect(poolAdmin.signer).deactivateFailover(mockToken.address)).to.emit(
-      hopeOracle,
-      'FailoverDeactivated'
-    ).withArgs(mockToken.address);
+    expect(await hopeOracle.connect(poolAdmin.signer).deactivateFailover(mockToken.address))
+      .to.emit(hopeOracle, 'FailoverDeactivated')
+      .withArgs(mockToken.address);
 
     expect(await hopeOracle.getAssetPrice(mockToken.address)).to.be.eq(assetPrice);
   });
@@ -296,18 +293,16 @@ makeSuite('HopeOracle', (testEnv: TestEnv) => {
     expect(await hopeOracle.getSourceOfAsset(mockToken.address)).to.be.eq(mockAggregator.address);
 
     // activate Failover
-    expect(await hopeOracle.connect(poolAdmin.signer).activateFailover(mockToken.address)).to.emit(
-      hopeOracle,
-      'FailoverActivated'
-    ).withArgs(mockToken.address);
+    expect(await hopeOracle.connect(poolAdmin.signer).activateFailover(mockToken.address))
+      .to.emit(hopeOracle, 'FailoverActivated')
+      .withArgs(mockToken.address);
 
     expect(await hopeOracle.getAssetPrice(mockToken.address)).to.be.eq(fallbackPrice);
 
     // deactivate Failover
-    expect(await hopeOracle.connect(poolAdmin.signer).deactivateFailover(mockToken.address)).to.emit(
-      hopeOracle,
-      'FailoverDeactivated'
-    ).withArgs(mockToken.address);
+    expect(await hopeOracle.connect(poolAdmin.signer).deactivateFailover(mockToken.address))
+      .to.emit(hopeOracle, 'FailoverDeactivated')
+      .withArgs(mockToken.address);
 
     expect(await hopeOracle.getAssetPrice(mockToken.address)).to.be.eq(assetPrice);
   });

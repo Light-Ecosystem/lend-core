@@ -24,12 +24,13 @@ makeSuite('Reserve Without Incentives', (testEnv) => {
   let mockVariableDebt: ERC20;
 
   before(async () => {
-    const { pool, poolAdmin, configurator, dai, helpersContract } = testEnv;
+    const { pool, poolAdmin, configurator, dai, helpersContract, deployer } = testEnv;
 
     mockToken = await new MintableERC20__factory(await getFirstSigner()).deploy(
       'MOCK',
       'MOCK',
-      '18'
+      '18',
+      deployer.address
     );
 
     const stableDebtTokenImplementation = await new StableDebtToken__factory(
@@ -157,9 +158,10 @@ makeSuite('Reserve Without Incentives', (testEnv) => {
 
     expect(await aMockToken.balanceOf(user.address)).to.be.eq(0);
 
-    await mockToken
-      .connect(user.signer)
-      ['mint(uint256)'](await convertToCurrencyDecimals(mockToken.address, '10000'));
+    await mockToken['mint(address,uint256)'](
+      user.address,
+      await convertToCurrencyDecimals(mockToken.address, '10000')
+    );
     await mockToken.connect(user.signer).approve(pool.address, MAX_UINT_AMOUNT);
     await pool
       .connect(user.signer)
@@ -240,7 +242,7 @@ makeSuite('Reserve Without Incentives', (testEnv) => {
     } = testEnv;
 
     const mintAmount = await convertToCurrencyDecimals(mockToken.address, '100');
-    await mockToken.connect(user.signer)['mint(uint256)'](mintAmount);
+    await mockToken['mint(address,uint256)'](user.address, mintAmount);
 
     const expectedMockTokenBalance = mintAmount.add(
       await convertToCurrencyDecimals(mockToken.address, '100')

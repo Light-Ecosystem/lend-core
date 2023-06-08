@@ -22,7 +22,10 @@ makeSuite('Pool: FlashLoan for gas comparison', (testEnv: TestEnv) => {
   const PREMIUM_TO_PROTOCOL = 3000;
 
   before(async () => {
+    const { weth, usdc } = testEnv;
     _mockFlashLoanReceiver = await getMockFlashLoanReceiver();
+    await weth.addMinter(_mockFlashLoanReceiver.address);
+    await usdc.addMinter(_mockFlashLoanReceiver.address);
   });
 
   it('Configurator sets total premium = 9 bps, premium to protocol = 30%', async () => {

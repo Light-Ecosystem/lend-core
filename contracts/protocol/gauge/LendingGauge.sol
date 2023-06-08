@@ -102,7 +102,7 @@ contract LendingGauge is ILendingGauge, Initializable {
     for (uint256 i = 0; i < _phases.length; i++) {
       _addPhase(_phases[i]);
     }
-    emit AddPhases(_phases);
+    emit AddPhases(address(_addressesProvider), underlyingAsset, _phases);
   }
 
   /**

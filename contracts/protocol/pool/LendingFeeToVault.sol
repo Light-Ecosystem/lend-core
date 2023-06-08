@@ -2,7 +2,7 @@
 pragma solidity 0.8.17;
 
 import "../../dependencies/openzeppelin/contracts/Pausable.sol";
-import "../../dependencies/openzeppelin/contracts/Ownable.sol";
+import "../../dependencies/openzeppelin/contracts/Ownable2Step.sol";
 import "../../dependencies/openzeppelin/contracts/AccessControl.sol";
 import "../../dependencies/openzeppelin/contracts/IERC20.sol";
 
@@ -14,7 +14,7 @@ interface IBurnerManager {
     function burners(address token) external returns (IBurner burner);
 }
 
-contract LendingFeeToVault is Ownable, Pausable, AccessControl {
+contract LendingFeeToVault is Ownable2Step, Pausable, AccessControl {
     bytes32 public constant OPERATOR_ROLE = keccak256("Operator_Role");
 
     address public immutable burnerManager;

@@ -2,9 +2,9 @@
 pragma solidity 0.8.17;
 
 import '../../../dependencies/openzeppelin/contracts/AccessControl.sol';
-import '../../../dependencies/openzeppelin/contracts/Ownable.sol';
+import '../../../dependencies/openzeppelin/contracts/Ownable2Step.sol';
 
-contract MockAggregator is AccessControl, Ownable {
+contract MockAggregator is AccessControl, Ownable2Step {
   bytes32 public constant OPERATOR_ROLE = keccak256('OPERATOR_ROLE');
   int256 private _latestAnswer;
 
