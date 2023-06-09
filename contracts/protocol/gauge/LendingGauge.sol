@@ -202,6 +202,26 @@ contract LendingGauge is ILendingGauge, Initializable {
   }
 
   /***
+   * @notice Get the number of integrateFraction(hToken) value per user
+   * @dev This function should be manually changed to "view" in the ABI
+   * @return uint256 number of integrateFraction(hToken) value per user
+   */
+  function integrateFractionOfHToken(address _addr) external returns (uint256) {
+    hvCheckpoint(_addr);
+    return IHTokenRewards(hToken).integrateFraction(_addr);
+  }
+
+  /***
+   * @notice Get the number of integrateFraction(vdToken) value per user
+   * @dev This function should be manually changed to "view" in the ABI
+   * @return uint256 number of integrateFraction(vdToken) value per user
+   */
+  function integrateFractionOfVariableDebtToken(address _addr) external returns (uint256) {
+    hvCheckpoint(_addr);
+    return IVariableDebtTokenRewards(variableDebtToken).integrateFraction(_addr);
+  }
+
+  /***
    * @notice Set the killed status for this contract
    * @dev When killed, the gauge always yields a rate of 0 and so cannot mint LT
    * @param _is_killed Killed status to set
