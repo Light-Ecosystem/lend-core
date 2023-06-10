@@ -81,7 +81,7 @@ abstract contract IncentivizedERC20 is AbsGauge, IERC20Detailed {
   }
 
   function setLendingGauge(address _lendingGauge) external onlyPool {
-    _initGauge(_lendingGauge);
+    _setLendingGauge(_lendingGauge);
   }
 
   /// @inheritdoc IERC20Detailed

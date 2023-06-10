@@ -55,16 +55,12 @@ abstract contract AbsGauge is Context, IAbsGauge {
     _;
   }
 
-  modifier onlyInitialize() {
-    require(!_initialized, 'Initializable: contract is already initialized');
-    _initialized = true;
-    _;
-  }
-
-  function _initGauge(address _lendingPoolGuageAddr) internal onlyInitialize {
+  function _setLendingGauge(address _lendingPoolGuageAddr) internal {
     lendingGauge = ILendingGauge(_lendingPoolGuageAddr);
-    controller = lendingGauge.controller();
-    votingEscrow = lendingGauge.votingEscrow();
+    if (_lendingPoolGuageAddr != address(0)) {
+      controller = lendingGauge.controller();
+      votingEscrow = lendingGauge.votingEscrow();
+    }
   }
 
   /***
