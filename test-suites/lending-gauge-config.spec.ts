@@ -8,7 +8,7 @@ import { parseUnits } from 'ethers/lib/utils';
 
 makeSuite('LendingGauge: Config', (testEnv) => {
   const {
-    PARAMETER_ADDRESS_NOT_ZERO,
+    ZERO_ADDRESS_NOT_VALID,
     CALLER_NOT_POOL_ADMIN,
     INVALID_PHASES_LENGTH,
     LENDING_GAUGE_PERCENTAGE_NOT_MATCH,
@@ -65,7 +65,7 @@ makeSuite('LendingGauge: Config', (testEnv) => {
     const { lendingGauge } = testEnv;
     await expect(
       lendingGauge.initialize(ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS)
-    ).to.be.revertedWith(PARAMETER_ADDRESS_NOT_ZERO);
+    ).to.be.revertedWith(ZERO_ADDRESS_NOT_VALID);
   });
   it('Add phase will revert because caller not pool admin', async () => {
     const { daiLendingGauge } = testEnv;

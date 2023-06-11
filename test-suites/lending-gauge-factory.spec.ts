@@ -5,7 +5,7 @@ import { makeSuite } from './helpers/make-suite';
 import { evmRevert, evmSnapshot } from 'lend-deploy';
 
 makeSuite('LendingGauge: Factory', (testEnv) => {
-  const { PARAMETER_ADDRESS_NOT_ZERO, CALLER_NOT_POOL_ADMIN } = ProtocolErrors;
+  const { ZERO_ADDRESS_NOT_VALID, CALLER_NOT_POOL_ADMIN } = ProtocolErrors;
   let alice, bob, eve;
   let snapId;
 
@@ -25,7 +25,7 @@ makeSuite('LendingGauge: Factory', (testEnv) => {
   it('GaugeFactory grant operator will revert because operator address is zero', async () => {
     const { gaugeFactory } = testEnv;
     await expect(gaugeFactory.addOperator(ZERO_ADDRESS)).to.be.revertedWith(
-      PARAMETER_ADDRESS_NOT_ZERO
+      ZERO_ADDRESS_NOT_VALID
     );
   });
   it('GaugeFactory grant operator will revert because caller is not pool admin', async () => {
@@ -46,7 +46,7 @@ makeSuite('LendingGauge: Factory', (testEnv) => {
   it('GaugeFactory revoke operator will revert because operator address is zero', async () => {
     const { gaugeFactory } = testEnv;
     await expect(gaugeFactory.removeOperator(ZERO_ADDRESS)).to.be.revertedWith(
-      PARAMETER_ADDRESS_NOT_ZERO
+      ZERO_ADDRESS_NOT_VALID
     );
   });
   it('GaugeFactory revoke operator will revert because caller is not pool admin', async () => {
@@ -65,7 +65,7 @@ makeSuite('LendingGauge: Factory', (testEnv) => {
   it('GaugeFactory create lending gauge will revert because underlying asset address is zero', async () => {
     const { gaugeFactory } = testEnv;
     await expect(gaugeFactory.createLendingGauge(ZERO_ADDRESS)).to.be.revertedWith(
-      PARAMETER_ADDRESS_NOT_ZERO
+      ZERO_ADDRESS_NOT_VALID
     );
   });
   it('GaugeFactory create lending gauge will revert because caller is not operator', async () => {
@@ -86,7 +86,7 @@ makeSuite('LendingGauge: Factory', (testEnv) => {
   it('GaugeFactory set lending gauge impl will revert because lending gauge impl address is zero', async () => {
     const { gaugeFactory } = testEnv;
     await expect(gaugeFactory.setLendingGaugeImplementation(ZERO_ADDRESS)).to.be.revertedWith(
-      PARAMETER_ADDRESS_NOT_ZERO
+      ZERO_ADDRESS_NOT_VALID
     );
   });
   it('GaugeFactory set lending gauge impl will revert because lending gauge impl is not pool admin', async () => {

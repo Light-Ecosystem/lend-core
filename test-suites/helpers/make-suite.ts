@@ -19,7 +19,6 @@ import {
   getMinter,
   getGaugeController,
   getVotingEscrow,
-  getLendingFeeToVault,
   getStakingHope,
 } from 'lend-deploy/dist/helpers/contract-getters';
 import { tEthereumAddress } from '../../helpers/types';
@@ -39,7 +38,6 @@ import {
   VariableDebtToken,
   LendingGauge,
   GaugeFactory,
-  LendingFeeToVault,
 } from '../../types';
 
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
@@ -83,7 +81,6 @@ export interface TestEnv {
   gaugeController: Contract;
   veLT: Contract;
   minter: Contract;
-  lendingFeeToVault: LendingFeeToVault;
   stakingHOPE: Contract;
   hstHOPE: Contract;
 }
@@ -123,7 +120,6 @@ const testEnv: TestEnv = {
   gaugeController: {} as Contract,
   lt: {} as Contract,
   veLT: {} as Contract,
-  lendingFeeToVault: {} as LendingFeeToVault,
   stakingHOPE: {} as Contract,
   hstHOPE: {} as Contract,
 } as TestEnv;
@@ -214,8 +210,6 @@ export async function initializeMakeSuite() {
 
   const daiLendingGaugeAddress = await testEnv.gaugeFactory.lendingGauge(daiAddress);
   testEnv.daiLendingGauge = await getLendingGauge(daiLendingGaugeAddress);
-
-  testEnv.lendingFeeToVault = await getLendingFeeToVault();
 
   testEnv.stakingHOPE = await getStakingHope();
   testEnv.hstHOPE = await getHToken(hstHOPEAddress);

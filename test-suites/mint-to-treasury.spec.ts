@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { RateMode } from '../helpers/types';
-import { MAX_UINT_AMOUNT, ONE_YEAR } from '../helpers/constants';
+import { MAX_UINT_AMOUNT, ONE_YEAR, ONE_ADDRESS } from '../helpers/constants';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import './helpers/utils/wadraymath';
@@ -56,9 +56,10 @@ makeSuite('Mint To Treasury', (testEnv: TestEnv) => {
   });
 
   it('Mints the accrued to the treasury', async () => {
-    const { pool, hope, hHope, lendingFeeToVault } = testEnv;
+    const { pool, hope, hHope } = testEnv;
 
-    await pool.setFeeToVault(lendingFeeToVault.address);
+    const feeToVault = ONE_ADDRESS;
+    await pool.setFeeToVault(feeToVault);
 
     const treasuryAddress = await hHope.RESERVE_TREASURY_ADDRESS();
     const { accruedToTreasury } = await pool.getReserveData(hope.address);
@@ -68,7 +69,6 @@ makeSuite('Mint To Treasury', (testEnv: TestEnv) => {
     const normalizedIncome = await pool.getReserveNormalizedIncome(hope.address);
     const treasuryBalance = await hHope.balanceOf(treasuryAddress);
 
-    const feeToVault = await pool.getFeeToVault();
     const feeToVaultPercent = await pool.getFeeToVaultPercent();
     const feeToVaultBalance = await hope.balanceOf(feeToVault);
 
@@ -90,20 +90,5 @@ makeSuite('Mint To Treasury', (testEnv: TestEnv) => {
       2,
       'Invalid vault balance after minting'
     );
-  });
-
-  it('burn the underlying token', async () => {
-    const { users, hope, lendingFeeToVault } = testEnv;
-
-    const balanceOfVault = await hope.balanceOf(lendingFeeToVault.address);
-    expect(balanceOfVault).to.be.gt(0);
-
-    await lendingFeeToVault.addOperator(users[0].address);
-    await lendingFeeToVault.connect(users[0].signer).burn(hope.address, balanceOfVault, 1);
-
-    // in test unit, no cover swap case
-    const underlyingBurner = await lendingFeeToVault.underlyingBurner();
-    const underlyingBurnerBalance = await hope.balanceOf(underlyingBurner);
-    expect(underlyingBurnerBalance).to.be.equal(balanceOfVault);
   });
 });

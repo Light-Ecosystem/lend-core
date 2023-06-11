@@ -39,10 +39,10 @@ contract GaugeFactory is AccessControl, IGaugeFactory {
     address _minter,
     address _votingEscrow
   ) {
-    require(_pool != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
-    require(_lendingGaugeImplementation != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
-    require(_minter != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
-    require(_votingEscrow != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
+    require(_pool != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
+    require(_lendingGaugeImplementation != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
+    require(_minter != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
+    require(_votingEscrow != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
     pool = _pool;
     lendingGaugeImplementation = _lendingGaugeImplementation;
     minter = _minter;
@@ -51,7 +51,7 @@ contract GaugeFactory is AccessControl, IGaugeFactory {
   }
 
   function createLendingGauge(address _underlyingAsset) external onlyRole(OPERATOR_ROLE) returns (address lendingGaugeAddress) {
-    require(_underlyingAsset != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
+    require(_underlyingAsset != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
     bytes32 salt = keccak256(abi.encodePacked(_underlyingAsset));
     lendingGaugeAddress = Clones.cloneDeterministic(lendingGaugeImplementation, salt);
     ILendingGauge(lendingGaugeAddress).initialize(pool, minter, votingEscrow, _underlyingAsset);
@@ -65,7 +65,7 @@ contract GaugeFactory is AccessControl, IGaugeFactory {
   }
 
   function setLendingGaugeImplementation(address _gaugeAddress) external onlyPoolAdmin {
-    require(_gaugeAddress != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
+    require(_gaugeAddress != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
     lendingGaugeImplementation = _gaugeAddress;
     emit SetLendingGaugeImplementation(address(_addressesProvider), _gaugeAddress);
   }
@@ -75,12 +75,12 @@ contract GaugeFactory is AccessControl, IGaugeFactory {
   }
 
   function addOperator(address _operator) external override onlyPoolAdmin {
-    require(_operator != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
+    require(_operator != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
     _grantRole(OPERATOR_ROLE, _operator);
   }
 
   function removeOperator(address _operator) external override onlyPoolAdmin {
-    require(_operator != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
+    require(_operator != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
     _revokeRole(OPERATOR_ROLE, _operator);
   }
 }

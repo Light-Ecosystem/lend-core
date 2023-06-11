@@ -70,10 +70,10 @@ contract LendingGauge is ILendingGauge, Initializable {
     address _votingEscrow,
     address _underlyingAsset
   ) public override {
-    require(_pool != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
-    require(_minter != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
-    require(_votingEscrow != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
-    require(_underlyingAsset != address(0), Errors.PARAMETER_ADDRESS_NOT_ZERO);
+    require(_pool != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
+    require(_minter != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
+    require(_votingEscrow != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
+    require(_underlyingAsset != address(0), Errors.ZERO_ADDRESS_NOT_VALID);
     require(factory == address(0), 'GP002');
     factory = msg.sender;
     POOL = IPool(_pool);
