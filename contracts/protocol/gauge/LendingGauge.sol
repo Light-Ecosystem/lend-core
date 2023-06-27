@@ -32,6 +32,14 @@ contract LendingGauge is ILendingGauge, Initializable {
     _;
   }
 
+  /**
+   * @dev Only pool can call functions marked by this modifier.
+   */
+  modifier onlyPool() {
+    require(msg.sender == address(POOL), Errors.CALLER_MUST_BE_POOL);
+    _;
+  }
+
   uint256 internal constant _DAY = 86400;
   uint256 internal constant _WEEK = _DAY * 7;
 
@@ -108,7 +116,7 @@ contract LendingGauge is ILendingGauge, Initializable {
   /**
    * Update debt token allocation ratio based on fund utilization rate
    */
-  function updateAllocation() external override returns (bool) {
+  function updateAllocation() external override onlyPool returns (bool) {
     uint256 stableDebtTokenTotalSupply = IERC20(stableDebtToken).totalSupply();
     uint256 variableDebtTokenTotalSupply = IERC20(variableDebtToken).totalSupply();
     uint256 totalDebt = stableDebtTokenTotalSupply + variableDebtTokenTotalSupply;
@@ -118,10 +126,6 @@ contract LendingGauge is ILendingGauge, Initializable {
     }
     uint256 availableLiquidity = IERC20(underlyingAsset).balanceOf(hToken);
     uint256 availableLiquidityPlusDebt = availableLiquidity + totalDebt;
-    if (availableLiquidityPlusDebt == 0) {
-      borrowAllocation = 0;
-      return false;
-    }
     borrowAllocation = _getAllocationByUtilizationRate(totalDebt.rayDiv(availableLiquidityPlusDebt));
     return true;
   }
@@ -268,7 +272,7 @@ contract LendingGauge is ILendingGauge, Initializable {
 
   /**
    * Calculate the debt token allocation ratio based on fund utilization rate
-   * @dev borrowAllocation = kx + b. k = (y2 - y1) / (x2 - x1). b = y1 - m * x1.
+   * @dev borrowAllocation = kx + b. k = (y2 - y1) / (x2 - x1). b = y1 - k * x1.
    * @param _utilizationRate Utilization rate
    */
   function _getAllocationByUtilizationRate(uint256 _utilizationRate) internal view returns (uint256) {
