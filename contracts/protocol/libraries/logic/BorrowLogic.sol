@@ -136,10 +136,9 @@ library BorrowLogic {
 
     if (isolationModeActive) {
       uint256 nextIsolationModeTotalDebt = reservesData[isolationModeCollateralAddress]
-        .isolationModeTotalDebt += (params.amount /
-        10 **
-          (reserveCache.reserveConfiguration.getDecimals() -
-            ReserveConfiguration.DEBT_CEILING_DECIMALS))
+        .isolationModeTotalDebt += ((params.amount *
+        10**ReserveConfiguration.DEBT_CEILING_DECIMALS) /
+        10**reserveCache.reserveConfiguration.getDecimals())
         .toUint128();
       emit IsolationModeTotalDebtUpdated(
         isolationModeCollateralAddress,

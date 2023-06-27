@@ -41,10 +41,9 @@ library IsolationModeLogic {
       uint128 isolationModeTotalDebt = reservesData[isolationModeCollateralAddress]
         .isolationModeTotalDebt;
 
-      uint128 isolatedDebtRepaid = (repayAmount /
-        10 **
-          (reserveCache.reserveConfiguration.getDecimals() -
-            ReserveConfiguration.DEBT_CEILING_DECIMALS)).toUint128();
+      uint128 isolatedDebtRepaid = ((repayAmount * 10**ReserveConfiguration.DEBT_CEILING_DECIMALS) /
+        10**reserveCache.reserveConfiguration.getDecimals())
+        .toUint128();
 
       // since the debt ceiling does not take into account the interest accrued, it might happen that amount
       // repaid > debt in isolation mode
