@@ -38,12 +38,7 @@ abstract contract AbsGauge is Context, IAbsGauge {
   uint256 public workingSupply;
   mapping(address => uint256) public integrateInvSupplyOf;
   mapping(address => uint256) public integrateCheckpointOf;
-  mapping(address => uint256) public integrateFraction; //Mintable Token amount (include minted amount)
-
-  /**
-   * @dev Indicates that the contract has been initialized.
-   */
-  bool private _initialized;
+  mapping(address => uint256) public integrateFraction; // Mintable Token amount (include minted amount)
 
   uint256 private _integrateInvSupply;
 
