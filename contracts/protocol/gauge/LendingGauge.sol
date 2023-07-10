@@ -244,7 +244,7 @@ contract LendingGauge is ILendingGauge, Initializable {
     uint256 _variableDebtTokenLast = IVariableDebtTokenRewards(variableDebtToken).integrateCheckpointOf(_addr);
     uint256 _tVe = votingEscrow.userPointHistoryTs(_addr, votingEscrow.userPointEpoch(_addr));
     uint256 _hTokenBalance = IHTokenRewards(hToken).lpBalanceOf(_addr);
-    uint256 _variableDebtTokenBalance = IHTokenRewards(hToken).lpBalanceOf(_addr);
+    uint256 _variableDebtTokenBalance = IVariableDebtTokenRewards(variableDebtToken).lpBalanceOf(_addr);
 
     require(votingEscrow.balanceOfAtTime(_addr, block.timestamp) == 0 || _tVe > _hTokenLast || _tVe > _variableDebtTokenLast, 'GP001');
     require(
