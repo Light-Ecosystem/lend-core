@@ -160,6 +160,7 @@ contract LendingGauge is ILendingGauge, Initializable {
     if (isKilled) {
       // Stop distributing inflation as soon as killed
       _st.rate = 0;
+      _st.newRate = 0;
     }
     if (IHTokenRewards(hToken).totalSupply() != 0) {
       IHTokenRewards(hToken).checkpoint(_addr, _calRelativeWeightByAllocation(hToken), _st);
@@ -315,6 +316,7 @@ contract LendingGauge is ILendingGauge, Initializable {
     if (isKilled) {
       // Stop distributing inflation as soon as killed
       _st.rate = 0;
+      _st.newRate = 0;
     }
     if (IHTokenRewards(hToken).totalSupply() != 0) {
       IHTokenRewards(hToken).checkpoint(_addr, _calRelativeWeightByAllocation(hToken), _st);
