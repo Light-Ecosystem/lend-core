@@ -387,7 +387,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
 
   /// @inheritdoc IPool
   function mintToTreasury(address[] calldata assets) external virtual override {
-    PoolLogic.executeMintToTreasury(_reserves, assets);
+    PoolLogic.executeMintToTreasury(_reserves, assets, _feeToVault, _feeToVaultPercent);
   }
 
   /// @inheritdoc IPool

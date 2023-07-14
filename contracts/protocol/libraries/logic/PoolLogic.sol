@@ -5,6 +5,8 @@ import {GPv2SafeERC20} from '../../../dependencies/gnosis/contracts/GPv2SafeERC2
 import {Address} from '../../../dependencies/openzeppelin/contracts/Address.sol';
 import {IERC20} from '../../../dependencies/openzeppelin/contracts/IERC20.sol';
 import {IHToken} from '../../../interfaces/IHToken.sol';
+import {IAbsGauge} from '../../../interfaces/IAbsGauge.sol';
+import {ILendingGauge} from '../../../interfaces/ILendingGauge.sol';
 import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
 import {Errors} from '../helpers/Errors.sol';
 import {WadRayMath} from '../math/WadRayMath.sol';
@@ -84,10 +86,14 @@ library PoolLogic {
    * @notice Mints the assets accrued through the reserve factor to the treasury in the form of hTokens
    * @param reservesData The state of all the reserves
    * @param assets The list of reserves for which the minting needs to be executed
+   * @param feeToVault The address of Hope Ecosystem FeeToVault
+   * @param feeToVaultPercent The address of Hope Ecosystem FeeToVault percentage
    */
   function executeMintToTreasury(
     mapping(address => DataTypes.ReserveData) storage reservesData,
-    address[] calldata assets
+    address[] calldata assets,
+    address feeToVault,
+    uint256 feeToVaultPercent
   ) external {
     for (uint256 i = 0; i < assets.length; i++) {
       address assetAddress = assets[i];
@@ -106,6 +112,13 @@ library PoolLogic {
         uint256 normalizedIncome = reserve.getNormalizedIncome();
         uint256 amountToMint = accruedToTreasury.rayMul(normalizedIncome);
         IHToken(reserve.hTokenAddress).mintToTreasury(amountToMint, normalizedIncome);
+
+        if (feeToVault != address(0) && feeToVaultPercent != 0) {
+          ILendingGauge lendingGauge = IAbsGauge(reserve.hTokenAddress).lendingGauge();
+          if (address(lendingGauge) != address(0)) {
+            lendingGauge.updateAllocation();
+          }
+        }
 
         emit MintedToTreasury(assetAddress, amountToMint);
       }
