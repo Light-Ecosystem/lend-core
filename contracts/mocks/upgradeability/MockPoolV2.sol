@@ -5,6 +5,8 @@ import {Pool} from '../../protocol/pool/Pool.sol';
 import {IPoolAddressesProvider} from '../../interfaces/IPoolAddressesProvider.sol';
 
 contract MockPoolV2 is Pool {
+  bool public updated = true;
+  
   constructor(IPoolAddressesProvider provider) Pool(provider) {}
 
   function getRevision() internal pure override returns (uint256) {

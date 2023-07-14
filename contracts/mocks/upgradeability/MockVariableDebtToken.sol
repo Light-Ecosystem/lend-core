@@ -5,6 +5,8 @@ import {VariableDebtToken} from '../../protocol/tokenization/VariableDebtToken.s
 import {IPool} from '../../interfaces/IPool.sol';
 
 contract MockVariableDebtToken is VariableDebtToken {
+  bool public updated = true;
+  
   constructor(IPool pool) VariableDebtToken(pool) {}
 
   function getRevision() internal pure override returns (uint256) {

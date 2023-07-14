@@ -5,6 +5,8 @@ import {HToken} from '../../protocol/tokenization/HToken.sol';
 import {IPool} from '../../interfaces/IPool.sol';
 
 contract MockHToken is HToken {
+  bool public updated = true;
+  
   constructor(IPool pool) HToken(pool) {}
 
   function getRevision() internal pure override returns (uint256) {
