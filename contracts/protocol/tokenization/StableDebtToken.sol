@@ -152,7 +152,7 @@ contract StableDebtToken is DebtTokenBase, IncentivizedERC20, IStableDebtToken {
       .toUint128();
 
     uint256 amountToMint = amount + balanceIncrease;
-    _mint(onBehalfOf, amountToMint, vars.previousSupply);
+    _mint(onBehalfOf, amountToMint);
 
     emit Transfer(address(0), onBehalfOf, amountToMint);
     emit Mint(
@@ -212,12 +212,12 @@ contract StableDebtToken is DebtTokenBase, IncentivizedERC20, IStableDebtToken {
 
     if (balanceIncrease > amount) {
       uint256 amountToMint = balanceIncrease - amount;
-      _mint(from, amountToMint, previousSupply);
+      _mint(from, amountToMint);
       emit Transfer(address(0), from, amountToMint);
       emit Mint(from, from, amountToMint, currentBalance, balanceIncrease, userStableRate, nextAvgStableRate, nextSupply);
     } else {
       uint256 amountToBurn = amount - balanceIncrease;
-      _burn(from, amountToBurn, previousSupply);
+      _burn(from, amountToBurn);
       emit Transfer(from, address(0), amountToBurn);
       emit Burn(from, amountToBurn, currentBalance, balanceIncrease, nextAvgStableRate, nextSupply);
     }
@@ -315,12 +315,10 @@ contract StableDebtToken is DebtTokenBase, IncentivizedERC20, IStableDebtToken {
    * @notice Mints stable debt tokens to a user
    * @param account The account receiving the debt tokens
    * @param amount The amount being minted
-   * @param oldTotalSupply The total supply before the minting event
    */
   function _mint(
     address account,
-    uint256 amount,
-    uint256 oldTotalSupply
+    uint256 amount
   ) internal {
     uint128 castAmount = amount.toUint128();
     uint128 oldAccountBalance = _userState[account].balance;
@@ -331,12 +329,10 @@ contract StableDebtToken is DebtTokenBase, IncentivizedERC20, IStableDebtToken {
    * @notice Burns stable debt tokens of a user
    * @param account The user getting his debt burned
    * @param amount The amount being burned
-   * @param oldTotalSupply The total supply before the burning event
    */
   function _burn(
     address account,
-    uint256 amount,
-    uint256 oldTotalSupply
+    uint256 amount
   ) internal {
     uint128 castAmount = amount.toUint128();
     uint128 oldAccountBalance = _userState[account].balance;
