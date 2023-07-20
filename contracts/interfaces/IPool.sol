@@ -211,6 +211,13 @@ interface IPool {
   event MintedToTreasury(address indexed reserve, uint256 amountMinted);
 
   /**
+   * @dev Emitted when the protocol FeeToVault receives tokens from the accrued interest.
+   * @param reserve The address of the reserve
+   * @param amountCollected The amount collected to the FeeToVault
+   */
+  event CollectedToVault(address indexed reserve, uint256 amountCollected);
+
+  /**
    * @notice Mints an `amount` of hTokens to the `onBehalfOf`
    * @param asset The address of the underlying asset to mint
    * @param amount The amount to mint
@@ -656,7 +663,7 @@ interface IPool {
    */
   function updateFeeToVaultPercent(uint256 feeToVaultPercent) external;
 
-    /**
+  /**
    * @notice Returns the percent of fee
    * @return feeToVaultPercent The the percent of fee, 100% = 1e4
    */

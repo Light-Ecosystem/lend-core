@@ -10,6 +10,7 @@ import {ILendingGauge} from '../../../interfaces/ILendingGauge.sol';
 import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
 import {Errors} from '../helpers/Errors.sol';
 import {WadRayMath} from '../math/WadRayMath.sol';
+import {PercentageMath} from '../math/PercentageMath.sol';
 import {DataTypes} from '../types/DataTypes.sol';
 import {ReserveLogic} from './ReserveLogic.sol';
 import {ValidationLogic} from './ValidationLogic.sol';
@@ -23,11 +24,13 @@ import {GenericLogic} from './GenericLogic.sol';
 library PoolLogic {
   using GPv2SafeERC20 for IERC20;
   using WadRayMath for uint256;
+  using PercentageMath for uint256;
   using ReserveLogic for DataTypes.ReserveData;
   using ReserveConfiguration for DataTypes.ReserveConfigurationMap;
 
   // See `IPool` for descriptions
   event MintedToTreasury(address indexed reserve, uint256 amountMinted);
+  event CollectedToVault(address indexed reserve, uint256 amountCollected);
   event IsolationModeTotalDebtUpdated(address indexed asset, uint256 totalDebt);
 
   /**
@@ -114,10 +117,15 @@ library PoolLogic {
         IHToken(reserve.hTokenAddress).mintToTreasury(amountToMint, normalizedIncome);
 
         if (feeToVault != address(0) && feeToVaultPercent != 0) {
+          uint256 amountToVault = amountToMint.percentMul(feeToVaultPercent);
+          amountToMint = amountToMint - amountToVault;
+
           ILendingGauge lendingGauge = IAbsGauge(reserve.hTokenAddress).lendingGauge();
           if (address(lendingGauge) != address(0)) {
             lendingGauge.updateAllocation();
           }
+
+          emit CollectedToVault(assetAddress, amountToVault);
         }
 
         emit MintedToTreasury(assetAddress, amountToMint);
