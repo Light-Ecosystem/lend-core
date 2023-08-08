@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { BigNumber, Signer, utils } from 'ethers';
 import { impersonateAccountsHardhat } from '../helpers/misc-utils';
 import { ProtocolErrors, RateMode } from '../helpers/types';
-import { getFirstSigner } from 'lend-deploy/dist/helpers/utilities/signer';
+import { getFirstSigner } from '@hopelend/deploy/dist/helpers/utilities/signer';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import {
@@ -11,7 +11,7 @@ import {
   DefaultReserveInterestRateStrategy__factory,
   VariableDebtToken__factory,
   increaseTime,
-} from 'lend-deploy';
+} from '@hopelend/deploy';
 import {
   InitializableImmutableAdminUpgradeabilityProxy,
   MockL2Pool__factory,

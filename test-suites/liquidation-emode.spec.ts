@@ -6,7 +6,7 @@ import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import { getReserveData, getUserData } from './helpers/utils/helpers';
 import './helpers/utils/wadraymath';
-import { evmRevert, evmSnapshot, waitForTx } from 'lend-deploy';
+import { evmRevert, evmSnapshot, waitForTx } from '@hopelend/deploy';
 import { percentMul } from './helpers/utils/wadraymath';
 
 makeSuite('Pool Liquidation: Liquidates borrows in eMode with price change', (testEnv: TestEnv) => {

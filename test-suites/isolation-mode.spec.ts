@@ -6,11 +6,11 @@ import { HOPELEND_REFERRAL, MAX_UINT_AMOUNT, MAX_UNBACKED_MINT_CAP } from '../he
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { TestEnv, makeSuite } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
-import { increaseTime, waitForTx, evmSnapshot, evmRevert, advanceTimeAndBlock } from 'lend-deploy';
+import { increaseTime, waitForTx, evmSnapshot, evmRevert, advanceTimeAndBlock } from '@hopelend/deploy';
 import { getReserveData, getUserData } from './helpers/utils/helpers';
 import { getTxCostAndTimestamp } from './helpers/actions';
-import HopeLendConfig from 'lend-deploy/dist/markets/test';
-import { getACLManager } from 'lend-deploy/dist/helpers/contract-getters';
+import HopeLendConfig from '@hopelend/deploy/dist/markets/test';
+import { getACLManager } from '@hopelend/deploy/dist/helpers/contract-getters';
 import {
   calcExpectedReserveDataAfterMintUnbacked,
   configuration as calculationsConfiguration,

@@ -1,7 +1,7 @@
 {
-  "name": "lend-core",
+  "name": "@hopelend/core",
   "version": "1.0.0",
-  "description": "HopeLend Protocol periphery smart contracts",
+  "description": "HopeLend Protocol core smart contracts",
   "files": [
     "contracts",
     "artifacts",
@@ -35,8 +35,8 @@
     "test-withdraw-lt": ". ./setup-test-env.sh && TS_NODE_TRANSPILE_ONLY=1 hardhat test test-suites/__setup.spec.ts test-suites/withdraw-lt-rewards.spec.ts"
   },
   "devDependencies": {
-    "lend-deploy": "file:../lend-deploy",
-    "lend-periphery": "file:../lend-periphery",
+    "@hopelend/deploy": "^1.0.0",
+    "@hopelend/periphery": "^1.0.0",
     "@ethersproject/bignumber": "^5.6.2",
     "@nomicfoundation/hardhat-chai-matchers": "1.0.5",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
@@ -61,13 +61,14 @@
     "tslint": "6.1.2",
     "tslint-config-prettier": "1.18.0",
     "tslint-plugin-prettier": "2.3.0",
-    "typescript": "^4.5.0"
+    "typescript": "^4.5.0",
+    "jsondiffpatch": "^0.4.1"
   },
   "author": "HopeLend",
   "license": "LGPL-3.0",
   "keywords": [
-    "hope",
-    "hopeLend",
+    "Hope",
+    "HopeLend",
     "protocol",
     "core",
     "ethereum",

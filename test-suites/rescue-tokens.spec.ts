@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import { utils } from 'ethers';
 import { ProtocolErrors } from '../helpers/types';
 import { makeSuite, TestEnv } from './helpers/make-suite';
-import { evmSnapshot, evmRevert, ONE_ADDRESS } from 'lend-deploy';
-import { deployMintableERC20 } from 'lend-deploy/dist/helpers/contract-deployments';
+import { evmSnapshot, evmRevert, ONE_ADDRESS } from '@hopelend/deploy';
+import { deployMintableERC20 } from '@hopelend/deploy/dist/helpers/contract-deployments';
 import { MintableERC20 } from './../types';
 
 makeSuite('Rescue tokens', (testEnv: TestEnv) => {

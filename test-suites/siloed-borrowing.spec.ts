@@ -5,7 +5,7 @@ import { HOPELEND_REFERRAL, MAX_UINT_AMOUNT, MAX_UNBACKED_MINT_CAP } from '../he
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { TestEnv, makeSuite } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
-import { evmSnapshot } from 'lend-deploy';
+import { evmSnapshot } from '@hopelend/deploy';
 
 makeSuite('Siloed borrowing', (testEnv: TestEnv) => {
   const { SILOED_BORROWING_VIOLATION } = ProtocolErrors;

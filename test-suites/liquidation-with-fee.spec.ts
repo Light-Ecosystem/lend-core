@@ -8,7 +8,7 @@ import { calcExpectedStableDebtTokenBalance } from './helpers/utils/calculations
 import { getReserveData, getUserData } from './helpers/utils/helpers';
 import { makeSuite } from './helpers/make-suite';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { waitForTx, increaseTime, evmSnapshot, evmRevert } from 'lend-deploy';
+import { waitForTx, increaseTime, evmSnapshot, evmRevert } from '@hopelend/deploy';
 import { percentDiv, percentMul } from './helpers/utils/wadraymath';
 
 declare var hre: HardhatRuntimeEnvironment;

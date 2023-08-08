@@ -20,7 +20,7 @@ import {
   getGaugeController,
   getVotingEscrow,
   getStakingHope,
-} from 'lend-deploy/dist/helpers/contract-getters';
+} from '@hopelend/deploy/dist/helpers/contract-getters';
 import { tEthereumAddress } from '../../helpers/types';
 import {
   Pool,
@@ -42,7 +42,7 @@ import {
 
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { usingTenderly } from '../../helpers/tenderly-utils';
-import { waitForTx, evmSnapshot, evmRevert, getEthersSigners } from 'lend-deploy';
+import { waitForTx, evmSnapshot, evmRevert, getEthersSigners } from '@hopelend/deploy';
 
 declare var hre: HardhatRuntimeEnvironment;
 
@@ -163,12 +163,18 @@ export async function initializeMakeSuite() {
 
   const allTokens = await testEnv.helpersContract.getAllHTokens();
 
-  const hDaiAddress = allTokens.find((hToken) => hToken.symbol.includes('DAI'))?.tokenAddress;
-  const hUsdcAddress = allTokens.find((hToken) => hToken.symbol.includes('USDC'))?.tokenAddress;
-  const hWEthAddress = allTokens.find((hToken) => hToken.symbol.includes('WETH'))?.tokenAddress;
-  const hHopeAddress = allTokens.find((hToken) => hToken.symbol.includes('HOPE'))?.tokenAddress;
+  const hDaiAddress = allTokens.find((hToken) => hToken.symbol.includes('hTestDAI'))?.tokenAddress;
+  const hUsdcAddress = allTokens.find((hToken) =>
+    hToken.symbol.includes('hTestUSDC')
+  )?.tokenAddress;
+  const hWEthAddress = allTokens.find((hToken) =>
+    hToken.symbol.includes('hTestWETH')
+  )?.tokenAddress;
+  const hHopeAddress = allTokens.find((hToken) =>
+    hToken.symbol.includes('hTestHOPE')
+  )?.tokenAddress;
   const hstHOPEAddress = allTokens.find((hToken) =>
-    hToken.symbol.includes('StakingHOPE')
+    hToken.symbol.includes('hTeststHOPE')
   )?.tokenAddress;
 
   const reservesTokens = await testEnv.helpersContract.getAllReservesTokens();

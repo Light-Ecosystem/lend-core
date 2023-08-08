@@ -2,7 +2,7 @@
 
 # @dev
 # This bash script setups the needed artifacts to use
-# the lend-deploy package as source of deployment
+# the @hopelend/deploy package as source of deployment
 # scripts for testing or coverage purposes.
 #
 # A separate  artifacts directory was created 
@@ -17,7 +17,7 @@ if [ ! "$COVERAGE" = true ]; then
     # remove hardhat and artifacts cache
     npm run ci:clean
 
-    # compile lend-core contracts
+    # compile @hopelend/core contracts
     npm run compile
 else
     echo "[BASH] Skipping compilation to keep coverage artifacts"
@@ -28,13 +28,13 @@ fi
 mkdir -p temp-artifacts
 cp -r artifacts/* temp-artifacts
 
-# Import external @hopeLend/periphery artifacts
+# Import external @HopeLend/periphery artifacts
 mkdir -p temp-artifacts/periphery
-cp -r node_modules/lend-periphery/artifacts/contracts/* temp-artifacts/periphery
+cp -r node_modules/@hopelend/periphery/artifacts/contracts/* temp-artifacts/periphery
 
-# Import external @hopeLend/deploy artifacts
+# Import external @HopeLend/deploy artifacts
 mkdir -p temp-artifacts/deploy
-cp -r node_modules/lend-deploy/artifacts/contracts/* temp-artifacts/deploy
+cp -r node_modules/@hopelend/deploy/artifacts/contracts/* temp-artifacts/deploy
 
 # Export MARKET_NAME variable to use HopeLend market as testnet deployment setup
 export MARKET_NAME="Test"

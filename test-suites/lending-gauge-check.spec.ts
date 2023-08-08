@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { ZERO_ADDRESS } from '../helpers/constants';
 import { ProtocolErrors } from '../helpers/types';
 import { makeSuite } from './helpers/make-suite';
-import { evmRevert, evmSnapshot } from 'lend-deploy';
+import { evmRevert, evmSnapshot } from '@hopelend/deploy';
 import { BigNumberish } from 'ethers';
 
 makeSuite('LendingGauge: Checkpoint', (testEnv) => {

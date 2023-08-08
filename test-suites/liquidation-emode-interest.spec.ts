@@ -8,7 +8,7 @@ import { getReserveData, getUserData } from './helpers/utils/helpers';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { waitForTx, increaseTime } from 'lend-deploy';
+import { waitForTx, increaseTime } from '@hopelend/deploy';
 import { percentMul } from './helpers/utils/wadraymath';
 
 declare var hre: HardhatRuntimeEnvironment;

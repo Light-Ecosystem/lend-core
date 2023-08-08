@@ -1,4 +1,4 @@
-import { evmSnapshot, evmRevert, advanceTimeAndBlock, MintableERC20__factory } from 'lend-deploy';
+import { evmSnapshot, evmRevert, advanceTimeAndBlock, MintableERC20__factory } from '@hopelend/deploy';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import { BigNumber } from '@ethersproject/bignumber';

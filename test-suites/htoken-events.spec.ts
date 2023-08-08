@@ -4,7 +4,7 @@ import {
   advanceTimeAndBlock,
   ZERO_ADDRESS,
   MintableERC20__factory,
-} from 'lend-deploy';
+} from '@hopelend/deploy';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import { BigNumber } from 'ethers';

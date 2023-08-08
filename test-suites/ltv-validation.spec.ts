@@ -3,7 +3,7 @@ import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { ProtocolErrors, RateMode } from '../helpers/types';
 import { MAX_UINT_AMOUNT } from '../helpers/constants';
 import { TestEnv, makeSuite } from './helpers/make-suite';
-import { evmRevert, evmSnapshot } from 'lend-deploy';
+import { evmRevert, evmSnapshot } from '@hopelend/deploy';
 import { parseUnits } from 'ethers/lib/utils';
 
 makeSuite('LTV validation', (testEnv: TestEnv) => {

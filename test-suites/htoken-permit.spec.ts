@@ -1,4 +1,4 @@
-import { waitForTx } from 'lend-deploy';
+import { waitForTx } from '@hopelend/deploy';
 import { expect } from 'chai';
 import { ethers, utils } from 'ethers';
 import { HARDHAT_CHAINID, MAX_UINT_AMOUNT, ZERO_ADDRESS } from '../helpers/constants';

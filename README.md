@@ -1,15 +1,45 @@
+# HopeLend Protocol
 
+This repository contains the smart contracts source code and markets configuration for HopeLend Protocol. The repository uses Docker Compose and Hardhat as development environment for compilation, testing and deployment tasks.
+
+## What is HopeLend?
+
+HopeLend is a decentralized non-custodial liquidity markets protocol where users can participate as suppliers or borrowers. Suppliers provide liquidity to the market to earn a passive income, while borrowers are able to borrow in an overcollateralized (perpetually) or undercollateralized (one-block liquidity) fashion.
+
+## Documentation
+
+See the link to know more about HopeLend
+
+- (https://hope-money.gitbook.io/hopelend-wip/F9bSJmvfdpzwPh7rn1U5/)
+
+## Audits
+
+You can find all audit reports under the audits folder
+
+V1.0 - July 2023
+
+- [PeckShield](./audits/30-07-2023_PeckShield_HopeLendV1.pdf)
+- [Beosin](./audits/19-07-2023_Beosin_Hope-oracle.pdf)
+- [Beosin](./audits/19-07-2023_Beosin_HopeLendV1_Core.pdf)
+- [Beosin](./audits/19-07-2023_Beosin_HopeLendV1_Periphery.pdf)
+- [MetaTrust](./audits/29-07-2023_MetaTrust_Hope-oracle.pdf)
+- [MetaTrust](./audits/29-07-2023_MetaTrust_HopeLendV1_Core.pdf)
+- [MetaTrust](./audits/29-07-2023_MetaTrust_HopeLendV1_Periphery.pdf)
+
+## Connect with the community
+
+You can join the [Discord](https://discord.gg/hopemoneyofficial) to ask questions about the protocol or talk about HopeLend with other peers.
 
 ## Getting Started
 
-You can install `lend-core` as an NPM package in your Hardhat or Truffle project to import the contracts and interfaces:
+You can install `@hopelend/core` as an NPM package in your Hardhat or Truffle project to import the contracts and interfaces:
 
-`npm install lend-core`
+`npm install @hopelend/core`
 
 Import at Solidity files:
 
 ```
-import {IPool} from "lend-core/contracts/interfaces/IPool.sol";
+import {IPool} from "@hopelend/core/contracts/interfaces/IPool.sol";
 
 contract Misc {
 
@@ -25,7 +55,7 @@ The JSON artifacts with the ABI and Bytecode are also included in the bundled NP
 Import JSON file via Node JS `require`:
 
 ```
-const PoolArtifact = require('lend-core/artifacts/contracts/protocol/pool/Pool.sol/Pool.json');
+const PoolArtifact = require('@hopelend/core/artifacts/contracts/protocol/pool/Pool.sol/Pool.json');
 
 // Log the ABI into console
 console.log(PoolArtifact.abi)

@@ -4,7 +4,7 @@ import { MAX_UINT_AMOUNT, RAY } from '../helpers/constants';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { RateMode } from '../helpers/types';
 import { makeSuite } from './helpers/make-suite';
-import { evmRevert, evmSnapshot } from 'lend-deploy';
+import { evmRevert, evmSnapshot } from '@hopelend/deploy';
 import { percentMul } from './helpers/utils/wadraymath';
 import { supply, variableBorrow } from './helpers/utils/tokenization-events';
 

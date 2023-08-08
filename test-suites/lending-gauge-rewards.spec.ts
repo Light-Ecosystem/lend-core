@@ -3,7 +3,7 @@ import { MAX_UINT_AMOUNT, PERCENTAGE_FACTOR, ZERO_ADDRESS, oneEther } from '../h
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { ProtocolErrors, RateMode } from '../helpers/types';
 import { makeSuite } from './helpers/make-suite';
-import { evmRevert, evmSnapshot, increaseTime } from 'lend-deploy';
+import { evmRevert, evmSnapshot, increaseTime } from '@hopelend/deploy';
 import { percentMul } from './helpers/utils/wadraymath';
 import { supply, variableBorrow } from './helpers/utils/tokenization-events';
 

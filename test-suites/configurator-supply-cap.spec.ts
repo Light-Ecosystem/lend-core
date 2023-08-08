@@ -1,4 +1,4 @@
-import { advanceTimeAndBlock } from 'lend-deploy';
+import { advanceTimeAndBlock } from '@hopelend/deploy';
 import { expect } from 'chai';
 import { utils } from 'ethers';
 import { MAX_UINT_AMOUNT, MAX_SUPPLY_CAP } from '../helpers/constants';

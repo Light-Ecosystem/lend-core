@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { makeSuite, TestEnv } from './helpers/make-suite';
-import { evmSnapshot, evmRevert, ZERO_ADDRESS } from 'lend-deploy';
+import { evmSnapshot, evmRevert, ZERO_ADDRESS } from '@hopelend/deploy';
 
 makeSuite('Pool: getReservesList', (testEnv: TestEnv) => {
   let snap: string;

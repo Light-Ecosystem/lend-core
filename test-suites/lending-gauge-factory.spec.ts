@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { ZERO_ADDRESS } from '../helpers/constants';
 import { ProtocolErrors } from '../helpers/types';
 import { makeSuite } from './helpers/make-suite';
-import { evmRevert, evmSnapshot } from 'lend-deploy';
+import { evmRevert, evmSnapshot } from '@hopelend/deploy';
 
 makeSuite('LendingGauge: Factory', (testEnv) => {
   const { ZERO_ADDRESS_NOT_VALID, CALLER_NOT_POOL_ADMIN } = ProtocolErrors;

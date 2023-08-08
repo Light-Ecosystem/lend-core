@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { utils, BigNumber, BigNumberish } from 'ethers';
-import { strategyWETH } from 'lend-deploy/dist/markets/test/reservesConfigs';
-import { getFirstSigner } from 'lend-deploy/dist/helpers/utilities/signer';
+import { strategyWETH } from '@hopelend/deploy/dist/markets/test/reservesConfigs';
+import { getFirstSigner } from '@hopelend/deploy/dist/helpers/utilities/signer';
 import { MAX_UINT_AMOUNT, ONE_ADDRESS, RAY, ZERO_ADDRESS } from '../helpers/constants';
 import { ProtocolErrors } from '../helpers/types';
 import {
@@ -13,7 +13,7 @@ import {
   VariableDebtToken__factory,
 } from './../types';
 import { TestEnv, makeSuite } from './helpers/make-suite';
-import { advanceTimeAndBlock, evmRevert, evmSnapshot } from 'lend-deploy';
+import { advanceTimeAndBlock, evmRevert, evmSnapshot } from '@hopelend/deploy';
 
 type ReserveConfigurationValues = {
   reserveDecimals: string;

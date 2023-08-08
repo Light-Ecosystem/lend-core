@@ -2,9 +2,9 @@ import { expect } from 'chai';
 import { BigNumber, BigNumberish, utils } from 'ethers';
 import { impersonateAccountsHardhat, setAutomine } from '../helpers/misc-utils';
 import { MAX_UINT_AMOUNT, MAX_UNBACKED_MINT_CAP, ZERO_ADDRESS } from '../helpers/constants';
-import { deployMintableERC20 } from 'lend-deploy/dist/helpers/contract-deployments';
+import { deployMintableERC20 } from '@hopelend/deploy/dist/helpers/contract-deployments';
 import { ProtocolErrors, RateMode } from '../helpers/types';
-import { getFirstSigner } from 'lend-deploy/dist/helpers/utilities/signer';
+import { getFirstSigner } from '@hopelend/deploy/dist/helpers/utilities/signer';
 import { topUpNonPayableWithEther } from './helpers/utils/funds';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
@@ -16,7 +16,7 @@ import {
   getMockFlashLoanReceiver,
   advanceTimeAndBlock,
   getACLManager,
-} from 'lend-deploy';
+} from '@hopelend/deploy';
 import {
   MockPoolInherited__factory,
   MockReserveInterestRateStrategy__factory,
@@ -29,7 +29,7 @@ import {
 import { convertToCurrencyDecimals, getProxyImplementation } from '../helpers/contracts-helpers';
 import { ethers } from 'hardhat';
 import { deposit, getTxCostAndTimestamp } from './helpers/actions';
-import HopeConfig from 'lend-deploy/dist/markets/test';
+import HopeConfig from '@hopelend/deploy/dist/markets/test';
 import {
   calcExpectedReserveDataAfterDeposit,
   configuration as calculationsConfiguration,

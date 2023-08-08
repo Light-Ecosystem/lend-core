@@ -3,7 +3,7 @@ import { utils } from 'ethers';
 import { ProtocolErrors } from '../helpers/types';
 import { MAX_UINT_AMOUNT, ZERO_ADDRESS } from '../helpers/constants';
 import { MockFlashLoanReceiver } from './../types';
-import { getMockFlashLoanReceiver } from 'lend-deploy/dist/helpers/contract-getters';
+import { getMockFlashLoanReceiver } from '@hopelend/deploy/dist/helpers/contract-getters';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 
 makeSuite('Pool: Drop Reserve', (testEnv: TestEnv) => {

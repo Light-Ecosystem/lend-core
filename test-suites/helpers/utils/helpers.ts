@@ -2,14 +2,14 @@ import { expect } from 'chai';
 import { logger, utils, Contract } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber';
 import { TransactionReceipt } from '@ethersproject/providers';
-import { getContract } from 'lend-deploy';
+import { getContract } from '@hopelend/deploy';
 import {
   getMintableERC20,
   getHToken,
   getStableDebtToken,
   getVariableDebtToken,
   getIRStrategy,
-} from 'lend-deploy/dist/helpers/contract-getters';
+} from '@hopelend/deploy/dist/helpers/contract-getters';
 import { tEthereumAddress } from '../../../helpers/types';
 import { HToken, HopeLendProtocolDataProvider, Pool } from './../../../types';
 import { ReserveData, UserReserveData } from './interfaces';

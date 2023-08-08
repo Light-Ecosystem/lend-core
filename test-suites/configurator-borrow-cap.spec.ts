@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { utils } from 'ethers';
-import { advanceTimeAndBlock } from 'lend-deploy';
+import { advanceTimeAndBlock } from '@hopelend/deploy';
 import { MAX_UINT_AMOUNT, MAX_BORROW_CAP } from '../helpers/constants';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { ProtocolErrors, RateMode } from '../helpers/types';

@@ -10,8 +10,8 @@ import {
   getMockVariableDebtToken,
   getStableDebtToken,
   getVariableDebtToken,
-} from 'lend-deploy/dist/helpers/contract-getters';
-import { getFirstSigner } from 'lend-deploy/dist/helpers/utilities/signer';
+} from '@hopelend/deploy/dist/helpers/contract-getters';
+import { getFirstSigner } from '@hopelend/deploy/dist/helpers/utilities/signer';
 import {
   deployInitializableImmutableAdminUpgradeabilityProxy,
   deployMockHToken,
@@ -21,12 +21,12 @@ import {
   deployMockReentrantInitializableImple,
   deployMockStableDebtToken,
   deployMockVariableDebtToken,
-} from 'lend-deploy/dist/helpers/contract-deployments';
+} from '@hopelend/deploy/dist/helpers/contract-deployments';
 import {
   InitializableImmutableAdminUpgradeabilityProxy,
   InitializableImmutableAdminUpgradeabilityProxy__factory,
 } from './../types';
-import { evmSnapshot, evmRevert, getEthersSigners } from 'lend-deploy';
+import { evmSnapshot, evmRevert, getEthersSigners } from '@hopelend/deploy';
 
 makeSuite('Upgradeability', (testEnv: TestEnv) => {
   context('VersionedInitializable', async () => {

@@ -9,7 +9,7 @@ import {
   evmRevert,
   MockFlashLoanReceiver,
   getMockFlashLoanReceiver,
-} from 'lend-deploy';
+} from '@hopelend/deploy';
 import './helpers/utils/wadraymath';
 import { rayMul } from './helpers/utils/wadraymath';
 

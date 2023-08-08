@@ -7,7 +7,7 @@ import {
   DefaultReserveInterestRateStrategy__factory,
   IStableDebtToken__factory,
   IVariableDebtToken__factory,
-} from 'lend-deploy';
+} from '@hopelend/deploy';
 import { parseUnits } from '@ethersproject/units';
 import { expect } from 'chai';
 import { utils } from 'ethers';

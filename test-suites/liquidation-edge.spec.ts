@@ -13,7 +13,7 @@ import {
   HToken__factory,
   StableDebtToken__factory,
   VariableDebtToken__factory,
-} from 'lend-deploy';
+} from '@hopelend/deploy';
 import { percentDiv, percentMul } from './helpers/utils/wadraymath';
 
 makeSuite('Pool Liquidation: Edge cases', (testEnv: TestEnv) => {

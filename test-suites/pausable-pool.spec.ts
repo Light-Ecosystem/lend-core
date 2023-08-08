@@ -7,9 +7,9 @@ import {
   getMockFlashLoanReceiver,
   getMockPool,
   getPoolConfiguratorProxy,
-} from 'lend-deploy/dist/helpers/contract-getters';
-import { getFirstSigner } from 'lend-deploy/dist/helpers/utilities/signer';
-import { deployMockPool } from 'lend-deploy/dist/helpers/contract-deployments';
+} from '@hopelend/deploy/dist/helpers/contract-getters';
+import { getFirstSigner } from '@hopelend/deploy/dist/helpers/utilities/signer';
+import { deployMockPool } from '@hopelend/deploy/dist/helpers/contract-deployments';
 import {
   ACLManager__factory,
   ConfiguratorLogic__factory,
@@ -18,7 +18,7 @@ import {
   MockFlashLoanReceiver,
 } from './../types';
 import { makeSuite, TestEnv } from './helpers/make-suite';
-import { evmSnapshot, evmRevert } from 'lend-deploy';
+import { evmSnapshot, evmRevert } from '@hopelend/deploy';
 import { percentMul } from './helpers/utils/wadraymath';
 
 makeSuite('PausablePool', (testEnv: TestEnv) => {

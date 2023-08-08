@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { ProtocolErrors } from '../helpers/types';
 import { TestEnv, makeSuite } from './helpers/make-suite';
-import { ONE_ADDRESS } from 'lend-deploy';
+import { ONE_ADDRESS } from '@hopelend/deploy';
 import { ethers } from 'hardhat';
 
 makeSuite('AddressesProviderRegistry', (testEnv: TestEnv) => {

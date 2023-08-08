@@ -4,7 +4,7 @@ import { MAX_UINT_AMOUNT, ONE_YEAR, ONE_ADDRESS } from '../helpers/constants';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import './helpers/utils/wadraymath';
-import { advanceTimeAndBlock } from 'lend-deploy';
+import { advanceTimeAndBlock } from '@hopelend/deploy';
 import { percentMul, rayDiv, rayMul } from './helpers/utils/wadraymath';
 
 makeSuite('Mint To Treasury', (testEnv: TestEnv) => {

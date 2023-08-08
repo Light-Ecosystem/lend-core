@@ -1,5 +1,5 @@
 import { MockHTokenRepayment, MockHTokenRepayment__factory } from './../types';
-import { waitForTx, increaseTime, ZERO_ADDRESS } from 'lend-deploy';
+import { waitForTx, increaseTime, ZERO_ADDRESS } from '@hopelend/deploy';
 import { expect } from 'chai';
 import { BigNumber, utils } from 'ethers';
 import { MAX_UINT_AMOUNT } from '../helpers/constants';

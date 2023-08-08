@@ -1,8 +1,8 @@
 const { expect } = require('chai');
 import { BigNumber, Event, utils } from 'ethers';
-import HopeLendConfig from 'lend-deploy/dist/markets/test';
-import { waitForTx, advanceTimeAndBlock } from 'lend-deploy';
-import { getACLManager } from 'lend-deploy/dist/helpers/contract-getters';
+import HopeLendConfig from '@hopelend/deploy/dist/markets/test';
+import { waitForTx, advanceTimeAndBlock } from '@hopelend/deploy';
+import { getACLManager } from '@hopelend/deploy/dist/helpers/contract-getters';
 import { ReserveData, UserReserveData } from './helpers/utils/interfaces';
 import { ProtocolErrors, RateMode } from '../helpers/types';
 import { MAX_UINT_AMOUNT, MAX_UNBACKED_MINT_CAP } from '../helpers/constants';

@@ -6,7 +6,7 @@ import { ProtocolErrors, RateMode } from '../helpers/types';
 import { calcExpectedStableDebtTokenBalance } from './helpers/utils/calculations';
 import { getReserveData, getUserData } from './helpers/utils/helpers';
 import { makeSuite } from './helpers/make-suite';
-import { increaseTime, waitForTx } from 'lend-deploy';
+import { increaseTime, waitForTx } from '@hopelend/deploy';
 
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { percentDiv, percentMul } from './helpers/utils/wadraymath';

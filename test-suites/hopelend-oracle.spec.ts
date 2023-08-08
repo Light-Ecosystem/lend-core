@@ -1,4 +1,4 @@
-import { MOCK_CHAINLINK_AGGREGATORS_PRICES } from 'lend-deploy/dist/helpers/constants';
+import { MOCK_CHAINLINK_AGGREGATORS_PRICES } from '@hopelend/deploy/dist/helpers/constants';
 import { expect } from 'chai';
 import { oneEther, ONE_ADDRESS, ZERO_ADDRESS } from '../helpers/constants';
 import { ProtocolErrors } from '../helpers/types';
@@ -10,7 +10,7 @@ import {
   evmSnapshot,
   MintableERC20,
   MockAggregator,
-} from 'lend-deploy';
+} from '@hopelend/deploy';
 import { log } from 'console';
 
 makeSuite('HopeOracle', (testEnv: TestEnv) => {

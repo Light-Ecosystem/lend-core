@@ -4,7 +4,7 @@ import { ProtocolErrors, RateMode } from '../helpers/types';
 import { MAX_UINT_AMOUNT } from '../helpers/constants';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { MockFlashLoanReceiver } from './../types';
-import { getMockFlashLoanReceiver } from 'lend-deploy/dist/helpers/contract-getters';
+import { getMockFlashLoanReceiver } from '@hopelend/deploy/dist/helpers/contract-getters';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
 import { percentMul } from './helpers/utils/wadraymath';

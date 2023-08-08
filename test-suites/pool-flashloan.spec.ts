@@ -1,4 +1,4 @@
-import { deployDefaultReserveInterestRateStrategy } from 'lend-deploy/dist/helpers/contract-deployments';
+import { deployDefaultReserveInterestRateStrategy } from '@hopelend/deploy/dist/helpers/contract-deployments';
 import { expect } from 'chai';
 import { BigNumber, ethers, Event, utils } from 'ethers';
 import { MAX_UINT_AMOUNT } from '../helpers/constants';
@@ -9,10 +9,10 @@ import {
   getMockFlashLoanReceiver,
   getStableDebtToken,
   getVariableDebtToken,
-} from 'lend-deploy/dist/helpers/contract-getters';
+} from '@hopelend/deploy/dist/helpers/contract-getters';
 import { TestEnv, makeSuite } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
-import { waitForTx } from 'lend-deploy';
+import { waitForTx } from '@hopelend/deploy';
 import { MockHTokenRepayment__factory, MockFlashLoanReceiver } from './../types';
 
 makeSuite('Pool: FlashLoan', (testEnv: TestEnv) => {

@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { BigNumber } from '@ethersproject/bignumber';
-import { deployMockReserveConfiguration } from 'lend-deploy/dist/helpers/contract-deployments';
+import { deployMockReserveConfiguration } from '@hopelend/deploy/dist/helpers/contract-deployments';
 import { ProtocolErrors } from '../helpers/types';
-import { evmSnapshot, evmRevert } from 'lend-deploy';
+import { evmSnapshot, evmRevert } from '@hopelend/deploy';
 import { MockReserveConfiguration } from './../types';
 
 describe('ReserveConfiguration', async () => {

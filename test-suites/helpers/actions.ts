@@ -23,7 +23,7 @@ import {
   getStableDebtToken,
   getVariableDebtToken,
   getTestnetReserveAddressFromSymbol,
-} from 'lend-deploy/dist/helpers/contract-getters';
+} from '@hopelend/deploy/dist/helpers/contract-getters';
 import { MAX_UINT_AMOUNT, ONE_YEAR } from '../../helpers/constants';
 import { SignerWithAddress, TestEnv } from './make-suite';
 import chai from 'chai';
@@ -32,7 +32,7 @@ import { ContractReceipt, Wallet } from 'ethers';
 import { HToken } from './../../types';
 import { RateMode, tEthereumAddress } from '../../helpers/types';
 import { MintableERC20__factory } from './../../types';
-import { waitForTx, advanceTimeAndBlock } from 'lend-deploy';
+import { waitForTx, advanceTimeAndBlock } from '@hopelend/deploy';
 import { getChainId } from 'hardhat';
 import { timeLatest } from '../../helpers/misc-utils';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';

@@ -3,7 +3,7 @@ import { MAX_UINT_AMOUNT, ONE_ADDRESS } from '../helpers/constants';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import './helpers/utils/wadraymath';
-import { advanceTimeAndBlock } from 'lend-deploy';
+import { advanceTimeAndBlock } from '@hopelend/deploy';
 
 makeSuite('Withdraw lt reward from hstHOPE', (testEnv: TestEnv) => {
   it('user supply stHOPE, admin withdraw lt rewards', async () => {

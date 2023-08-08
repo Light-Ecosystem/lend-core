@@ -7,7 +7,7 @@ import { makeSuite, TestEnv } from './helpers/make-suite';
 import { topUpNonPayableWithEther } from './helpers/utils/funds';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { evmRevert, evmSnapshot, getStableDebtToken, increaseTime, waitForTx } from 'lend-deploy';
+import { evmRevert, evmSnapshot, getStableDebtToken, increaseTime, waitForTx } from '@hopelend/deploy';
 import { StableDebtToken__factory } from '../types';
 import { getStableDebtTokenEvent } from './helpers/utils/tokenization-events';
 declare var hre: HardhatRuntimeEnvironment;

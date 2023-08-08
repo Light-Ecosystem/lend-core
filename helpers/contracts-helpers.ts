@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import { signTypedData_v4 } from 'eth-sig-util';
 import { fromRpcSig, ECDSASignature } from 'ethereumjs-util';
 import { tEthereumAddress, tStringTokenSmallUnits } from './types';
-import { getContract } from 'lend-deploy';
+import { getContract } from '@hopelend/deploy';
 import { impersonateAccountsHardhat } from './misc-utils';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { InitializableImmutableAdminUpgradeabilityProxy } from './../types';

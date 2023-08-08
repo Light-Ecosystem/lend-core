@@ -1,4 +1,4 @@
-import { evmSnapshot, evmRevert } from 'lend-deploy';
+import { evmSnapshot, evmRevert } from '@hopelend/deploy';
 import { expect } from 'chai';
 import { BigNumber, utils } from 'ethers';
 import { HARDHAT_CHAINID, MAX_UINT_AMOUNT, ZERO_ADDRESS } from '../helpers/constants';

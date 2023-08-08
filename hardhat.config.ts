@@ -14,7 +14,7 @@ import 'hardhat-contract-sizer';
 import 'hardhat-dependency-compiler';
 import '@nomicfoundation/hardhat-chai-matchers';
 
-import { DEFAULT_NAMED_ACCOUNTS } from 'lend-deploy';
+import { DEFAULT_NAMED_ACCOUNTS } from '@hopelend/deploy';
 
 const DEFAULT_BLOCK_GAS_LIMIT = 124500000;
 const HARDFORK = 'london';
@@ -91,7 +91,7 @@ const hardhatConfig = {
     contracts: [
       {
         artifacts: './temp-artifacts',
-        deploy: 'node_modules/lend-deploy/dist/deploy',
+        deploy: 'node_modules/@hopelend/deploy/dist/deploy',
       },
     ],
   },

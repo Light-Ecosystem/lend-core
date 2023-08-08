@@ -1,4 +1,4 @@
-import { evmSnapshot, evmRevert } from 'lend-deploy';
+import { evmSnapshot, evmRevert } from '@hopelend/deploy';
 import { expect } from 'chai';
 import { MAX_UINT_AMOUNT } from '../helpers/constants';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';

@@ -11,7 +11,7 @@ import {
   StableDebtToken__factory,
   VariableDebtToken__factory,
 } from './../types';
-import { getFirstSigner } from 'lend-deploy/dist/helpers/utilities/signer';
+import { getFirstSigner } from '@hopelend/deploy/dist/helpers/utilities/signer';
 import { makeSuite } from './helpers/make-suite';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
 import { setBlocktime, timeLatest } from '../helpers/misc-utils';

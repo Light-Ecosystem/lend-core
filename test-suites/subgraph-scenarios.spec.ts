@@ -2,7 +2,7 @@ import { configuration as actionsConfiguration } from './helpers/actions';
 import { configuration as calculationsConfiguration } from './helpers/utils/calculations';
 import { makeSuite } from './helpers/make-suite';
 import { executeStory } from './helpers/scenario-engine';
-import HopeConfig from 'lend-deploy/dist/markets/test';
+import HopeConfig from '@hopelend/deploy/dist/markets/test';
 
 makeSuite('Subgraph scenario tests', async (testEnv) => {
   let story: any;
