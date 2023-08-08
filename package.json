@@ -1,6 +1,6 @@
 {
   "name": "@hopelend/core",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "HopeLend Protocol core smart contracts",
   "files": [
     "contracts",
@@ -73,5 +73,9 @@
     "core",
     "ethereum",
     "solidity"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Light-Ecosystem/lend-core"
+  }
 }
