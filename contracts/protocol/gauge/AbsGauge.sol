@@ -40,7 +40,7 @@ abstract contract AbsGauge is Context, IAbsGauge {
   mapping(address => uint256) public integrateCheckpointOf;
   mapping(address => uint256) public integrateFraction; // Mintable Token amount (include minted amount)
 
-  uint256 private _integrateInvSupply;
+  uint256 internal _integrateInvSupply;
 
   /**
    * @dev Only pool can call functions marked by this modifier.
@@ -70,7 +70,7 @@ abstract contract AbsGauge is Context, IAbsGauge {
     address _addr,
     uint256 _l,
     uint256 _L
-  ) internal {
+  ) internal virtual {
     // To be called after totalSupply is updated
     uint256 _votingBalance = votingEscrow.balanceOfAtTime(_addr, block.timestamp);
     uint256 _votingTotal = votingEscrow.totalSupplyAtTime(block.timestamp);
@@ -105,7 +105,7 @@ abstract contract AbsGauge is Context, IAbsGauge {
     address _addr,
     uint256 _allocation,
     DataTypes.CheckPointParameters memory _st
-  ) internal {
+  ) internal virtual {
     if (block.timestamp > _st.periodTime) {
       uint256 _workingSupply = workingSupply;
       uint256 _prevWeekTime = _st.periodTime;

@@ -2,7 +2,7 @@ import rawBRE from 'hardhat';
 import { initializeMakeSuite } from './helpers/make-suite';
 
 before(async () => {
-  await rawBRE.deployments.fixture(['light-dao', 'market', 'lending-gauge', 'lending-fee-to-vault', 'deploy-gauge-lt-rewards']);
+  await rawBRE.deployments.fixture(['light-dao', 'market', 'lending-gauge']);
 
   console.log('-> Deployed market');
 

@@ -35,7 +35,7 @@
     "test-withdraw-lt": ". ./setup-test-env.sh && TS_NODE_TRANSPILE_ONLY=1 hardhat test test-suites/__setup.spec.ts test-suites/withdraw-lt-rewards.spec.ts"
   },
   "devDependencies": {
-    "@hopelend/deploy": "^1.0.0",
+    "@hopelend/deploy": "file:../lend-deploy",
     "@hopelend/periphery": "^1.0.0",
     "@ethersproject/bignumber": "^5.6.2",
     "@nomicfoundation/hardhat-chai-matchers": "1.0.5",
