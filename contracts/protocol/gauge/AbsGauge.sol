@@ -50,7 +50,7 @@ abstract contract AbsGauge is Context, IAbsGauge {
     _;
   }
 
-  function _setLendingGauge(address _lendingPoolGuageAddr) internal {
+  function _setLendingGauge(address _lendingPoolGuageAddr) internal virtual {
     lendingGauge = ILendingGauge(_lendingPoolGuageAddr);
     if (_lendingPoolGuageAddr != address(0)) {
       controller = lendingGauge.controller();

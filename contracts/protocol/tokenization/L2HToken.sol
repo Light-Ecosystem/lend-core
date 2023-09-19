@@ -4,6 +4,7 @@ pragma solidity 0.8.17;
 import {Math} from '../../dependencies/openzeppelin/contracts/Math.sol';
 import {IERC20} from '../../dependencies/openzeppelin/contracts/IERC20.sol';
 import {IPool} from '../../interfaces/IPool.sol';
+import {ILendingGauge} from '../../interfaces/ILendingGauge.sol';
 import {IL2LendingGauge} from '../../interfaces/IL2LendingGauge.sol';
 import {WadRayMath} from '../libraries/math/WadRayMath.sol';
 import {DataTypes} from '../libraries/types/DataTypes.sol';
@@ -26,6 +27,13 @@ contract L2HToken is HToken {
     // Intentionally left blank
   }
 
+  function _setLendingGauge(address _lendingPoolGuageAddr) internal override {
+    lendingGauge = ILendingGauge(_lendingPoolGuageAddr);
+    if (_lendingPoolGuageAddr != address(0)) {
+      votingEscrow = lendingGauge.votingEscrow();
+    }
+  }
+
   /**
    * @notice Calculate limits which depend on the amount of lp Token per-user.
    *        Effectively it calculates working balances to apply amplification
@@ -40,8 +48,8 @@ contract L2HToken is HToken {
     uint256 _L
   ) internal override {
     uint256 _lim = (_l * _TOKENLESS_PRODUCTION) / 100;
-    uint256 _votingBalance = IERC20(address(votingEscrow)).balanceOf(_addr);
-    uint256 _votingTotal = IERC20(address(votingEscrow)).totalSupply();
+    uint256 _votingBalance = votingEscrow.balanceOf(_addr);
+    uint256 _votingTotal = votingEscrow.totalSupply();
     if (address(votingEscrow) != address(0)) {
       if (_votingTotal > 0) {
         // 0.4 * _l + 0.6 * _L * balance / total
