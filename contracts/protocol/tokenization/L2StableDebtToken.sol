@@ -19,6 +19,14 @@ import {StableDebtToken} from './StableDebtToken.sol';
  */
 contract L2StableDebtToken is StableDebtToken {
 
+  event UpdateLiquidityLimit(
+    address user,
+    uint256 originalBalance,
+    uint256 originalSupply,
+    uint256 workingBalance,
+    uint256 workingSupply
+  );
+
   mapping(uint256 => uint256) public inflationRate;
 
   /**
@@ -50,22 +58,22 @@ contract L2StableDebtToken is StableDebtToken {
     uint256 _L
   ) internal override {
     uint256 _lim = (_l * _TOKENLESS_PRODUCTION) / 100;
-    uint256 _votingBalance = votingEscrow.balanceOf(_addr);
-    uint256 _votingTotal = votingEscrow.totalSupply();
     if (address(votingEscrow) != address(0)) {
+      uint256 _votingBalance = votingEscrow.balanceOf(_addr);
+      uint256 _votingTotal = votingEscrow.totalSupply();
       if (_votingTotal > 0) {
         // 0.4 * _l + 0.6 * _L * balance / total
         _lim += (_L * _votingBalance * (100 - _TOKENLESS_PRODUCTION)) / _votingTotal / 100;
+        _lim = Math.min(_l, _lim);
       }
     }
-    _lim = Math.min(_l, _lim);
 
     uint256 _oldBal = workingBalances[_addr];
     workingBalances[_addr] = _lim;
     uint256 _workingSupply = workingSupply + _lim - _oldBal;
     workingSupply = _workingSupply;
 
-    emit UpdateLiquidityLimit(_addr, _l, _L, _lim, _workingSupply, _votingBalance, _votingTotal);
+    emit UpdateLiquidityLimit(_addr, _l, _L, _lim, _workingSupply);
   }
 
   /**
